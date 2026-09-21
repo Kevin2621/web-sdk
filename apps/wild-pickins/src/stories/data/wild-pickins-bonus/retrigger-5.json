@@ -1,0 +1,6147 @@
+{
+  "schemaVersion": 1,
+  "gameId": "wild_pickins",
+  "lineSetId": "WP-L20-draft1",
+  "mathVersion": "fixture-only-1",
+  "assetMapVersion": "template-draft-1",
+  "spinBudget": 30,
+  "roundCap": 100000,
+  "fixtureOnly": true,
+  "fixtureMath": {
+    "paths": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      [
+        0,
+        1,
+        2,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        1,
+        2,
+        2
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        2,
+        2,
+        2,
+        1
+      ],
+      [
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        2,
+        1,
+        2,
+        1
+      ],
+      [
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        2,
+        2
+      ],
+      [
+        2,
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        2,
+        2,
+        2
+      ]
+    ],
+    "paytable": {
+      "C01": {
+        "3": 8,
+        "4": 16,
+        "5": 32
+      },
+      "C02": {
+        "3": 7,
+        "4": 14,
+        "5": 28
+      },
+      "C03": {
+        "3": 6,
+        "4": 12,
+        "5": 24
+      },
+      "C04": {
+        "3": 5,
+        "4": 10,
+        "5": 20
+      },
+      "C05": {
+        "3": 4,
+        "4": 8,
+        "5": 16
+      },
+      "C06": {
+        "3": 3,
+        "4": 6,
+        "5": 12
+      },
+      "C07": {
+        "3": 2,
+        "4": 4,
+        "5": 8
+      },
+      "C08": {
+        "3": 1,
+        "4": 2,
+        "5": 4
+      }
+    }
+  },
+  "events": [
+    {
+      "index": 0,
+      "type": "reveal",
+      "spinId": 0,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "basegame",
+      "underlyingBoard": [
+        [
+          "S",
+          "C01",
+          "C08"
+        ],
+        [
+          "S",
+          "C02",
+          "C05"
+        ],
+        [
+          "S",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 1,
+      "type": "wildPickinsSpinResult",
+      "spinId": 0,
+      "finalBoard": [
+        [
+          "S",
+          "C01",
+          "C08"
+        ],
+        [
+          "S",
+          "C02",
+          "C05"
+        ],
+        [
+          "S",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [
+        {
+          "reel": 0,
+          "row": 0
+        },
+        {
+          "reel": 1,
+          "row": 0
+        },
+        {
+          "reel": 2,
+          "row": 0
+        }
+      ],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 0,
+      "remaining": 0,
+      "totalGranted": 0,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 2,
+      "type": "setTotalWin",
+      "spinId": 0,
+      "amount": 0
+    },
+    {
+      "index": 3,
+      "type": "freeSpinTrigger",
+      "spinId": 0,
+      "totalFs": 10,
+      "positions": [
+        {
+          "reel": 0,
+          "row": 1
+        },
+        {
+          "reel": 1,
+          "row": 1
+        },
+        {
+          "reel": 2,
+          "row": 1
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "type": "reveal",
+      "spinId": 1,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 5,
+      "type": "wildPickinsSpinResult",
+      "spinId": 1,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 1,
+      "remaining": 9,
+      "totalGranted": 10,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 6,
+      "type": "setTotalWin",
+      "spinId": 1,
+      "amount": 0
+    },
+    {
+      "index": 7,
+      "type": "reveal",
+      "spinId": 2,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "S",
+          "C01",
+          "C08"
+        ],
+        [
+          "S",
+          "C02",
+          "C05"
+        ],
+        [
+          "S",
+          "C03",
+          "C06"
+        ],
+        [
+          "S",
+          "C04",
+          "C07"
+        ],
+        [
+          "S",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 8,
+      "type": "wildPickinsSpinResult",
+      "spinId": 2,
+      "finalBoard": [
+        [
+          "S",
+          "C01",
+          "C08"
+        ],
+        [
+          "S",
+          "C02",
+          "C05"
+        ],
+        [
+          "S",
+          "C03",
+          "C06"
+        ],
+        [
+          "S",
+          "C04",
+          "C07"
+        ],
+        [
+          "S",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [
+        {
+          "reel": 0,
+          "row": 0
+        },
+        {
+          "reel": 1,
+          "row": 0
+        },
+        {
+          "reel": 2,
+          "row": 0
+        },
+        {
+          "reel": 3,
+          "row": 0
+        },
+        {
+          "reel": 4,
+          "row": 0
+        }
+      ],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 10,
+      "grantedExtraSpins": 10,
+      "completedBonusSpins": 2,
+      "remaining": 18,
+      "totalGranted": 20,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 9,
+      "type": "setTotalWin",
+      "spinId": 2,
+      "amount": 0
+    },
+    {
+      "index": 10,
+      "type": "reveal",
+      "spinId": 3,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 11,
+      "type": "wildPickinsSpinResult",
+      "spinId": 3,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 3,
+      "remaining": 17,
+      "totalGranted": 20,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 12,
+      "type": "setTotalWin",
+      "spinId": 3,
+      "amount": 0
+    },
+    {
+      "index": 13,
+      "type": "reveal",
+      "spinId": 4,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "S"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "S",
+          "C01",
+          "C08"
+        ],
+        [
+          "S",
+          "C02",
+          "C05"
+        ],
+        [
+          "S",
+          "C03",
+          "C06"
+        ],
+        [
+          "S",
+          "C04",
+          "C07"
+        ],
+        [
+          "S",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 14,
+      "type": "wildPickinsSpinResult",
+      "spinId": 4,
+      "finalBoard": [
+        [
+          "S",
+          "C01",
+          "C08"
+        ],
+        [
+          "S",
+          "C02",
+          "C05"
+        ],
+        [
+          "S",
+          "C03",
+          "C06"
+        ],
+        [
+          "S",
+          "C04",
+          "C07"
+        ],
+        [
+          "S",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [
+        {
+          "reel": 0,
+          "row": 0
+        },
+        {
+          "reel": 1,
+          "row": 0
+        },
+        {
+          "reel": 2,
+          "row": 0
+        },
+        {
+          "reel": 3,
+          "row": 0
+        },
+        {
+          "reel": 4,
+          "row": 0
+        }
+      ],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 10,
+      "grantedExtraSpins": 10,
+      "completedBonusSpins": 4,
+      "remaining": 26,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 15,
+      "type": "setTotalWin",
+      "spinId": 4,
+      "amount": 0
+    },
+    {
+      "index": 16,
+      "type": "reveal",
+      "spinId": 5,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 17,
+      "type": "wildPickinsSpinResult",
+      "spinId": 5,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 5,
+      "remaining": 25,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 18,
+      "type": "setTotalWin",
+      "spinId": 5,
+      "amount": 0
+    },
+    {
+      "index": 19,
+      "type": "reveal",
+      "spinId": 6,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 20,
+      "type": "wildPickinsSpinResult",
+      "spinId": 6,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 6,
+      "remaining": 24,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 21,
+      "type": "setTotalWin",
+      "spinId": 6,
+      "amount": 0
+    },
+    {
+      "index": 22,
+      "type": "reveal",
+      "spinId": 7,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 23,
+      "type": "wildPickinsSpinResult",
+      "spinId": 7,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 7,
+      "remaining": 23,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 24,
+      "type": "setTotalWin",
+      "spinId": 7,
+      "amount": 0
+    },
+    {
+      "index": 25,
+      "type": "reveal",
+      "spinId": 8,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 26,
+      "type": "wildPickinsSpinResult",
+      "spinId": 8,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 8,
+      "remaining": 22,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 27,
+      "type": "setTotalWin",
+      "spinId": 8,
+      "amount": 0
+    },
+    {
+      "index": 28,
+      "type": "reveal",
+      "spinId": 9,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 29,
+      "type": "wildPickinsSpinResult",
+      "spinId": 9,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 9,
+      "remaining": 21,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 30,
+      "type": "setTotalWin",
+      "spinId": 9,
+      "amount": 0
+    },
+    {
+      "index": 31,
+      "type": "reveal",
+      "spinId": 10,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 32,
+      "type": "wildPickinsSpinResult",
+      "spinId": 10,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 10,
+      "remaining": 20,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 33,
+      "type": "setTotalWin",
+      "spinId": 10,
+      "amount": 0
+    },
+    {
+      "index": 34,
+      "type": "reveal",
+      "spinId": 11,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 35,
+      "type": "wildPickinsSpinResult",
+      "spinId": 11,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 11,
+      "remaining": 19,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 36,
+      "type": "setTotalWin",
+      "spinId": 11,
+      "amount": 0
+    },
+    {
+      "index": 37,
+      "type": "reveal",
+      "spinId": 12,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 38,
+      "type": "wildPickinsSpinResult",
+      "spinId": 12,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 12,
+      "remaining": 18,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 39,
+      "type": "setTotalWin",
+      "spinId": 12,
+      "amount": 0
+    },
+    {
+      "index": 40,
+      "type": "reveal",
+      "spinId": 13,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 41,
+      "type": "wildPickinsSpinResult",
+      "spinId": 13,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 13,
+      "remaining": 17,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 42,
+      "type": "setTotalWin",
+      "spinId": 13,
+      "amount": 0
+    },
+    {
+      "index": 43,
+      "type": "reveal",
+      "spinId": 14,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 44,
+      "type": "wildPickinsSpinResult",
+      "spinId": 14,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 14,
+      "remaining": 16,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 45,
+      "type": "setTotalWin",
+      "spinId": 14,
+      "amount": 0
+    },
+    {
+      "index": 46,
+      "type": "reveal",
+      "spinId": 15,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 47,
+      "type": "wildPickinsSpinResult",
+      "spinId": 15,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 15,
+      "remaining": 15,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 48,
+      "type": "setTotalWin",
+      "spinId": 15,
+      "amount": 0
+    },
+    {
+      "index": 49,
+      "type": "reveal",
+      "spinId": 16,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 50,
+      "type": "wildPickinsSpinResult",
+      "spinId": 16,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 16,
+      "remaining": 14,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 51,
+      "type": "setTotalWin",
+      "spinId": 16,
+      "amount": 0
+    },
+    {
+      "index": 52,
+      "type": "reveal",
+      "spinId": 17,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 53,
+      "type": "wildPickinsSpinResult",
+      "spinId": 17,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 17,
+      "remaining": 13,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 54,
+      "type": "setTotalWin",
+      "spinId": 17,
+      "amount": 0
+    },
+    {
+      "index": 55,
+      "type": "reveal",
+      "spinId": 18,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 56,
+      "type": "wildPickinsSpinResult",
+      "spinId": 18,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 18,
+      "remaining": 12,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 57,
+      "type": "setTotalWin",
+      "spinId": 18,
+      "amount": 0
+    },
+    {
+      "index": 58,
+      "type": "reveal",
+      "spinId": 19,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 59,
+      "type": "wildPickinsSpinResult",
+      "spinId": 19,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 19,
+      "remaining": 11,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 60,
+      "type": "setTotalWin",
+      "spinId": 19,
+      "amount": 0
+    },
+    {
+      "index": 61,
+      "type": "reveal",
+      "spinId": 20,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 62,
+      "type": "wildPickinsSpinResult",
+      "spinId": 20,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 20,
+      "remaining": 10,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 63,
+      "type": "setTotalWin",
+      "spinId": 20,
+      "amount": 0
+    },
+    {
+      "index": 64,
+      "type": "reveal",
+      "spinId": 21,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 65,
+      "type": "wildPickinsSpinResult",
+      "spinId": 21,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 21,
+      "remaining": 9,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 66,
+      "type": "setTotalWin",
+      "spinId": 21,
+      "amount": 0
+    },
+    {
+      "index": 67,
+      "type": "reveal",
+      "spinId": 22,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 68,
+      "type": "wildPickinsSpinResult",
+      "spinId": 22,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 22,
+      "remaining": 8,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 69,
+      "type": "setTotalWin",
+      "spinId": 22,
+      "amount": 0
+    },
+    {
+      "index": 70,
+      "type": "reveal",
+      "spinId": 23,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 71,
+      "type": "wildPickinsSpinResult",
+      "spinId": 23,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 23,
+      "remaining": 7,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 72,
+      "type": "setTotalWin",
+      "spinId": 23,
+      "amount": 0
+    },
+    {
+      "index": 73,
+      "type": "reveal",
+      "spinId": 24,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 74,
+      "type": "wildPickinsSpinResult",
+      "spinId": 24,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 24,
+      "remaining": 6,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 75,
+      "type": "setTotalWin",
+      "spinId": 24,
+      "amount": 0
+    },
+    {
+      "index": 76,
+      "type": "reveal",
+      "spinId": 25,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 77,
+      "type": "wildPickinsSpinResult",
+      "spinId": 25,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 25,
+      "remaining": 5,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 78,
+      "type": "setTotalWin",
+      "spinId": 25,
+      "amount": 0
+    },
+    {
+      "index": 79,
+      "type": "reveal",
+      "spinId": 26,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 80,
+      "type": "wildPickinsSpinResult",
+      "spinId": 26,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 26,
+      "remaining": 4,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 81,
+      "type": "setTotalWin",
+      "spinId": 26,
+      "amount": 0
+    },
+    {
+      "index": 82,
+      "type": "reveal",
+      "spinId": 27,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 83,
+      "type": "wildPickinsSpinResult",
+      "spinId": 27,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 27,
+      "remaining": 3,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 84,
+      "type": "setTotalWin",
+      "spinId": 27,
+      "amount": 0
+    },
+    {
+      "index": 85,
+      "type": "reveal",
+      "spinId": 28,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 86,
+      "type": "wildPickinsSpinResult",
+      "spinId": 28,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 28,
+      "remaining": 2,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 87,
+      "type": "setTotalWin",
+      "spinId": 28,
+      "amount": 0
+    },
+    {
+      "index": 88,
+      "type": "reveal",
+      "spinId": 29,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 89,
+      "type": "wildPickinsSpinResult",
+      "spinId": 29,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 29,
+      "remaining": 1,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 90,
+      "type": "setTotalWin",
+      "spinId": 29,
+      "amount": 0
+    },
+    {
+      "index": 91,
+      "type": "reveal",
+      "spinId": 30,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "freegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": null
+    },
+    {
+      "index": 92,
+      "type": "wildPickinsSpinResult",
+      "spinId": 30,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 30,
+      "remaining": 0,
+      "totalGranted": 30,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": "spinsExhausted"
+    },
+    {
+      "index": 93,
+      "type": "setTotalWin",
+      "spinId": 30,
+      "amount": 0
+    },
+    {
+      "index": 94,
+      "type": "freeSpinEnd",
+      "spinId": 30,
+      "amount": 0,
+      "winLevel": 1,
+      "endReason": "spinsExhausted",
+      "roundTotal": 0
+    },
+    {
+      "index": 95,
+      "type": "finalWin",
+      "spinId": 30,
+      "amount": 0
+    }
+  ]
+}

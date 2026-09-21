@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "gameId": "wild_pickins",
+  "lineSetId": "WP-L20-draft1",
+  "mathVersion": "fixture-only-1",
+  "assetMapVersion": "template-draft-1",
+  "spinBudget": 30,
+  "roundCap": 100000,
+  "fixtureOnly": true,
+  "fixtureMath": {
+    "paths": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      [
+        0,
+        1,
+        2,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        2,
+        2,
+        1,
+        2,
+        2
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        2,
+        2,
+        2,
+        1
+      ],
+      [
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        2,
+        1,
+        2,
+        1
+      ],
+      [
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        2,
+        2
+      ],
+      [
+        2,
+        2,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        2,
+        2,
+        2
+      ]
+    ],
+    "paytable": {
+      "C01": {
+        "3": 8,
+        "4": 16,
+        "5": 32
+      },
+      "C02": {
+        "3": 7,
+        "4": 14,
+        "5": 28
+      },
+      "C03": {
+        "3": 6,
+        "4": 12,
+        "5": 24
+      },
+      "C04": {
+        "3": 5,
+        "4": 10,
+        "5": 20
+      },
+      "C05": {
+        "3": 4,
+        "4": 8,
+        "5": 16
+      },
+      "C06": {
+        "3": 3,
+        "4": 6,
+        "5": 12
+      },
+      "C07": {
+        "3": 2,
+        "4": 4,
+        "5": 8
+      },
+      "C08": {
+        "3": 1,
+        "4": 2,
+        "5": 4
+      }
+    }
+  },
+  "events": [
+    {
+      "index": 0,
+      "type": "reveal",
+      "spinId": 0,
+      "board": [
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C01"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C02"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C03"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C04"
+          },
+          {
+            "name": "C07"
+          },
+          {
+            "name": "C08"
+          }
+        ],
+        [
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C06"
+          },
+          {
+            "name": "C05"
+          },
+          {
+            "name": "C08"
+          },
+          {
+            "name": "C08"
+          }
+        ]
+      ],
+      "paddingPositions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "anticipation": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gameType": "basegame",
+      "underlyingBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "C05",
+          "C08"
+        ]
+      ],
+      "stickyBefore": [],
+      "goldenTarget": {
+        "reel": 4,
+        "row": 1
+      }
+    },
+    {
+      "index": 1,
+      "type": "goldenCropPick",
+      "spinId": 0,
+      "target": {
+        "reel": 4,
+        "row": 1
+      },
+      "expectedCrop": "C05",
+      "result": "W",
+      "persistent": false,
+      "visibleAfterPick": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "W",
+          "C08"
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "type": "wildPickinsSpinResult",
+      "spinId": 0,
+      "finalBoard": [
+        [
+          "C02",
+          "C01",
+          "C08"
+        ],
+        [
+          "C03",
+          "C02",
+          "C05"
+        ],
+        [
+          "C04",
+          "C03",
+          "C06"
+        ],
+        [
+          "C05",
+          "C04",
+          "C07"
+        ],
+        [
+          "C06",
+          "W",
+          "C08"
+        ]
+      ],
+      "stickyAfter": [],
+      "collisionPositions": [],
+      "scatterPositions": [],
+      "nominalCollisionAward": 0,
+      "nominalRetriggerAward": 0,
+      "grantedExtraSpins": 0,
+      "completedBonusSpins": 0,
+      "remaining": 0,
+      "totalGranted": 0,
+      "lineWin": 0,
+      "harvestTopUp": 0,
+      "spinWin": 0,
+      "bonusTotal": 0,
+      "roundTotal": 0,
+      "endReason": null
+    },
+    {
+      "index": 3,
+      "type": "setTotalWin",
+      "spinId": 0,
+      "amount": 0
+    },
+    {
+      "index": 4,
+      "type": "finalWin",
+      "spinId": 0,
+      "amount": 0
+    }
+  ]
+}

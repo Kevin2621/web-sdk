@@ -3,7 +3,7 @@
 
 	import { Popup } from 'components-shared';
 	import { zIndex } from 'constants-shared/zIndex';
-	import { stateModal } from 'state-shared';
+	import { stateModal, stateI18nDerived } from 'state-shared';
 
 	import BaseContent from './BaseContent.svelte';
 	import BaseScrollable from './BaseScrollable.svelte';
@@ -19,7 +19,7 @@
 	<Popup zIndex={zIndex.modal} onclose={() => (stateModal.modal = null)}>
 		<BaseContent maxWidth="100%">
 			<BaseScrollable type="column">
-				<span>ADD YOUR PAY TABLE</span>
+				<span>{stateI18nDerived.translate('PAYTABLE')}</span>
 				{@render props.children()}
 			</BaseScrollable>
 		</BaseContent>

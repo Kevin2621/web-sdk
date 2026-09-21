@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { stateBet, stateModal, type BetModeData } from 'state-shared';
+	import { stateI18nDerived, stateBet, stateModal, type BetModeData } from 'state-shared';
 	import { Button } from 'components-shared';
 	import { getContextEventEmitter } from 'utils-event-emitter';
 	import { numberToCurrencyString } from 'utils-shared/amount';
@@ -23,14 +23,14 @@
 		<BonusCard>
 			{#snippet title()}
 				<div class="title">
-					{betModeData.text.title}
+					{stateI18nDerived.displayText(betModeData.text.title)}
 				</div>
 			{/snippet}
 
 			{#snippet description()}
 				{#if betModeData?.text?.description}
 					<div class="description">
-						{betModeData.text.description}
+						{stateI18nDerived.displayText(betModeData.text.description)}
 					</div>
 				{/if}
 			{/snippet}
@@ -53,7 +53,9 @@
 				>
 					<BaseIcon width="100%" height="2rem" border="2px solid white;" />
 					<BaseButtonContent>
-						<span style="font-size: 1rem;">{betModeData.text.button}</span>
+						<span style="font-size: 1rem;"
+							>{stateI18nDerived.displayText(betModeData.text.button)}</span
+						>
 					</BaseButtonContent>
 				</Button>
 			{/snippet}

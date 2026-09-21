@@ -1,0 +1,47 @@
+{
+  "10": {
+    "key": "wpBakedLetter10",
+    "canvasWidth": 869,
+    "canvasHeight": 921,
+    "faceWidth": 741.5670180722891,
+    "faceHeight": 768,
+    "anchorX": 0.4863065322278758,
+    "anchorY": 0.4872650209960362
+  },
+  "A": {
+    "key": "wpBakedLetterA",
+    "canvasWidth": 622,
+    "canvasHeight": 921,
+    "faceWidth": 495.0361445783132,
+    "faceHeight": 768,
+    "anchorX": 0.4812458838569713,
+    "anchorY": 0.4872650209960362
+  },
+  "K": {
+    "key": "wpBakedLetterK",
+    "canvasWidth": 599,
+    "canvasHeight": 921,
+    "faceWidth": 471.9036144578313,
+    "faceHeight": 768,
+    "anchorX": 0.4804151497475712,
+    "anchorY": 0.4872650209960362
+  },
+  "Q": {
+    "key": "wpBakedLetterQ",
+    "canvasWidth": 642,
+    "canvasHeight": 921,
+    "faceWidth": 514.3749411709338,
+    "faceHeight": 768,
+    "anchorX": 0.4813151683105084,
+    "anchorY": 0.4872650209960362
+  },
+  "J": {
+    "key": "wpBakedLetterJ",
+    "canvasWidth": 520,
+    "canvasHeight": 921,
+    "faceWidth": 392.8828830948795,
+    "faceHeight": 768,
+    "anchorX": 0.4774198250333063,
+    "anchorY": 0.4872650209960362
+  }
+}

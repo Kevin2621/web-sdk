@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Pickins · Symbol workshop</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#172218;color:#f5eddd;font:16px system-ui,sans-serif}main{max-width:1400px;margin:auto;padding:32px}header p{color:#bcc9b8;max-width:650px;line-height:1.6}h1{font: bold 36px Georgia,serif;margin:8px 0}h2{font-size:18px;margin:0 0 20px}.layout{display:grid;grid-template-columns:280px 1fr;gap:24px}aside{background:#223025;border:1px solid #526044;border-radius:16px;padding:22px}label{display:block;margin:18px 0;font-size:14px}select,input[type=range]{width:100%;margin-top:8px}select,button{font:inherit;background:#344734;color:#fff;border:1px solid #788665;border-radius:7px;padding:10px}button{cursor:pointer}input[type=color]{width:48px;height:34px;border:0;padding:2px;background:none;vertical-align:middle;margin-left:8px}input[type=checkbox]{accent-color:#89acd0}.presets{display:flex;flex-wrap:wrap;gap:6px}.presets button{font-size:12px;padding:8px}.scene{border:1px solid #7d825c;border-radius:16px;overflow:hidden;background:linear-gradient(#17291f44,#17291f99),url('../assets/art-v1/field-a.png') center/cover;padding:24px;min-width:0}.reference{display:flex;align-items:center;gap:24px;background:#283e26f0;border-radius:10px;padding:0 20px;margin-bottom:24px}.reference img{width:180px;height:180px;object-fit:contain}.reference p{color:#d6dec9;line-height:1.5;font-size:14px}.symbols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#283e26f0;border:8px solid #826039;border-radius:12px;box-shadow:0 6px 20px #0006}.symbol{text-align:center;min-width:0;border-right:1px solid #ffffff18;padding:12px 0}.symbol:last-child{border:0}.symbol svg{display:block;width:100%;height:auto}.symbol span{display:block;font-size:12px;color:#d0d9c3;margin:8px}.symbol input{margin:0}.small-row{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:24px;background:#283e26f0;border-radius:10px;padding:16px}.small-row svg{width:64px;height:64px}.caption{text-align:center;font-size:13px;color:#e7ecdf}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}#status{font-size:13px;color:#c8d9be;min-height:20px}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f7d16b;outline-offset:3px}@media(max-width:850px){main{padding:16px}.layout{grid-template-columns:1fr}aside{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}aside h2,.presets{grid-column:1/-1}.scene{padding:12px}.reference img{width:130px;height:130px}.symbols{border-width:4px}.symbol span{font-size:10px}.symbol input{width:32px}}
+</style>
+<main>
+<header><p>WILD PICKINS / ART PREVIEW</p><h1>Symbol workshop</h1><p>Try painted lettering beside the original WILD. Colors and texture update instantly; your choices are saved in this browser.</p></header>
+<div class="layout">
+<aside><h2>Lettering & paint</h2>
+<label>Font<select id="font"><option value="rounded">Rounded · Arial Rounded</option><option value="heavy">Heavy · Impact</option><option value="serif">Classic · Georgia</option><option value="slab">Slab · Rockwell</option></select></label>
+<label>Weight<select id="weight"><option value="900">Extra bold</option><option value="700">Bold</option><option value="400">Regular</option></select></label>
+<label>Shared paint<input id="color" type="color" value="#749cba"></label>
+<label><input id="individual" type="checkbox"> Individual colors</label>
+<div class="presets"><button data-color="#749cba">Muted blue</button><button data-color="#83a66a">Sage</button><button data-color="#c86656">Barn red</button><button data-color="#e6d8b8">Cream</button></div>
+<label>Wood edge <output id="edge-value"></output><input id="edge" type="range" min="2" max="14" value="8"></label>
+<label>Depth <output id="depth-value"></output><input id="depth" type="range" min="0" max="12" value="6"></label>
+<label>Grain <output id="grain-value"></output><input id="grain" type="range" min="0" max="45" value="18"></label>
+</aside>
+<section class="scene" aria-label="Symbol preview on the game reel backing">
+<div class="reference"><img src="../assets/art-v1/painted-wild.png" alt="Original painted wooden WILD"><p>Original WILD reference<br>Warm wood, worn paint, soft depth.<br>The preview uses live font lettering.</p></div>
+<div class="symbols" id="symbols"></div>
+<p class="caption">Small-size readability</p><div class="small-row" id="small"></div>
+<p class="caption">Font availability depends on your computer. These are style studies, not final hand-carved artwork.</p>
+</section></div>
+<div class="actions"><button id="download">Download SVG sample sheet</button><button id="reset">Reset defaults</button></div><p id="status" role="status"></p>
+</main>
+<script>
+const ranks=['10','J','Q','K','A'];
+const names=['Clay pot','Pinecone','Horseshoe','Wagon wheel','Stone'];
+const fonts={rounded:'Arial Rounded MT Bold, Trebuchet MS, sans-serif',heavy:'Impact, Arial Black, sans-serif',serif:'Georgia, serif',slab:'Rockwell, Georgia, serif'};
+const defaults={font:'rounded',weight:'900',color:'#749cba',individual:false,colors:['#749cba','#749cba','#749cba','#749cba','#749cba'],edge:8,depth:6,grain:18};
+let state=structuredClone(defaults);
+const hex=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
+try{const s=JSON.parse(localStorage.getItem('wp-symbol-workshop-v1'));if(s&&fonts[s.font]&&['900','700','400'].includes(s.weight)&&hex(s.color)&&Array.isArray(s.colors)&&s.colors.length===5&&s.colors.every(hex)&&typeof s.individual==='boolean'&&[['edge',2,14],['depth',0,12],['grain',0,45]].every(([k,min,max])=>Number.isFinite(s[k])&&s[k]>=min&&s[k]<=max))state=s;}catch{}
+const $=id=>document.getElementById(id);
+function artwork(rank,index,prefix){
+ const id=prefix+index,paint=state.individual?state.colors[index]:state.color;
+ const text=`x="100" y="145" text-anchor="middle" font-family="${fonts[state.font]}" font-weight="${state.weight}" font-size="${rank==='10'?116:145}" stroke-linejoin="round" paint-order="stroke fill"`;
+ return `<defs><linearGradient id="wood${id}" x2="0.3" y2="1"><stop stop-color="#daa15b"/><stop offset=".48" stop-color="#a66a30"/><stop offset="1" stop-color="#623b20"/></linearGradient><linearGradient id="light${id}" x2=".2" y2="1"><stop stop-color="#fff" stop-opacity=".32"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#28190a" stop-opacity=".24"/></linearGradient><filter id="grain${id}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09 .012" numOctaves="3" seed="8"/><feColorMatrix type="saturate" values="0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+ <text ${text} transform="translate(0 ${state.depth})" fill="#674022" stroke="#51311e" stroke-width="${state.edge+3}">${rank}</text>
+ <text ${text} fill="${paint}" stroke="url(#wood${id})" stroke-width="${state.edge}">${rank}</text>
+ <text ${text} fill="url(#light${id})">${rank}</text>
+ <text ${text} fill="white" filter="url(#grain${id})" opacity="${state.grain/100}">${rank}</text>`;
+}
+const svg=(r,i,p)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="${r}">${artwork(r,i,p)}</svg>`;
+function render(){
+ $('symbols').innerHTML=ranks.map((r,i)=>`<div class="symbol">${svg(r,i,'large')}<span>${names[i]} → ${r}</span>${state.individual?`<input type="color" aria-label="${r} paint color" data-index="${i}" value="${state.colors[i]}">`:''}</div>`).join('');
+ $('small').innerHTML=ranks.map((r,i)=>svg(r,i,'small')).join('');
+ for(const k of ['edge','depth','grain'])$(k+'-value').textContent=state[k];
+ try{localStorage.setItem('wp-symbol-workshop-v1',JSON.stringify(state));}catch{$('status').textContent='Browser storage is unavailable. Download a sample to keep your choices.';}
+}
+function sync(){for(const k of ['font','weight','color','edge','depth','grain'])$(k).value=state[k];$('individual').checked=state.individual;render();}
+for(const k of ['font','weight','color','edge','depth','grain','individual'])$(k).addEventListener('input',e=>{state[k]=k==='individual'?e.target.checked:['edge','depth','grain'].includes(k)?Number(e.target.value):e.target.value;render();});
+// Update the existing color inputs in place so dragging a native color picker stays uninterrupted.
+$('symbols').addEventListener('input',e=>{if(e.target.dataset.index!==undefined){const i=Number(e.target.dataset.index);state.colors[i]=e.target.value;document.querySelectorAll('.symbol svg')[i].innerHTML=artwork(ranks[i],i,'large');$('small').innerHTML=ranks.map((r,j)=>svg(r,j,'small')).join('');try{localStorage.setItem('wp-symbol-workshop-v1',JSON.stringify(state));}catch{}}});
+document.querySelectorAll('[data-color]').forEach(b=>b.addEventListener('click',()=>{state.color=b.dataset.color;state.individual=false;sync();}));
+$('reset').addEventListener('click',()=>{state=structuredClone(defaults);sync();$('status').textContent='Defaults restored.';});
+$('download').addEventListener('click',()=>{const sheet=`<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="200" viewBox="0 0 1000 200"><title>Wild Pickins lettering study</title>${ranks.map((r,i)=>`<g transform="translate(${i*200} 0)">${artwork(r,i,'export')}</g>`).join('')}</svg>`;const url=URL.createObjectURL(new Blob([sheet],{type:'image/svg+xml'}));const a=document.createElement('a');a.href=url;a.download='wild-pickins-symbol-study.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('status').textContent='SVG downloaded. It uses your selected system font; keep that font available when opening it.';});
+sync();
+</script>
+</html>

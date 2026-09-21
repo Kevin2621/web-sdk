@@ -11,13 +11,17 @@
 	import BonusContentWrapLandscape from './BonusContentWrapLandscape.svelte';
 
 	const { stateLayoutDerived } = getContextLayout();
+	let { allowedModes }: { allowedModes?: string[] } = $props();
+	const availableModes = $derived(stateMetaDerived.betModeMetaList().filter(
+		item => !allowedModes || allowedModes.some(mode => mode.toLowerCase() === item.mode.toLowerCase()),
+	));
 
 	const activateList = $derived(
-		stateMetaDerived.betModeMetaList().filter((item) => item.type === 'activate'),
+		availableModes.filter((item) => item.type === 'activate'),
 	);
 
 	const buyList = $derived(
-		stateMetaDerived.betModeMetaList().filter((item) => item.type === 'buy'),
+		availableModes.filter((item) => item.type === 'buy'),
 	);
 
 	const COMPONENT_MAP = {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Popup } from 'components-shared';
 	import { zIndex } from 'constants-shared/zIndex';
-	import { stateModal } from 'state-shared';
+	import { stateModal, stateI18nDerived } from 'state-shared';
 
 	import BaseContent from './BaseContent.svelte';
 </script>
@@ -15,9 +15,9 @@
 				{#if error}
 					{#if error?.error && error?.message}
 						<span>{JSON.stringify(error.error || 'unknown')}</span>
-						<p>{JSON.stringify(error.message || 'unknown')}</p>
+						<p>{stateI18nDerived.displayText(JSON.stringify(error.message || 'unknown'))}</p>
 					{:else}
-						<p>{error}</p>
+						<p>{stateI18nDerived.displayText(String(error))}</p>
 					{/if}
 				{:else}
 					<span>unknown error</span>

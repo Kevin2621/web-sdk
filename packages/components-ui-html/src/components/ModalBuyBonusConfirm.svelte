@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button, Popup } from 'components-shared';
 	import { zIndex } from 'constants-shared/zIndex';
-	import { stateBet, stateModal, stateUi, INFINITY_MARK } from 'state-shared';
+	import { stateI18nDerived, stateBet, stateModal, stateUi, INFINITY_MARK } from 'state-shared';
 	import { getContextEventEmitter } from 'utils-event-emitter';
 
 	import BaseIcon from './BaseIcon.svelte';
@@ -34,10 +34,10 @@
 	<Popup zIndex={zIndex.dialog} onclose={() => (stateModal.modal = { name: 'buyBonus' })}>
 		<BaseContent maxWidth="500px">
 			<BaseTitle>
-				{stateBonusDerived.selectedBetModeData().text.title}
+				{stateI18nDerived.displayText(stateBonusDerived.selectedBetModeData().text.title)}
 			</BaseTitle>
 			<BaseScrollable type="column">
-				{stateBonusDerived.selectedBetModeData().text.dialog}
+				{stateI18nDerived.displayText(stateBonusDerived.selectedBetModeData().text.dialog)}
 			</BaseScrollable>
 			<BaseButtonWrap type="max-width">
 				<Button

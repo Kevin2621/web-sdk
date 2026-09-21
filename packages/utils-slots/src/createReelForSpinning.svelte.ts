@@ -76,6 +76,7 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 
 	// internal states
 	let isPreSpinning = false;
+	let usedPreSpin = false;
 	let targetPaddingPosition = reelLength - 1;
 	let prevSymbols: ReelSymbol[] = createReelSymbols(reelOptions.initialSymbols);
 	let targetSymbols: ReelSymbol[] = createReelSymbols(reelOptions.initialSymbols);
@@ -145,10 +146,21 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 		await reelY.set(targetY, { duration, easing });
 	};
 
+	const liftBeforeSpin = async () => {
+		const lift = reelOptions.spinStartLift?.();
+		if (lift && lift.distance > 0) {
+			await reelY.set(reelY.current - lift.distance, { duration: lift.duration, easing: sineOut });
+		} else if (lift) {
+			// Suppressing decorative movement must preserve the selected spin pacing.
+			await waitForTimeout(lift.duration);
+		}
+	};
+
 	const placeY = (targetY: number) => reelY.set(targetY, { duration: 0 });
 
 	const removePaddingAndBounceBack = async () => {
 		reelState.symbols = [...targetSymbols];
+		if (reelOptions.landOnImpact) updateAllReelSymbolState('land');
 		placeY(defaultY + reelOptions.symbolHeight * reelState.spinOptions().reelBounceSizeMulti);
 		await slideY({
 			reelY: defaultY,
@@ -187,7 +199,7 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 			const speed = started
 				? reelState.spinOptions().reelSpinSpeed
 				: reelState.spinOptions().reelPreSpinSpeed;
-			const easing = started || isTurboBeforeAll ? linear : backIn;
+			const easing = started || isTurboBeforeAll || reelOptions.spinStartLift ? linear : backIn;
 			await slideY({ reelY: defaultY, speed, easing });
 			await preSpinPadding({ preSpinPaddingRawReel });
 			if (!started) {
@@ -212,9 +224,12 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 		const preSpinPaddingRawReel = preSpinPaddingReel;
 
 		isPreSpinning = true;
+		usedPreSpin = true;
 		reelState.spinType = isTurboBeforeAll ? 'fast' : 'normal';
 		await preSpinPadding({ preSpinPaddingRawReel });
 		if (!isTurboBeforeAll) await delaySpinByReelIndex();
+		if (!isTurboBeforeAll) await liftBeforeSpin();
+		if (reelOptions.spinStartLift) updateAllReelSymbolState('spin');
 		preSpinSlideDownLoop({ isTurboBeforeAll, preSpinPaddingRawReel });
 	};
 
@@ -224,10 +239,17 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 		const topY = await addPadding(paddingSize);
 		await placeY(topY);
 
+		if (!usedPreSpin && reelState.spinType !== 'fast') {
+			// Direct book playback needs the same left-to-right lead-in as pre-spin.
+			if (reelOptions.spinStartLift?.()) await delaySpinByReelIndex();
+			await liftBeforeSpin();
+		}
+
 		if (!isSpinning) {
 			reelState.motion = 'spinning';
 			updateAllReelSymbolState('spin');
 		}
+
 
 		// Q: When to skip the slideDown?
 		// A: When it's preSpinning(isSpinning) and stop button is clicked(isTurbo) and is noStop is false
@@ -240,10 +262,11 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 		}
 
 		reelState.motion = 'bouncing';
+		if (reelOptions.spinStartLift) updateAllReelSymbolState('static');
 		onSpinFinishing();
 		await removePaddingAndBounceBack();
 		reelState.motion = 'stopped';
-		updateAllReelSymbolState('land');
+		if (!reelOptions.landOnImpact) updateAllReelSymbolState('land');
 	};
 
 	const fastSpin = () =>
@@ -330,6 +353,7 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 
 		await SPIN_MAP[reelState.spinType]();
 
+		usedPreSpin = false;
 		interruptible.clear();
 	};
 

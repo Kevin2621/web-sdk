@@ -13,6 +13,7 @@
 
 	type Props = {
 		version: Snippet;
+		bonusModes?: string[];
 	};
 
 	const props: Props = $props();
@@ -20,7 +21,7 @@
 
 <ModalError />
 <ModalBetMenu />
-<ModalBuyBonus />
+<ModalBuyBonus allowedModes={props.bonusModes} />
 <ModalBuyBonusConfirm />
 <ModalAutoSpin />
 <ModalAutoSpinMessage />

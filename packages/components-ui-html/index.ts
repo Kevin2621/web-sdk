@@ -1,5 +1,7 @@
 import Modals from './src/components/Modals.svelte';
 import GameVersion from './src/components/GameVersion.svelte';
+import SlotControlBar from './src/components/SlotControlBar.svelte';
+export { SlotControlBar };
 import GlobalStyle from './src/components/GlobalStyle.svelte';
 
 import messagesMap from './src/i18n/messagesMap';

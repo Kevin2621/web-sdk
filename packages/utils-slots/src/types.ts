@@ -47,7 +47,12 @@ type ReelCreateOptions<TRawSymbol extends object, TSymbolState extends string> =
 export type SpinningReelCreateOptions<
 	TRawSymbol extends object,
 	TSymbolState extends string,
-> = ReelCreateOptions<TRawSymbol, TSymbolState>;
+> = ReelCreateOptions<TRawSymbol, TSymbolState> & {
+	/** Optional upward anticipation before downward reel motion. */
+	/** Start symbol landing effects at impact, before the reel rebounds. */
+	landOnImpact?: boolean;
+	spinStartLift?: () => { distance: number; duration: number } | undefined;
+};
 
 export type CascadingReelCreateOptions<
 	TRawSymbol extends object,

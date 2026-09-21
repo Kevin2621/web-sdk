@@ -1,0 +1,47 @@
+{
+  "10": {
+    "key": "wpLetter10",
+    "canvasWidth": 1254,
+    "canvasHeight": 1254,
+    "x": 181,
+    "y": 285,
+    "width": 920,
+    "height": 738
+  },
+  "J": {
+    "key": "wpLetterJ",
+    "canvasWidth": 1254,
+    "canvasHeight": 1254,
+    "x": 257,
+    "y": 168,
+    "width": 737,
+    "height": 919
+  },
+  "Q": {
+    "key": "wpLetterQ",
+    "canvasWidth": 1254,
+    "canvasHeight": 1254,
+    "x": 227,
+    "y": 163,
+    "width": 795,
+    "height": 955
+  },
+  "K": {
+    "key": "wpLetterK",
+    "canvasWidth": 1254,
+    "canvasHeight": 1254,
+    "x": 198,
+    "y": 182,
+    "width": 870,
+    "height": 893
+  },
+  "A": {
+    "key": "wpLetterA",
+    "canvasWidth": 1254,
+    "canvasHeight": 1254,
+    "x": 157,
+    "y": 143,
+    "width": 940,
+    "height": 980
+  }
+}
