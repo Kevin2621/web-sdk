@@ -3,6 +3,7 @@
  import { StoryGameTemplate, StoryLocale } from 'components-storybook';
  import Game from './Game.svelte';
  import PlayerControls from './PlayerControls.svelte';
+ import multiplierMath from '../game/multiplierPaytable.json';
  import { stateBet } from 'state-shared';
  import { bookEventAmountToCurrencyString } from 'utils-shared/amount';
  let restoreBet=()=>{};
@@ -15,8 +16,8 @@
  });
  import { getContext } from '../game/context';
  const context=getContext();
- import { requestGeneratedRound, profiles } from '../game/generatedRound.mjs';
- let {profile='quieter-base'}:{profile?:'natural'|'reference'|'quieter-base'}=$props();
+ import { requestGeneratedRound, profiles, usesMultiplierRules } from '../game/generatedRound.mjs';
+ let {profile='multiplier-wilds'}:{profile?:'natural'|'reference'|'quieter-base'|'multiplier-wilds'|'candidate-1'|'candidate-3'|'candidate-500k-1'}=$props();
  import { playGeneratedRound, fixturePlayback, cancelFixtureAction } from '../game/fixturePlayback.svelte';
  let seed=crypto.getRandomValues(new Uint32Array(1))[0];
  let count=$state(0),returned=$state(0),requesting=$state(false),error=$state('');
@@ -45,7 +46,7 @@
  <StoryLocale lang="en"><Game fixtureOnly /></StoryLocale>
 </StoryGameTemplate></div>
 {#if mounted}
- <PlayerControls simulated busy={requesting||fixturePlayback.busy} onspin={spin}/>
+ <PlayerControls simulated busy={requesting||fixturePlayback.busy} onspin={spin} math={usesMultiplierRules(profile)?multiplierMath:undefined} multiplierRules={usesMultiplierRules(profile)}/>
  {#if error}<p class="error" role="alert">{error}</p>{/if}
 {/if}
 <style>.generated-game :global(.wrap){display:none}.error{position:fixed;top:10px;left:5%;max-width:90%;background:#392313;color:white;z-index:10001;padding:12px}</style>

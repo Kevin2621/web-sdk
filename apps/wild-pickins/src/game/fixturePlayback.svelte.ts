@@ -17,9 +17,12 @@ import { eventEmitter } from './eventEmitter';
 import { mapPaddedBoard, mapVisibleBoard, validateBaseFixture } from './fixtureAdapter.mjs';
 import type { RawSymbol } from './types';
 
-export const fixturePlayback = $state({ linePayouts:[] as {amount:number;positions:{reel:number;row:number}[];line:number}[], busy:false, error:'', status:'Ready', pick:null as null | {reel:number;row:number;phase:string;progress:number;crop:string}, roundTotal:0, bonusTotal:0, remaining:0, completed:0, granted:0, budget:0, inBonus:false, releasingSticky:false, rolling:false, message:'', cuePositions:[] as {reel:number;row:number}[], collisions:[] as {reel:number;row:number}[], sticky:[] as {reel:number;row:number}[] });
+export const fixtureWilds = $state({multipliers:[] as {reel:number;row:number;multiplier:number}[]});
+
+export const fixturePlayback = $state({ linePayouts:[] as {amount:number;positions:{reel:number;row:number}[];line:number;multiplier?:number;label?:string}[], busy:false, error:'', status:'Ready', pick:null as null | {reel:number;row:number;phase:string;progress:number;crop:string}, roundTotal:0, bonusTotal:0, remaining:0, completed:0, granted:0, budget:0, inBonus:false, releasingSticky:false, rolling:false, message:'', cuePositions:[] as {reel:number;row:number}[], collisions:[] as {reel:number;row:number}[], sticky:[] as {reel:number;row:number}[] });
 let controller: AbortController | null = null;
 export function cancelFixturePlayback() {
+ fixtureWilds.multipliers=[];
  controller?.abort();
  eventEmitter.broadcast({type:'winSignHide'});
  fixturePlayback.linePayouts=[];
@@ -79,11 +82,12 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
    } else if(e.type==='goldenCropPick') {
     await runPickSequence({animate,signal:run.signal,wait:delay,
      frame:(phase:string,progress:number)=>{ fixturePlayback.pick={...e.target,phase,progress,crop:e.expectedCrop}; },
-     commit:()=>stateGameDerived.enhancedBoard.settle(mapVisibleBoard(e.visibleAfterPick) as RawSymbol[][]),
+     commit:()=>stateGameDerived.enhancedBoard.settle(mapVisibleBoard(e.visibleAfterPick,e.wildMultipliers) as RawSymbol[][]),
      clear:()=>{fixturePlayback.pick=null;}
     });
    } else if(e.type==='wildPickinsSpinResult') {
-    stateGameDerived.enhancedBoard.settle(mapVisibleBoard(e.finalBoard) as RawSymbol[][]);
+    fixtureWilds.multipliers=e.wildMultipliers??[];
+    stateGameDerived.enhancedBoard.settle(mapVisibleBoard(e.finalBoard,e.wildMultipliers) as RawSymbol[][]);
     fixturePlayback.roundTotal=e.roundTotal;
     fixturePlayback.bonusTotal=e.bonusTotal;
     if(bonusWin.visible)bonusWin.amount=e.bonusTotal;
@@ -118,7 +122,7 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
       const nextReveal=after.findIndex(event=>event.type==='reveal');
       const award=after.slice(0,nextReveal<0?undefined:nextReveal).find(event=>event.type==='setWin');
      
-      fixturePlayback.linePayouts=e.wins.map((w:any,i:number)=>({amount:w.win,positions:w.positions,line:w.meta?.lineIndex??i+1}));
+      fixturePlayback.linePayouts=e.wins.map((w:any,i:number)=>({amount:w.win,positions:w.positions,line:w.meta?.lineIndex??i+1,multiplier:w.meta?.lineMultiplier??1}));
       const lineTotal=fixturePlayback.linePayouts.reduce((sum,w)=>sum+w.amount,0);
       if(award && award.amount>lineTotal)fixturePlayback.linePayouts.push({amount:award.amount-lineTotal,line:0,positions:[{reel:2,row:2}]});
       await delay(getWinTiming().paylines);

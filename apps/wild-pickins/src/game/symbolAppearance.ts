@@ -1,4 +1,4 @@
-export const symbolRanks: Record<string, string> = { H4: 'A', L1: 'K', L2: 'Q', L3: 'J', L4: '10' };
+export const symbolRanks: Record<string, string> = { L1: 'A', L2: 'K', L3: 'Q', L4: 'J', L5: '10' };
 export const symbolFonts = {
 	luckiest: 'Luckiest Guy, Arial Black, sans-serif',
 	patua: 'Patua One, Georgia, serif',
@@ -21,7 +21,9 @@ export const symbolStyleDefaults = {
 // One cell-relative sizing policy; effects never participate in symbol layout.
 export const symbolLayout = {
 	artworkFill: 0.88,
-	highSymbolScale: 0.82,
+	// Preserve the enlarged foreground artwork independently of any backing.
+	highSymbolScale: 0.82 * 1.12,
+	grainRotation: Math.PI / 9,
 	letterHeight: 0.78,
 	letterMaxWidth: 0.86,
 	fontSize: 145,

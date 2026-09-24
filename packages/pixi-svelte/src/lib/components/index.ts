@@ -1,4 +1,5 @@
 import App from './App.svelte';
+export { default as PreviewCanvas } from './PreviewCanvas.svelte';
 import Text, { type Props as TextProps } from './Text.svelte';
 import Container, { type Props as ContainerProps } from './Container.svelte';
 import Rectangle, { type Props as RectangleProps } from './Rectangle.svelte';

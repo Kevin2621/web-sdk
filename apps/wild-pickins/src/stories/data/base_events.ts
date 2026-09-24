@@ -4,19 +4,19 @@ export default {
 		board: [
 			[
 				{
+					name: 'L3',
+				},
+				{
 					name: 'L2',
 				},
 				{
-					name: 'L1',
-				},
-				{
-					name: 'L4',
+					name: 'L5',
 				},
 				{
 					name: 'H2',
 				},
 				{
-					name: 'L1',
+					name: 'L2',
 				},
 			],
 			[
@@ -27,58 +27,58 @@ export default {
 					name: 'L5',
 				},
 				{
-					name: 'L2',
+					name: 'L3',
 				},
 				{
 					name: 'H3',
 				},
 				{
-					name: 'L4',
+					name: 'L5',
 				},
 			],
 			[
 				{
-					name: 'L3',
+					name: 'L4',
 				},
 				{
 					name: 'L5',
 				},
 				{
-					name: 'L3',
-				},
-				{
-					name: 'H4',
-				},
-				{
 					name: 'L4',
-				},
-			],
-			[
-				{
-					name: 'H4',
-				},
-				{
-					name: 'H3',
-				},
-				{
-					name: 'L4',
-				},
-				{
-					name: 'L5',
 				},
 				{
 					name: 'L1',
 				},
+				{
+					name: 'L5',
+				},
+			],
+			[
+				{
+					name: 'L1',
+				},
+				{
+					name: 'H3',
+				},
+				{
+					name: 'L5',
+				},
+				{
+					name: 'L5',
+				},
+				{
+					name: 'L2',
+				},
 			],
 			[
 				{
 					name: 'H3',
 				},
 				{
-					name: 'L3',
+					name: 'L4',
 				},
 				{
-					name: 'L3',
+					name: 'L4',
 				},
 				{
 					name: 'H1',

@@ -20,15 +20,19 @@
 	import { playerLabel } from '../game/playerLabels';
 	import { SlotControlBar } from 'components-ui-html';
 	import money from '../game/playerMoney';
-	import math from '../game/playerPaytable.json';
+	import defaultMath from '../game/playerPaytable.json';
 	let {
 		simulated = false,
 		busy = false,
 		onspin,
+		math = defaultMath,
+		multiplierRules = false,
 	}: {
 		simulated?: boolean;
 		busy?: boolean;
 		onspin?: () => Promise<AutoplayRound | void>;
+		math?: typeof defaultMath;
+		multiplierRules?: boolean;
 	} = $props();
 	const context = getContext();
 	const language = $derived(playerLanguage());
@@ -754,6 +758,13 @@
 							inert={!paytableOpen}
 							transition:slide={{ duration: motionReduced ? 0 : 260, easing: cubicInOut }}
 						>
+							{#if multiplierRules}
+								<p>All symbols can land on all five reels. Lines pay left to right from reel 1 with at least three matches. Only the highest award on each line pays.</p>
+								<p>Wilds substitute for paying symbols, never scatters. Wild values are 1×, 2× or 3×. Add the values of Wilds in the winning combination, then multiply that line's paytable award. For example, 2× + 3× gives 5×. Two 1× Wilds give 2×.</p>
+								<p>New Wilds on the same reel share a value for that spin. During free spins, Wilds and their values stick. Golden Picks create multiplier Wilds.</p>
+								<p>3 / 4 / 5 base scatters award 10 / 15 / 20 free spins with no scatter cash payout. Scatters do not appear during free spins. Wild collisions can award extra spins within the 30-spin lifetime limit.</p>
+								<p>Each Wild collision awards +1 spin, up to 30 total granted spins including the starting award. Collisions do not increase Wild multipliers. A full Wild board keeps paying on available spins, without a separate prize. The round ends when free spins run out or total winnings reach 5,000×, including all previous awards. The final payout is limited to the remaining amount under that cap.</p>
+							{/if}
 							{#each [['BASE', math.paytable], ['BONUS', math.bonusPaytable]] as [name, table]}<h4>
 									{t(String(name))} · ×
 								</h4>

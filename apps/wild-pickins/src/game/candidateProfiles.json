@@ -1,0 +1,14 @@
+{
+  "candidate-1": {
+    "label": "Candidate 1 \u00b7 Weighted experiment \u00b7 Picks off",
+    "hash": "b69a2d0401e372c7bab2d3a8efb3430d6c85f012f1790d4668455c54609d7947"
+  },
+  "candidate-3": {
+    "label": "Candidate 3 \u00b7 Weighted experiment \u00b7 Picks off",
+    "hash": "938cdf0640982c94c1636f4d39ce375b24fc4cb4a15516d91de66adda82ef38c"
+  },
+  "candidate-500k-1": {
+    "label": "500k pool \u00b7 Candidate 1 \u00b7 Weighted",
+    "hash": "e4644d0e1ab6b2be50d4b8a7dfa6f31250d6b1067be64cb420649676786ab182"
+  }
+}

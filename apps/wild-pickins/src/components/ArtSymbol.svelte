@@ -14,7 +14,12 @@
 	import LetterSymbol from './LetterSymbol.svelte';
 	import BakedLetterSymbol from './BakedLetterSymbol.svelte';
 	import GeneratedLetterSymbol from './GeneratedLetterSymbol.svelte';
-	import { symbolRanks, symbolArtwork, symbolLayout, symbolStyle } from '../game/symbolStyle.svelte';
+	import {
+		symbolRanks,
+		symbolArtwork,
+		symbolLayout,
+		symbolStyle,
+	} from '../game/symbolStyle.svelte';
 	let {
 		x = 0,
 		y = 0,
@@ -100,23 +105,27 @@
 
 <Container {x} {y}>
 	<Container y={lift} scale={pulse} filters={blurFilters}>
-		{#if symbolRanks[name]}
-			{#if !import.meta.env.DEV || !symbolStyle.livePreview}
-				<BakedLetterSymbol rank={symbolRanks[name]} {size} {tint} />
-			{:else if symbolStyle.generated}
-				<GeneratedLetterSymbol rank={symbolRanks[name]} {size} {tint} />
-			{:else}
-				<LetterSymbol rank={symbolRanks[name]} {size} {tint} />
+		<Container
+			rotation={name === 'H1' || name === 'H2' ? symbolLayout.grainRotation : 0}
+		>
+			{#if symbolRanks[name]}
+				{#if !import.meta.env.DEV || !symbolStyle.livePreview}
+					<BakedLetterSymbol rank={symbolRanks[name]} {size} {tint} />
+				{:else if symbolStyle.generated}
+					<GeneratedLetterSymbol rank={symbolRanks[name]} {size} {tint} />
+				{:else}
+					<LetterSymbol rank={symbolRanks[name]} {size} {tint} />
+				{/if}
+			{:else if art}
+				<Sprite
+					alpha={name === 'S' && seedCelebration.active ? 0 : 1}
+					key={art.key}
+					anchor={0.5}
+					{width}
+					{height}
+					{tint}
+				/>
 			{/if}
-		{:else if art}
-			<Sprite
-				alpha={name === 'S' && seedCelebration.active ? 0 : 1}
-				key={art.key}
-				anchor={0.5}
-				{width}
-				{height}
-				{tint}
-			/>
-		{/if}
+		</Container>
 	</Container>
 </Container>

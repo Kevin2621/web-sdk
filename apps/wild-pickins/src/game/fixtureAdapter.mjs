@@ -1,10 +1,13 @@
 // Local C01 base-book adapter. Bonus and live RGS playback remain separate work.
-export const textureNames = Object.freeze({ C01:'H1', C02:'H2', C03:'H3', C04:'H4', C05:'L1', C06:'L2', C07:'L3', C08:'L4', W:'W', S:'S' });
+export const textureNames = Object.freeze({ C01:'H1', C02:'H2', C03:'H3', C04:'L1', C05:'L2', C06:'L3', C07:'L4', C08:'L5', W:'W', S:'S' });
 const check = (ok, message) => { if (!ok) throw new Error(`Wild Pickins fixture: ${message}`); };
 const equal = (a,b) => JSON.stringify(a) === JSON.stringify(b);
 export const mapSymbol = (name) => { check(Object.hasOwn(textureNames,name),'unknown symbol'); return {name:textureNames[name]}; };
-export const mapPaddedBoard = (board) => board.map(reel=>reel.map(s=>mapSymbol(s.name)));
-export const mapVisibleBoard = (board) => board.map(reel=>[mapSymbol('C08'),...reel.map(mapSymbol),mapSymbol('C08')]);
+export const mapPaddedBoard = (board) => board.map(reel=>reel.map(s=>({...mapSymbol(s.name),...(s.multiplier===undefined?{}:{multiplier:s.multiplier})})));
+export const mapVisibleBoard = (board, multipliers=[]) => board.map((reel,r)=>[mapSymbol('C08'),...reel.map((s,y)=>{
+ const value=multipliers.find(p=>p.reel===r&&p.row===y)?.multiplier;
+ return {...mapSymbol(s),...(value===undefined?{}:{multiplier:value})};
+}),mapSymbol('C08')]);
 
 export function validateBaseFixture(book) {
  check(book.fixtureOnly===true && book.schemaVersion===1 && book.gameId==='wild_pickins','unsupported book');

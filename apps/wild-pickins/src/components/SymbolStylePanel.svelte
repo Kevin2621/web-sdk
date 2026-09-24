@@ -1,5 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { PreviewCanvas, Container } from 'pixi-svelte';
+	import Symbol from './Symbol.svelte';
+	import type { SymbolState } from '../game/types';
+	const highPreviews = ['H1', 'H2', 'H3'] as const;
+	let previewState = $state<SymbolState>('static');
+	let animationId = $state(0);
 	import { symbolStyle, symbolFonts, symbolStyleDefaults } from '../game/symbolStyle.svelte';
 	let open = $state(false);
 	let ready = $state(false);
@@ -57,6 +63,27 @@
 	>
 	{#if open}
 		<div class="panel">
+			<h3>High symbols</h3>
+			<div class="high-previews">
+				<PreviewCanvas width={280} height={280} label="High symbols: wheat, corn and tomatoes">
+					{#key animationId}
+						{#each highPreviews as name, index}
+							<Container x={70 + (index % 2) * 140} y={70 + Math.floor(index / 2) * 140}>
+								<Symbol rawSymbol={{ name }} state={previewState} />
+							</Container>
+						{/each}
+					{/key}
+				</PreviewCanvas>
+			</div>
+			<label
+				>Preview animation
+				<select bind:value={previewState}>
+					<option value="static">Still</option>
+					<option value="spin">Spinning</option>
+					<option value="win">Win</option>
+				</select>
+			</label>
+			{#if previewState === 'win'}<button onclick={() => animationId++}>Replay win</button>{/if}
 			<label
 				><input type="checkbox" bind:checked={symbolStyle.livePreview} /> Edit live letter artwork</label
 			>
@@ -137,6 +164,9 @@
 </div>
 
 <style>
+	.high-previews {
+		margin-bottom: 20px;
+	}
 	.workshop {
 		position: fixed;
 		right: 12px;

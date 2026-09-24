@@ -42,5 +42,10 @@
   <Text anchor={0.5} x={label.x} y={label.y-(SYMBOL_SIZE*0.55*exitProgress*exitProgress)} scale={pop}
    alpha={opacity} text={`${(label.amount/100).toFixed(2)}×`}
    style={{fontFamily:'Arial',fontSize:SYMBOL_SIZE*0.21,fontWeight:'bold',fill:0xfff1d1,stroke:{color:0x000000,width:5}}} />
+  {#if (label.multiplier??1)>1}
+   <Text anchor={0.5} x={label.x} y={label.y+SYMBOL_SIZE*0.2-(SYMBOL_SIZE*0.55*exitProgress*exitProgress)} scale={pop}
+    alpha={opacity} text={`WILDS ×${label.multiplier}`}
+    style={{fontFamily:'Arial',fontSize:SYMBOL_SIZE*0.11,fontWeight:'bold',fill:0xffd34e,stroke:{color:0x000000,width:3}}} />
+  {/if}
  {/each}
 </BoardContainer>
