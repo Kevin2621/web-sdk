@@ -9,6 +9,17 @@ export function createPlayOnce<TSoundName extends string>(options: {
 	initSoundVolume: (soundName: TSoundName) => void;
 }) {
 	type Sound = GetSound<TSoundName>;
+	// Register once per player, not once per impact. Completed/stopped voices
+	// leave no listener behind, and older overlapping tails cannot clear a new voice.
+	const voices = new Map<number, TSoundName>();
+	const release = (id: number) => {
+		const name = voices.get(id);
+		if (name === undefined) return;
+		voices.delete(id);
+		if (options.getSoundMap()[name]?.soundId === id) delete options.getSoundMap()[name];
+	};
+	options.howl.on('end', release);
+	options.howl.on('stop', release);
 
 	const playOnce = (sound: Sound) => {
 		const soundId = options.howl.play(sound.soundName);
@@ -20,12 +31,7 @@ export function createPlayOnce<TSoundName extends string>(options: {
 
 		options.initSoundVolume(sound.soundName);
 
-		options.howl.on('end', (soundIdOnEnd) => {
-			if (soundIdOnEnd === soundId) {
-				options.howl.stop(soundId);
-				delete options.getSoundMap()[sound.soundName];
-			}
-		});
+		voices.set(soundId, sound.soundName);
 	};
 
 	const soundPlayMap = {

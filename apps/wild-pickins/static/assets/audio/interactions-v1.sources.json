@@ -1,0 +1,72 @@
+[
+  {
+    "cue": "wp_ui",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Generic User Interface - Smooth Mechanical UI Button Click    [004734].wav",
+    "sourceStartSeconds": 0.005215419501133787,
+    "durationSeconds": 0.16,
+    "gain": 0.28
+  },
+  {
+    "cue": "wp_spin",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Wooden Block Solid Impact Click - User Interface Button or Slots Reel Stop    [005305].wav",
+    "sourceStartSeconds": 0.013356009070294784,
+    "durationSeconds": 0.22,
+    "gain": 0.45
+  },
+  {
+    "cue": "wp_reel_stop",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Wooden Block Heavy Drop Impact - User Interface Button or Slots Reel Stop    [005301].wav",
+    "sourceStartSeconds": 0.00909297052154195,
+    "durationSeconds": 0.28,
+    "gain": 0.38
+  },
+  {
+    "cue": "wp_scatter",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Simple Wild West Achievement Notification Hit - Special Reel Stop Electric Guitar Strum Level 1    [008881].wav",
+    "sourceStartSeconds": 0.0012925170068027211,
+    "durationSeconds": 0.8,
+    "gain": 0.46
+  },
+  {
+    "cue": "wp_wild",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/WOOD MAGIC SPELL SLAP - Fast Wooden Hit    [003818].wav",
+    "sourceStartSeconds": 0.0023356009070294786,
+    "durationSeconds": 0.42,
+    "gain": 0.46
+  },
+  {
+    "cue": "wp_bonus_entry",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Old West Cowboy Cartoon Banjo Anticipation Hit - Level 3.wav",
+    "sourceStartSeconds": 0.0,
+    "durationSeconds": 2.0,
+    "gain": 0.55
+  },
+  {
+    "cue": "wp_collision",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Generic User Interface - Smooth Mechanical UI Notification Thump - 01    [004735].wav",
+    "sourceStartSeconds": 0.008707482993197279,
+    "durationSeconds": 0.28,
+    "gain": 0.35
+  },
+  {
+    "cue": "wp_extra_spins",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Game User Interface Menu Chime - Button Click Select or Reveal Bell Ding - 01    [003880].wav",
+    "sourceStartSeconds": 0.0,
+    "durationSeconds": 0.65,
+    "gain": 0.42
+  },
+  {
+    "cue": "wp_payout",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Money Bag Pour - Gold Treasure Coins Spill    [002268].wav",
+    "sourceStartSeconds": 0.13507936507936508,
+    "durationSeconds": 0.3,
+    "gain": 0.28
+  },
+  {
+    "cue": "wp_bonus_exit",
+    "source": "Fusehive_WILD_WEST_SLOTS/Wild West Slots - Fusehive [WAV]/Barn Door Close - Small Wooden Farm Door Closing Shut Creak Noise    [016339].wav",
+    "sourceStartSeconds": 0.005555555555555556,
+    "durationSeconds": 0.65,
+    "gain": 0.3
+  }
+]

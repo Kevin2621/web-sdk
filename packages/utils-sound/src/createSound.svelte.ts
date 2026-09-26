@@ -1,4 +1,6 @@
-import { Howler } from 'howler';
+import { Howl, Howler } from 'howler';
+import { routeHowls } from './routeHowls.mjs';
+import { installAudioActivation } from './audioActivation.mjs';
 
 import { type LoadedAudio } from 'pixi-svelte';
 import { stateSoundDerived } from 'state-shared';
@@ -15,7 +17,7 @@ function createSound<TSoundName extends string>() {
 	type PlayOnce = ReturnType<typeof createPlayOnce<TSoundName>>['play'];
 
 	let loadedAudio: LoadedAudio<TSoundName>;
-	let audioContextState = $state<AudioContext['state']>('running');
+	let loaded = $state(false);
 	let visibilityState = $state<DocumentVisibilityState>('visible');
 	let players: {
 		music: Player<TSoundName, PlayMusic>;
@@ -23,15 +25,20 @@ function createSound<TSoundName extends string>() {
 		once: Player<TSoundName, PlayOnce>;
 	};
 
-	const load = (loadedAudioValue: LoadedAudio<TSoundName>) => {
+	const load = (loadedAudioValue: LoadedAudio<TSoundName>, sources: Partial<Record<TSoundName, string>> = {}) => {
 		// loadedAudio
 		loadedAudio = loadedAudioValue;
 
-		const howl = new Howl({
+		const primary = new Howl({
 			src: loadedAudio.src,
 			sprite: loadedAudio.sprite,
 			volume: 1,
 		});
+		const overrides: Record<string, Howl> = {};
+		for (const [name, src] of Object.entries(sources) as [TSoundName, string][]) {
+			overrides[name] = new Howl({src: [src], sprite: {[name]: loadedAudio.sprite[name]}, volume: 1});
+		}
+		const howl = Object.keys(overrides).length ? routeHowls(primary, overrides) as unknown as Howl : primary;
 		// players
 		players = {
 			music: createPlayer<TSoundName, PlayMusic>({ loadedAudio, loop: true, howl, createPlay: createPlayMusic<TSoundName> }), // prettier-ignore
@@ -40,20 +47,30 @@ function createSound<TSoundName extends string>() {
 		};
 
 		// audioContextState and visibilityState
-		const onAudioContextChange = () => (audioContextState = Howler.ctx.state);
 		const onVisibilityStateChange = () => (visibilityState = document.visibilityState);
-
-		Howler.ctx.addEventListener('statechange', onAudioContextChange);
+		visibilityState = document.visibilityState;
+		const removeActivation = installAudioActivation({
+			getContext: () => Howler.ctx,
+			target: document,
+			onActivate: () => {
+				if (!document.hidden) {
+					visibilityState = document.visibilityState;
+					Howler.volume(1);
+					Howler.mute(false);
+				}
+			},
+		});
 		document.addEventListener('visibilitychange', onVisibilityStateChange);
+		loaded = true;
 
 		const destroy = () => {
-			Howler.ctx.removeEventListener('statechange', onAudioContextChange);
+			loaded = false;
+			removeActivation();
 			document.removeEventListener('visibilitychange', onVisibilityStateChange);
 
 			if (players) {
 				players.music.howl.unload();
-				players.loop.howl.unload();
-				players.once.howl.unload();
+				
 			}
 		};
 
@@ -102,7 +119,8 @@ function createSound<TSoundName extends string>() {
 
 	const enableEffect = () => {
 		$effect(() => {
-			if (audioContextState === 'running' && visibilityState === 'visible') {
+			// A suspended context is unlocked by a real gesture, not a global mute.
+			if (visibilityState === 'visible') {
 				enable();
 			} else {
 				disable();
@@ -112,19 +130,19 @@ function createSound<TSoundName extends string>() {
 
 
 	const volumeMusicEffect = () => {
-		if (players) {
+		if (loaded && players) {
 			players.music.volume(stateSoundDerived.volumeMusic());
 		}
 	};
 
 	const volumeLoopEffect = () => {
-		if (players) {
+		if (loaded && players) {
 			players.loop.volume(stateSoundDerived.volumeSoundEffect());
 		}
 	};
 
 	const volumeOnceEffect = () => {
-		if (players) {
+		if (loaded && players) {
 			players.once.volume(stateSoundDerived.volumeSoundEffect());
 		}
 	};

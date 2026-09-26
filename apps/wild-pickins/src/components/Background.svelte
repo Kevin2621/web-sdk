@@ -1,10 +1,18 @@
 <script lang="ts">
- import { Sprite } from 'pixi-svelte';
+ import { Sprite, Container } from 'pixi-svelte';
  import { getContext } from '../game/context';
+ import { refreshScene } from '../game/artRefresh';
  const context = getContext();
  const canvas = $derived(context.stateLayoutDerived.canvasSizes());
- // Extend 12px past every canvas edge to cover the Scatter thud displacement.
- const overscan = 12;
- const scale = $derived(Math.max((canvas.width + overscan*2) / 1672, (canvas.height + overscan*2) / 941));
+ // Like the SDK template backgrounds: one viewport-covering image, independent of reel fit.
+ const background = $derived(context.stateLayoutDerived.normalBackgroundLayout({scale: 1}));
+ const scale = $derived(Math.max(canvas.width / refreshScene.width, canvas.height / refreshScene.height));
 </script>
-<Sprite key="wpField" anchor={0.5} x={canvas.width/2} y={canvas.height/2} width={1672*scale} height={941*scale} zIndex={-3} />
+<Container x={background.x} y={background.y}>
+ <Sprite key="wpRefreshEnvironment" anchor={0.5} width={refreshScene.width * scale + 12} height={refreshScene.height * scale + 12} />
+ {#if refreshScene.showClouds}
+  <Sprite key="wpRefreshCloud1" x={-canvas.width*.4} y={-canvas.height*.35} width={240*scale} height={120*scale} />
+  <Sprite key="wpRefreshCloud2" x={canvas.width*.28} y={-canvas.height*.4} width={280*scale} height={140*scale} />
+  <Sprite key="wpRefreshCloud3" x={canvas.width*.08} y={-canvas.height*.44} width={210*scale} height={105*scale} />
+ {/if}
+</Container>

@@ -19,6 +19,8 @@
 	createContextParent(root);
 	let host: HTMLDivElement;
 	let ready = $state(false);
+ let renderer = $state<PIXI.Application['renderer']>();
+ $effect(() => { renderer?.resize(width, height); });
 	let error = $state(false);
 
 	// Share the game's asset context, never reset its loader or application.
@@ -40,6 +42,7 @@
 			})
 			.then(() => {
 				initialized = true;
+    if (!disposed) renderer = app.renderer;
 				if (disposed) {
 					destroy();
 					return;

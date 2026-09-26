@@ -251,6 +251,18 @@ export function createReelForSpinning<TRawSymbol extends object, TSymbolState ex
 		}
 
 
+		if (reelOptions.onSpinTravelStart) {
+			const options = reelState.spinOptions();
+			const impactY = defaultY + reelOptions.symbolHeight * options.reelBounceSizeMulti;
+			const approachY = defaultY * basePaddingSize();
+			const skipped = !noStop && stateBet.isTurbo && isSpinning;
+			const duration = skipped ? 0 : reelState.spinType === 'fast'
+				? Math.abs(impactY - reelY.current) / options.reelSpinSpeed
+				: Math.abs(approachY - reelY.current) / options.reelSpinSpeed
+					+ Math.abs(impactY - approachY) / options.reelSpinSpeedBeforeBounce;
+			reelOptions.onSpinTravelStart(duration);
+		}
+
 		// Q: When to skip the slideDown?
 		// A: When it's preSpinning(isSpinning) and stop button is clicked(isTurbo) and is noStop is false
 		if (noStop) {

@@ -51,6 +51,8 @@ export type SpinningReelCreateOptions<
 	/** Optional upward anticipation before downward reel motion. */
 	/** Start symbol landing effects at impact, before the reel rebounds. */
 	landOnImpact?: boolean;
+	/** Actual remaining travel time before impact, after lift/pre-spin preparation. */
+	onSpinTravelStart?: (duration: number) => void;
 	spinStartLift?: () => { distance: number; duration: number } | undefined;
 };
 

@@ -5,7 +5,7 @@
  import { Text } from 'pixi-svelte';
  import BoardContainer from './BoardContainer.svelte';
  import { fixturePlayback } from '../game/fixturePlayback.svelte';
- import { SYMBOL_SIZE } from '../game/constants';
+ import { SYMBOL_SIZE, SYMBOL_WIDTH } from '../game/constants';
  import { getSymbolX } from '../game/utils';
  const labels=$derived.by(()=>{
   const used=new Set<number>();
@@ -13,7 +13,7 @@
    const x=w.positions.reduce((sum,p)=>sum+getSymbolX(p.reel),0)/w.positions.length;
    const y=w.positions.reduce((sum,p)=>sum+(p.row-0.5)*SYMBOL_SIZE,0)/w.positions.length;
    // Nearby separate slots keep coincident/crossing paylines readable.
-   const slots=Array.from({length:30},(_,i)=>({i,x:SYMBOL_SIZE*(0.5+i%5),y:SYMBOL_SIZE*(0.25+Math.floor(i/5)*0.5)}));
+   const slots=Array.from({length:30},(_,i)=>({i,x:SYMBOL_WIDTH*(0.5+i%5),y:SYMBOL_SIZE*(0.25+Math.floor(i/5)*0.5)}));
    const slot=slots.filter(s=>!used.has(s.i)).sort((a,b)=>(a.x-x)**2+(a.y-y)**2-((b.x-x)**2+(b.y-y)**2))[0];
    used.add(slot.i);
    return {...w,x:slot.x,y:slot.y};

@@ -1,9 +1,32 @@
 <script lang="ts">
- import { Rectangle } from 'pixi-svelte';
- import { getContext } from '../game/context';
- const context = getContext();
- const board = $derived(context.stateGameDerived.boardLayout());
- let glow = $state(false);
- context.eventEmitter.subscribeOnMount({boardFrameGlowShow:()=>glow=true,boardFrameGlowHide:()=>glow=false});
+	import { sceneRegistration } from '../game/artRefresh';
+	import { Rectangle, Sprite } from 'pixi-svelte';
+	import { getContext } from '../game/context';
+	const context = getContext();
+	const board = $derived(context.stateGameDerived.boardLayout());
+	const scene = $derived(sceneRegistration(board));
+	let glow = $state(false);
+	context.eventEmitter.subscribeOnMount({
+		boardFrameGlowShow: () => (glow = true),
+		boardFrameGlowHide: () => (glow = false),
+	});
 </script>
-<Rectangle x={board.x} y={board.y} anchor={0.5} width={board.width+10} height={board.height+10} backgroundColor={context.stateGameDerived.hasActiveWin() ? 0x1a2819 : 0x283e26} backgroundAlpha={0.94} borderColor={0xf7d16b} borderWidth={glow ? 5 : 0} />
+
+<Sprite
+	key="wpRefreshBacking"
+	x={scene.x}
+	y={scene.y}
+	width={scene.width}
+	height={scene.height}
+	tint={context.stateGameDerived.hasActiveWin() ? 0xc8d0c8 : 0xffffff}
+/>
+{#if glow}<Rectangle
+		x={board.x}
+		y={board.y}
+		anchor={0.5}
+		width={board.width + 10}
+		height={board.height + 10}
+		backgroundAlpha={0}
+		borderColor={0xf7d16b}
+		borderWidth={5}
+	/>{/if}

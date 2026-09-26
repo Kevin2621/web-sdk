@@ -20,21 +20,16 @@ export const symbolStyleDefaults = {
 };
 // One cell-relative sizing policy; effects never participate in symbol layout.
 export const symbolLayout = {
-	artworkFill: 0.88,
-	// Preserve the enlarged foreground artwork independently of any backing.
-	highSymbolScale: 0.82 * 1.12,
-	grainRotation: Math.PI / 9,
-	letterHeight: 0.78,
-	letterMaxWidth: 0.86,
+	letterHeight: 1,
+	letterMaxWidth: 1,
 	fontSize: 145,
 };
-export const symbolArtwork: Record<string, { key: string; ratio: number }> = {
-	H1: { key: 'wpWheat', ratio: 1 },
-	H2: { key: 'wpHuskedCorn', ratio: 1 },
-	H3: { key: 'wpTomato', ratio: 1 },
-	W: { key: 'wpWild', ratio: 1 },
-	S: { key: 'wpScatter', ratio: 1199 / 1312 },
-};
+export const symbolArtwork: Record<string, { key: string; ratio: number }> = Object.fromEntries(
+	['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'L4', 'L5', 'W', 'S'].map((name) => [
+		name,
+		{ key: `wpRefresh${name}`, ratio: 1 },
+	]),
+);
 export const symbolPalette: Record<string, string> = {
 	'10': '#83a66a',
 	J: '#649ac6',

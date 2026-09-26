@@ -1,0 +1,17 @@
+skeletons.png
+size:1676,1780
+filter:Linear,Linear
+pma:true
+board-frame
+bounds:2,2,1430,833
+offsets:121,74,1672,941
+environment-v3
+bounds:2,837,1672,941
+
+skeletons_2.png
+size:1312,705
+filter:Linear,Linear
+pma:true
+board-back
+bounds:2,2,1308,701
+offsets:182,125,1671,941

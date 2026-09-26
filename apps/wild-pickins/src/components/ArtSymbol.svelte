@@ -10,14 +10,13 @@
 	import { stateGame, stateGameDerived } from '../game/stateGame.svelte';
 	import type { SymbolState } from '../game/types';
 	import { seedCelebration } from '../game/seedCelebration.svelte';
-	import { SYMBOL_SIZE } from '../game/constants';
+	import { SYMBOL_SIZE, SYMBOL_WIDTH } from '../game/constants';
+	import artworkBounds from '../game/refreshSymbolBounds.json';
 	import LetterSymbol from './LetterSymbol.svelte';
-	import BakedLetterSymbol from './BakedLetterSymbol.svelte';
 	import GeneratedLetterSymbol from './GeneratedLetterSymbol.svelte';
 	import {
 		symbolRanks,
 		symbolArtwork,
-		symbolLayout,
 		symbolStyle,
 	} from '../game/symbolStyle.svelte';
 	let {
@@ -34,12 +33,20 @@
 		oncomplete?: () => void;
 	} = $props();
 	const art = $derived(symbolArtwork[name]);
-	const size = SYMBOL_SIZE * symbolLayout.artworkFill;
-	const artworkSize = $derived(
-		size * (['H1', 'H2', 'H3'].includes(name) ? symbolLayout.highSymbolScale : 1),
-	);
-	const width = $derived(artworkSize * Math.min(1, art?.ratio ?? 1));
-	const height = $derived(artworkSize / Math.max(1, art?.ratio ?? 1));
+	// Match the reference composition using visible artwork, excluding transparent padding.
+	const size = SYMBOL_SIZE;
+	const bounds = $derived(artworkBounds[name as keyof typeof artworkBounds]);
+	// Produce and feature symbols nearly fill the cell; ranks retain the reference hierarchy.
+	const fit = $derived(Math.min(
+		SYMBOL_WIDTH * 0.94 / (bounds?.width ?? 1254),
+		SYMBOL_SIZE * (symbolRanks[name] ? 0.80 : 0.96) / (bounds?.height ?? 1254),
+	));
+	const width = $derived((bounds?.canvasWidth ?? 1254) * fit);
+	const height = $derived((bounds?.canvasHeight ?? 1254) * fit);
+	const anchor = $derived(bounds ? {
+		x: (bounds.x + bounds.width / 2) / bounds.canvasWidth,
+		y: (bounds.y + bounds.height / 2) / bounds.canvasHeight,
+	} : {x: 0.5, y: 0.5});
 	const activeWin = $derived(stateGameDerived.hasActiveWin());
 	const anticipating = $derived(
 		!stateBet.isTurbo && stateGame.board.some((reel) => reel.reelState.anticipating),
@@ -64,12 +71,10 @@
 		symbolState === 'spin' ? [scrollBlur] : symbolState === 'win' ? [shineFilter] : [],
 	);
 	onDestroy(() => scrollBlur.destroy());
-	let pulse = $state(1);
 	let lift = $state(0);
 
 	$effect(() => {
 		const phase = symbolState;
-		pulse = 1;
 		lift = 0;
 		shineFilter.brightness(1, false);
 		let frame = 0;
@@ -87,7 +92,6 @@
 							: t < 0.78
 								? 1
 								: (1 + Math.cos(((t - 0.78) / 0.22) * Math.PI)) / 2;
-					pulse = 1 + 0.12 * raised;
 					lift = -SYMBOL_SIZE * 0.06 * raised;
 					const shine = t > 0.2 && t < 0.65 ? Math.sin(((t - 0.2) / 0.45) * Math.PI) : 0;
 					shineFilter.brightness(1 + 0.3 * shine, false);
@@ -104,14 +108,10 @@
 </script>
 
 <Container {x} {y}>
-	<Container y={lift} scale={pulse} filters={blurFilters}>
-		<Container
-			rotation={name === 'H1' || name === 'H2' ? symbolLayout.grainRotation : 0}
-		>
-			{#if symbolRanks[name]}
-				{#if !import.meta.env.DEV || !symbolStyle.livePreview}
-					<BakedLetterSymbol rank={symbolRanks[name]} {size} {tint} />
-				{:else if symbolStyle.generated}
+	<Container y={lift} filters={blurFilters}>
+		<Container rotation={0}>
+			{#if symbolRanks[name] && import.meta.env.DEV && symbolStyle.livePreview}
+				{#if symbolStyle.generated}
 					<GeneratedLetterSymbol rank={symbolRanks[name]} {size} {tint} />
 				{:else}
 					<LetterSymbol rank={symbolRanks[name]} {size} {tint} />
@@ -120,7 +120,7 @@
 				<Sprite
 					alpha={name === 'S' && seedCelebration.active ? 0 : 1}
 					key={art.key}
-					anchor={0.5}
+					{anchor}
 					{width}
 					{height}
 					{tint}

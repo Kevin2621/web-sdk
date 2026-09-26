@@ -4,6 +4,7 @@
 	import { cubicOut, cubicIn } from 'svelte/easing';
 	/** Presentation only: the host game owns wagers, round results and autoplay. */
 	let {
+		variant = 'game',
 		amount = $bindable(1),
 		amounts = [0.2, 0.5, 1, 2, 5, 10, 20, 50, 100],
 		menuOpen = false,
@@ -36,6 +37,7 @@
 		onspeedchange,
 		onautochange,
 	}: {
+		variant?: 'game' | 'bonus';
 		menuOpen?: boolean;
 		winLabel?: string;
 		showZeroWin?: boolean;
@@ -150,33 +152,43 @@
 />
 <svelte:window onpointerup={stopHold} onpointercancel={stopHold} onblur={stopHold} />
 
-<div class="control-container" class:reduced-motion={reducedMotion} class:motion-enabled={!reducedMotion}>
-	<div class="slot-controls" aria-label="Game controls">
-		<button
-			class="bonus"
-			onclick={onbonus}
-			disabled={locked || bonusDisabled}
-			aria-label={label('Bonus')}
-		>
-			<svg class="bonus-rim" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"
-				><path d="M15 5H85L95 15V85L85 95H15L5 85V15Z" /></svg
+<div
+	class="control-container"
+	class:reduced-motion={reducedMotion}
+	class:motion-enabled={!reducedMotion}
+>
+	<div
+		class="slot-controls"
+		class:bonus-only={variant === 'bonus'}
+		aria-label={variant === 'bonus' ? 'Bonus bet controls' : 'Game controls'}
+	>
+		{#if variant === 'game'}<button
+				class="bonus"
+				onclick={onbonus}
+				disabled={locked || bonusDisabled}
+				aria-label={label('Bonus')}
 			>
-			<svg class="bonus-mark" viewBox="0 0 32 32" aria-hidden="true"
-				><path d="m15 5 3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" /><path d="M26 3v6M23 6h6" /></svg
-			>
-			<span>{label('Bonus')}</span>
-		</button>
-		<div class="bar">
-			<button
-				class="menu"
-				onclick={onmenu}
-				aria-expanded={menuOpen}
-				aria-label={label(menuOpen ? 'Close' : 'Menu')}
-			>
-				<svg viewBox="0 0 24 24" aria-hidden="true"
-					><path d={menuOpen ? 'M6 6 18 18M18 6 6 18' : 'M4 7h16M4 12h16M4 17h16'} /></svg
+				<svg class="bonus-rim" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"
+					><path d="M15 5H85L95 15V85L85 95H15L5 85V15Z" /></svg
 				>
+				<svg class="bonus-mark" viewBox="0 0 32 32" aria-hidden="true"
+					><path d="m15 5 3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" /><path d="M26 3v6M23 6h6" /></svg
+				>
+				<span>{label('Bonus')}</span>
 			</button>
+		{/if}
+		<div class="bar">
+			{#if variant === 'game'}<button
+					class="menu"
+					onclick={onmenu}
+					aria-expanded={menuOpen}
+					aria-label={label(menuOpen ? 'Close' : 'Menu')}
+				>
+					<svg viewBox="0 0 24 24" aria-hidden="true"
+						><path d={menuOpen ? 'M6 6 18 18M18 6 6 18' : 'M4 7h16M4 12h16M4 17h16'} /></svg
+					>
+				</button>
+			{/if}
 			<div class="readouts">
 				{#if balance !== undefined || balanceNote}
 					<div class="readout-card balance">
@@ -186,12 +198,18 @@
 						>
 					</div>
 				{/if}
-				<div class="readout-card win" role="status" aria-live="polite" aria-atomic="true">
-					{#if (win > 0 || showZeroWin) && (persistWin || !spinning)}
-						<span class="label">{label(winLabel ?? (persistWin ? 'Last win' : 'Win'))}</span>
-						<strong class="value"><bdi>{formatAmount(win)}</bdi></strong>
-					{/if}
-				</div>
+				{#if variant === 'game'}<div
+						class="readout-card win"
+						role="status"
+						aria-live="polite"
+						aria-atomic="true"
+					>
+						{#if (win > 0 || showZeroWin) && (persistWin || !spinning)}
+							<span class="label">{label(winLabel ?? (persistWin ? 'Last win' : 'Win'))}</span>
+							<strong class="value"><bdi>{formatAmount(win)}</bdi></strong>
+						{/if}
+					</div>
+				{/if}
 			</div>
 			<div class="play-group">
 				<div class="stake" bind:this={stakeElement}>
@@ -206,6 +224,12 @@
 						<strong class="value"><bdi>{formatAmount(amount)}</bdi></strong>
 					</button>
 					<div class="slider-wrapper">
+						{#if variant === 'bonus' && levels.length}
+							<div class="slider-limits" aria-hidden="true">
+								<span>{formatAmount(levels[0])}</span>
+								<span>{formatAmount(levels[levels.length - 1])}</span>
+							</div>
+						{/if}
 						<input
 							type="range"
 							style:--slider-fill={`${sliderFill}%`}
@@ -255,114 +279,115 @@
 						</div>
 					{/if}
 				</div>
-				<div class="steps">
-					<button
-						class="step-btn"
-						aria-label={`${label('Play')} +`}
-						disabled={locked || !levels.some((n) => n > amount)}
-						onpointerdown={(event) => startHold(event, 1)}
-						onpointerleave={stopHold}
-						onclick={(event) => arrowClick(event, 1)}
-					>
-						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m18 15-6-6-6 6" /></svg>
-					</button>
-					<button
-						class="step-btn"
-						aria-label={`${label('Play')} −`}
-						disabled={locked || !levels.some((n) => n < amount)}
-						onpointerdown={(event) => startHold(event, -1)}
-						onpointerleave={stopHold}
-						onclick={(event) => arrowClick(event, -1)}
-					>
-						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-					</button>
-				</div>
-				<div class="actions" class:no-auto={!showAuto}>
-					<button
-						class="speed"
-						disabled={disabled || speedDisabled}
-						aria-label={`${label('Speed')} ${speedText || speed}`}
-						title={`${label('Speed')} ${speedText || speed}`}
-						onclick={() => {
-							const next = speed === 1 ? 2 : speed === 2 ? 3 : 1;
-							if (onspeedchange) onspeedchange(next);
-							else speed = next;
-						}}
-					>
-						<svg viewBox="0 0 24 24" aria-hidden="true"
-							><path class="bolt" d="m13 2-8 11h6l-1 9 10-12h-6z" /></svg
-						>
-						<small>{speed}×</small>
-					</button>
-					<button
-						class="spin"
-						disabled={stopQueued || (!auto && (disabled || spinning || spinDisabled))}
-						onclick={onspin}
-						aria-label={auto
-							? label('Stop')
-							: autoSetup
-								? `${label('Start')} ${autoCount}`
-								: label('Spin')}
-					>
-						<svg viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-							{#if auto}
-								<rect
-									x="12"
-									y="12"
-									width="40"
-									height="40"
-									rx="4"
-									fill="currentColor"
-									stroke="none"
-								/>
-								<text
-									class="remaining-spins"
-									x="32"
-									y="32"
-									text-anchor="middle"
-									dominant-baseline="central">{autoCount}</text
-								>
-							{:else if autoSetup}
-								<g transform="scale(2)" stroke-width="1.75">
-									<path d="M6.474 10.5A11 11 0 0 1 27 16M25.526 21.5A11 11 0 0 1 5 16" />
-									<path class="auto-arrow" d="M23.5 14 27 19.5 30.5 14ZM8.5 18 5 12.5 1.5 18Z" />
-									<path class="auto-play" d="M13 11.5 20 16 13 20.5Z" />
-								</g>
-							{:else}
-								<!-- Circular arc centered at (32,32), radius 22. -->
-								<path class="spin-ring" d="M48.853 46.141A22 22 0 1 1 54 32" />
-								<path class="spin-arrow" d="M47 28 54 40 61 28Z" />
-							{/if}
-						</svg>
-					</button>
-					{#if showAuto}
+				{#if variant === 'game'}<div class="steps">
 						<button
-							class="auto"
-							aria-label={autoSetup ? label('Close') : auto ? label('Stop') : label('Auto')}
-							title={autoSetup ? label('Close') : label('Auto')}
-							aria-expanded={autoSetup}
-							disabled={!autoSetup &&
-								(stopQueued || ((disabled || spinning || spinDisabled) && !auto))}
-							aria-pressed={auto}
+							class="step-btn"
+							aria-label={`${label('Play')} +`}
+							disabled={locked || !levels.some((n) => n > amount)}
+							onpointerdown={(event) => startHold(event, 1)}
+							onpointerleave={stopHold}
+							onclick={(event) => arrowClick(event, 1)}
+						>
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m18 15-6-6-6 6" /></svg>
+						</button>
+						<button
+							class="step-btn"
+							aria-label={`${label('Play')} −`}
+							disabled={locked || !levels.some((n) => n < amount)}
+							onpointerdown={(event) => startHold(event, -1)}
+							onpointerleave={stopHold}
+							onclick={(event) => arrowClick(event, -1)}
+						>
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+						</button>
+					</div>
+					<div class="actions" class:no-auto={!showAuto}>
+						<button
+							class="speed"
+							disabled={disabled || speedDisabled}
+							aria-label={`${label('Speed')} ${speedText || speed}`}
+							title={`${label('Speed')} ${speedText || speed}`}
 							onclick={() => {
-								if (onautochange) onautochange(!auto);
-								else auto = !auto;
+								const next = speed === 1 ? 2 : speed === 2 ? 3 : 1;
+								if (onspeedchange) onspeedchange(next);
+								else speed = next;
 							}}
 						>
-							<svg viewBox="0 0 32 32" aria-hidden="true">
-								{#if autoCloseIcon}<path d="M9 9 23 23M23 9 9 23" />{:else}
-									<!-- Both arcs share center (16,16) and radius 11. -->
-									<path d="M6.474 10.5A11 11 0 0 1 27 16M25.526 21.5A11 11 0 0 1 5 16" />
-									<path class="auto-arrow" d="M23.5 14 27 19.5 30.5 14ZM8.5 18 5 12.5 1.5 18Z" />
-									<path class="auto-play" d="M13 11.5 20 16 13 20.5Z" />
+							<svg viewBox="0 0 24 24" aria-hidden="true"
+								><path class="bolt" d="m13 2-8 11h6l-1 9 10-12h-6z" /></svg
+							>
+							<small>{speed}×</small>
+						</button>
+						<button
+							class="spin"
+							disabled={stopQueued || (!auto && (disabled || spinning || spinDisabled))}
+							onclick={onspin}
+							aria-label={auto
+								? label('Stop')
+								: autoSetup
+									? `${label('Start')} ${autoCount}`
+									: label('Spin')}
+						>
+							<svg viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+								{#if auto}
+									<rect
+										x="12"
+										y="12"
+										width="40"
+										height="40"
+										rx="4"
+										fill="currentColor"
+										stroke="none"
+									/>
+									<text
+										class="remaining-spins"
+										x="32"
+										y="32"
+										text-anchor="middle"
+										dominant-baseline="central">{autoCount}</text
+									>
+								{:else if autoSetup}
+									<g transform="scale(2)" stroke-width="1.75">
+										<path d="M6.474 10.5A11 11 0 0 1 27 16M25.526 21.5A11 11 0 0 1 5 16" />
+										<path class="auto-arrow" d="M23.5 14 27 19.5 30.5 14ZM8.5 18 5 12.5 1.5 18Z" />
+										<path class="auto-play" d="M13 11.5 20 16 13 20.5Z" />
+									</g>
+								{:else}
+									<!-- Circular arc centered at (32,32), radius 22. -->
+									<path class="spin-ring" d="M48.853 46.141A22 22 0 1 1 54 32" />
+									<path class="spin-arrow" d="M47 28 54 40 61 28Z" />
 								{/if}
 							</svg>
-							{#if auto}<span class="auto-status" aria-hidden="true"
-									>{stopQueued ? '…' : label('On')}</span
-								>{/if}
 						</button>
-					{/if}
-				</div>
+						{#if showAuto}
+							<button
+								class="auto"
+								aria-label={autoSetup ? label('Close') : auto ? label('Stop') : label('Auto')}
+								title={autoSetup ? label('Close') : label('Auto')}
+								aria-expanded={autoSetup}
+								disabled={!autoSetup &&
+									(stopQueued || ((disabled || spinning || spinDisabled) && !auto))}
+								aria-pressed={auto}
+								onclick={() => {
+									if (onautochange) onautochange(!auto);
+									else auto = !auto;
+								}}
+							>
+								<svg viewBox="0 0 32 32" aria-hidden="true">
+									{#if autoCloseIcon}<path d="M9 9 23 23M23 9 9 23" />{:else}
+										<!-- Both arcs share center (16,16) and radius 11. -->
+										<path d="M6.474 10.5A11 11 0 0 1 27 16M25.526 21.5A11 11 0 0 1 5 16" />
+										<path class="auto-arrow" d="M23.5 14 27 19.5 30.5 14ZM8.5 18 5 12.5 1.5 18Z" />
+										<path class="auto-play" d="M13 11.5 20 16 13 20.5Z" />
+									{/if}
+								</svg>
+								{#if auto}<span class="auto-status" aria-hidden="true"
+										>{stopQueued ? '…' : label('On')}</span
+									>{/if}
+							</button>
+						{/if}
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -883,6 +908,80 @@
 			inset-inline-start: 0;
 			inset-inline-end: auto;
 		}
+	}
+	/* Three sections like the feature selector: balance, play amount, then range. */
+	.bonus-only .bar {
+		flex-wrap: nowrap;
+		height: clamp(64px, 8cqw, 82px);
+		border-radius: 12px;
+		outline: 1px solid #ffffff35;
+		box-shadow: inset 0 1px #ffffff18, 0 8px 24px #0005;
+	}
+	.bonus-only .readouts {
+		flex: 1;
+		height: auto;
+		border-inline-start: 0;
+		justify-content: center;
+		text-align: center;
+	}
+	.bonus-only .play-group {
+		flex: 2.8;
+		min-width: 0;
+		width: auto;
+		height: auto;
+		border: 0;
+		background: transparent;
+		border-radius: 0 12px 12px 0;
+	}
+	.bonus-only .stake {
+		width: auto;
+		min-width: 0;
+		flex: 1;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+		grid-template-rows: minmax(0, 1fr);
+	}
+	.bonus-only .amount {
+		align-items: center;
+		text-align: center;
+		padding: 0 8px;
+		border-bottom: 0;
+		border-inline: 1px solid #ffffff12;
+	}
+	.bonus-only .slider-wrapper {
+		min-width: 0;
+		align-self: center;
+		display: grid;
+		gap: 12px;
+		padding: 0 clamp(12px, 2cqw, 24px);
+	}
+	.slider-limits {
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		color: #bfc1c5;
+		font-size: clamp(10px, 1.5cqw, 15px);
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.bonus-only .presets {
+		inset-inline-start: 0;
+		inset-inline-end: auto;
+		max-width: min(320px, 85vw);
+	}
+	.bonus-only .value {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-size: clamp(12px, 2.5cqw, 26px);
+		font-weight: 700;
+	}
+	.bonus-only .label { font-size: clamp(10px, 1.65cqw, 17px); }
+	@container slotbar (max-width: 480px) {
+		.bonus-only .readouts { padding-inline: 6px; }
+		.bonus-only .play-group { flex: 2.4; }
+		.bonus-only .stake { grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr); }
+		.bonus-only .slider-wrapper { padding-inline: 10px; }
 	}
 	.motion-enabled button {
 		transition: scale 50ms ease-out;

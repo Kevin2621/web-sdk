@@ -1,3 +1,4 @@
+import { audioLibraryPlugin } from '../scripts/audio-library-plugin.mjs';
 import { main } from 'config-storybook';
 import { fileURLToPath } from 'node:url';
 
@@ -11,6 +12,7 @@ const storybookConfig: typeof main = {
    ...(config.server.fs.allow ?? []),
    fileURLToPath(new URL('../../../packages', import.meta.url)),
   ];
+  config.plugins = [...(config.plugins ?? []), audioLibraryPlugin()];
   return config;
  },
 };

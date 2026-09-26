@@ -10,6 +10,13 @@ export type MusicName =
 	| 'bgm_winlevel_superwin';
 
 export type SoundEffectName =
+	| 'sfx_scatter_riser'
+	| 'sfx_bonus_ending_riser'
+	| 'sfx_bonus_yeehaw'
+	| 'sfx_bonus_open'
+	| 'sfx_bonus_close'
+	| 'sfx_money_drop'
+	| 'sfx_money_pour'
 	| 'jng_intro_fs'
 	| 'sfx_anticipation'
 	| 'sfx_anticipation_start'

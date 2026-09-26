@@ -23,14 +23,13 @@
  let count=$state(0),returned=$state(0),requesting=$state(false),error=$state('');
  let request:AbortController|null=null;
  let disposed=false;
- async function spin() {
+ async function spin(mode:'base'|'bonus'='base') {
   if(requesting||fixturePlayback.busy||disposed||context.stateLayout.showLoadingScreen)return;
   stateBet.wageredBetAmount=stateBet.betAmount;
-  context.eventEmitter.broadcast({type:'winSignHide'});
   requesting=true;error='';request=new AbortController();
   const timeout=setTimeout(()=>request?.abort(),15000);
   try {
-   const response=await requestGeneratedRound(seed,count,request.signal,profile);
+   const response=await requestGeneratedRound(seed,count,request.signal,profile,mode);
    clearTimeout(timeout);
    if(disposed)return;
    await playGeneratedRound(response);
@@ -42,11 +41,11 @@
  }
  onDestroy(()=>{disposed=true;request?.abort();cancelFixtureAction();restoreBet();});
 </script>
-<div class="generated-game"><StoryGameTemplate skipLoadingScreen={true} action={spin}>
+<div class="generated-game"><StoryGameTemplate skipLoadingScreen={false} action={()=>spin()}>
  <StoryLocale lang="en"><Game fixtureOnly /></StoryLocale>
 </StoryGameTemplate></div>
 {#if mounted}
- <PlayerControls simulated busy={requesting||fixturePlayback.busy} onspin={spin} math={usesMultiplierRules(profile)?multiplierMath:undefined} multiplierRules={usesMultiplierRules(profile)}/>
+ <PlayerControls simulated busy={requesting||fixturePlayback.busy} onspin={()=>spin()} onbuy={profile==='multiplier-wilds'?()=>spin('bonus'):undefined} math={usesMultiplierRules(profile)?multiplierMath:undefined} multiplierRules={usesMultiplierRules(profile)}/>
  {#if error}<p class="error" role="alert">{error}</p>{/if}
 {/if}
 <style>.generated-game :global(.wrap){display:none}.error{position:fixed;top:10px;left:5%;max-width:90%;background:#392313;color:white;z-index:10001;padding:12px}</style>

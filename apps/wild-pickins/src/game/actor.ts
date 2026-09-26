@@ -1,3 +1,4 @@
+import { bonusEnding } from './bonusEndingController';
 import _ from 'lodash';
 
 import { stateBet } from 'state-shared';
@@ -27,7 +28,7 @@ const primaryMachines = createPrimaryMachines<Bet>({
 			paddingBoard: config.paddingReels[stateGame.gameType],
 		});
 	},
-	onNewGameError: () => stateGameDerived.enhancedBoard.settle(),
+	onNewGameError: () => { bonusEnding.cancel();stateGameDerived.enhancedBoard.settle(); },
 	onPlayGame: async (bet) => await playBet(bet),
 	checkIsBonusGame: (bet) => checkIsMultipleRevealEvents({ bookEvents: bet.state }),
 });

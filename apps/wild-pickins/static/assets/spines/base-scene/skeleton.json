@@ -1,0 +1,43 @@
+{
+"skeleton": {
+	"hash": "tyl4dVg1PP8",
+	"spine": "4.2-from-4.3.26",
+	"x": -836,
+	"y": -470.5,
+	"width": 1672,
+	"height": 941,
+	"images": "/Users/kevinwhite/Development/wild-pickins/art/art-refresh",
+	"audio": null
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone2", "parent": "root" },
+	{ "name": "bone", "parent": "bone2" },
+	{ "name": "bone3", "parent": "bone", "x": -390.4999, "y": 397.5 },
+	{ "name": "bone4", "parent": "bone", "x": 275.5001, "y": 399.5 }
+],
+"slots": [
+	{ "name": "environment-v2", "bone": "root", "attachment": "environment-v3" },
+	{ "name": "board-back", "bone": "bone2", "attachment": "board-back" },
+	{ "name": "board-frame", "bone": "bone", "attachment": "board-frame" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"board-back": {
+				"board-back": { "x": 0.5, "y": 36.5, "scaleX": 0.91, "scaleY": 0.875, "width": 1671, "height": 941 }
+			},
+			"board-frame": {
+				"board-frame": { "y": 19.5, "scaleX": 0.96, "scaleY": 0.92, "width": 1672, "height": 941 }
+			},
+			"environment-v2": {
+				"environment-v3": { "width": 1672, "height": 941 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

@@ -1,6 +1,31 @@
 import { base } from '$app/paths';
+import { refreshAsset } from './artRefresh';
 
 export default {
+ ...Object.fromEntries([1,2,3].map(i=>[`wpCurtainSeed${i}`,{type:'sprite' as const,src:`${base}/assets/seed-transition/seed${i}.png`}])),
+ wpCurtainCluster:{type:'sprite',src:`${base}/assets/seed-transition/seeds-cluster.png`},
+	sound: { type: 'audio', src: `${base}/assets/audio/sounds.json`, preload: true },
+ wpScatterBag: {
+  type: 'spine',
+  src: { atlas: `${base}/assets/spines/scatter-bag/skeleton-animated.atlas`, skeleton: `${base}/assets/spines/scatter-bag/skeleton-animated.json`, scale: 1 },
+ },
+	wpBaseScene: {
+		type: 'spine',
+		src: {
+			atlas: `${base}/assets/spines/base-scene/skeletons.atlas`,
+			skeleton: `${base}/assets/spines/base-scene/skeleton.json`,
+			scale: 1,
+		},
+	},
+	...Object.fromEntries(['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'L4', 'L5', 'W', 'S'].map(name =>
+		[`wpRefresh${name}`, { type: 'sprite' as const, src: refreshAsset(name) }])),
+	wpRefreshEnvironment: { type: 'sprite', src: refreshAsset('environment-v3'), preload: true },
+	wpRefreshFrame: { type: 'sprite', src: refreshAsset('board-frame') },
+	wpRefreshBacking: { type: 'sprite', src: refreshAsset('board-back') },
+	wpRefreshLeaves: { type: 'sprite', src: refreshAsset('leaf-overhang') },
+	wpRefreshCloud1: { type: 'sprite', src: refreshAsset('cloud-1') },
+	wpRefreshCloud2: { type: 'sprite', src: refreshAsset('cloud-2') },
+	wpRefreshCloud3: { type: 'sprite', src: refreshAsset('cloud-3') },
 	wpBakedLetterA: { type: 'sprite', src: `${base}/assets/letters-baked/a.png` },
 	wpBakedLetterK: { type: 'sprite', src: `${base}/assets/letters-baked/k.png` },
 	wpBakedLetterQ: { type: 'sprite', src: `${base}/assets/letters-baked/q.png` },
@@ -20,7 +45,6 @@ export default {
 	wpLetterK: { type: 'sprite', src: `${base}/assets/art-v1/letters-v1/k.png` },
 	wpLetterA: { type: 'sprite', src: `${base}/assets/art-v1/letters-v1/a.png` },
 
-	wpHuskedCorn: { type: 'sprite', src: new URL('../../assets/art-v1/corn-bunch-v2.png', import.meta.url).href },
 	wpStone: { type: 'sprite', src: new URL('../../assets/art-v1/stone-v1.png', import.meta.url).href },
 	wpWagonWheel: { type: 'sprite', src: new URL('../../assets/art-v1/wagon-wheel-v1.png', import.meta.url).href },
 	wpHorseshoe: { type: 'sprite', src: new URL('../../assets/art-v1/horseshoe-v1.png', import.meta.url).href },
@@ -28,19 +52,13 @@ export default {
 	wpClayPot: { type: 'sprite', src: new URL('../../assets/art-v1/clay-pot-v1.png', import.meta.url).href },
 
 	wpCorn: { type: 'sprite', src: new URL('../../assets/art-v1/corn-v1.png', import.meta.url).href },
-	wpTomato: { type: 'sprite', src: new URL('../../assets/art-v1/tomato-bunch-v3.png', import.meta.url).href },
 	wpStrawberry: { type: 'sprite', src: new URL('../../assets/art-v1/strawberry-v1.png', import.meta.url).href },
 	wpApple: { type: 'sprite', src: new URL('../../assets/art-v1/apple-v1.png', import.meta.url).href },
 	wpSunflower: { type: 'sprite', src: new URL('../../assets/art-v1/sunflower-v1.png', import.meta.url).href },
-	wpWheat: { type: 'sprite', src: new URL('../../assets/art-v1/wheat-bundle-v2.png', import.meta.url).href },
 
-	wpField: { type: 'sprite', src: new URL('../../assets/art-v1/field-a.png', import.meta.url).href, preload: true },
-	wpWild: { type: 'sprite', src: new URL('../../assets/art-v1/painted-wild.png', import.meta.url).href },
 	wpCarrot: { type: 'sprite', src: new URL('../../assets/art-v1/carrot-c.png', import.meta.url).href },
-	wpFrame: { type: 'sprite', src: new URL('../../assets/art-v1/frame-a.png', import.meta.url).href },
 	wpGlove: { type: 'sprite', src: new URL('../../assets/art-v1/glove-b.png', import.meta.url).href },
 	wpPumpkin: { type: 'sprite', src: new URL('../../assets/art-v1/pumpkin-a.png', import.meta.url).href },
-	wpScatter: { type: 'sprite', src: new URL('../../assets/art-v1/seed-scatter-transparent.png', import.meta.url).href },
 
 	loader: {
 		type: 'spine',
@@ -294,10 +312,5 @@ export default {
 	coins: {
 		type: 'spriteSheet',
 		src: new URL('../../assets/sprites/coin/SD2_Coin.json', import.meta.url).href,
-	},
-	sound: {
-		type: 'audio',
-		src: new URL('../../assets/audio/sounds.json', import.meta.url).href,
-		preload: true,
 	},
 } as const;

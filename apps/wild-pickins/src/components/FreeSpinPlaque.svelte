@@ -32,13 +32,12 @@
  onDestroy(()=>cancelAnimationFrame(thudFrame));
  const layout = $derived(context.stateLayoutDerived.mainLayout());
  const board = $derived(context.stateGameDerived.boardLayout());
- const width = $derived(board.width * 0.48 * layout.scale);
+ const width = $derived(board.width * 0.4 * layout.scale);
  const height = $derived(width * 0.26);
  const left = $derived(layout.x + (board.x-layout.width/2)*layout.scale);
- // Original frame's wooden top edge is at source y=120; opening starts at 197.
- // Clip the rising sign at this seam to make it emerge from behind the rail.
+ // Rise to the inner top rail, keeping the plaque inside the fitted scene.
  const seam = $derived(layout.y + (board.y-layout.height/2-board.height/2
-  - board.height * 77/551 + 4)*layout.scale);
+  + 4)*layout.scale);
  const artwork = new URL('../../assets/art-v1/free-spin-sign-v2.png', import.meta.url).href;
 </script>
 

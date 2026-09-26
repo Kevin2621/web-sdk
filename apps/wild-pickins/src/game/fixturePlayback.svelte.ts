@@ -1,3 +1,7 @@
+import { AUDIO_WORKBENCH_ENABLED } from './audioWorkbenchEnabled';
+import { audioWorkbench } from './audioWorkbench.svelte';
+import { bonusEnding } from './bonusEndingController';
+import { planBonusEnding } from './bonusEnding.mjs';
 import { bonusWin, resetBonusWin, startBonusWin } from './bonusWin.svelte';
 import { getWinTiming } from './playerSpeed.svelte';
 import { celebrateSeeds } from './seedCelebration.svelte';
@@ -7,6 +11,7 @@ import { winLevelMap } from './winLevelMap';
 import { validateGeneratedResponse } from './generatedRound.mjs';
 import config from './config';
 import { bonusCues } from './bonusCues.mjs';
+import { extraSpinSound } from './interactionCues.mjs';
 import type { SoundEffectName } from './sound';
 import { validateBonusFixture } from './bonusFixtureAdapter.mjs';
 import { createFixtureBatch } from './fixtureBatch.mjs';
@@ -24,13 +29,14 @@ let controller: AbortController | null = null;
 export function cancelFixturePlayback() {
  fixtureWilds.multipliers=[];
  controller?.abort();
- eventEmitter.broadcast({type:'winSignHide'});
+ eventEmitter.broadcast({type:'soundInteractionsStop'});
  fixturePlayback.linePayouts=[];
  stateGame.activePayline=[];
  eventEmitter.broadcast({type:'winHide'});
  stateGameDerived.enhancedBoard.stop();
  fixturePlayback.releasingSticky=false; fixturePlayback.rolling=false; fixturePlayback.pick=null; fixturePlayback.collisions=[]; fixturePlayback.cuePositions=[]; fixturePlayback.sticky=[]; fixturePlayback.inBonus=false; fixturePlayback.remaining=0; fixturePlayback.completed=0; fixturePlayback.message='';
  stateGame.gameType='basegame';
+ eventEmitter.broadcast({type:'soundMusic',name:'bgm_main'});
  for(const reel of stateGame.board) for(const symbol of reel.reelState.symbols) symbol.symbolState='static';
  fixturePlayback.status='Cancelled';
 }
@@ -46,15 +52,20 @@ export const playGeneratedRound = (response: unknown, options: {animate?:boolean
 
 async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boolean;generated?:boolean;startAtBonus?:boolean} = {}) {
  if (fixturePlayback.busy) return;
+ bonusEnding.cancel();
  resetBonusWin();
  fixturePlayback.error='';
  fixturePlayback.busy=true;
+ const originalInput=import.meta.env.DEV ? structuredClone(input) : undefined;
  const run = new AbortController(); controller=run;
+ run.signal.addEventListener('abort',()=>bonusEnding.cancel(),{once:true});
  try { if(options.generated) input=await validateGeneratedResponse(input); else if(options.bonus) await validateBonusFixture(input); else validateBaseFixture(input); } catch(error) {
   controller=null; fixturePlayback.busy=false;
   fixturePlayback.error=String(error); throw error;
  }
  const book = input as {events: Array<Record<string, any>>};
+ if(import.meta.env.DEV && book.events.some(e=>e.type==='freeSpinTrigger'))
+  if(AUDIO_WORKBENCH_ENABLED)audioWorkbench.lastBonus={input:originalInput,options:{bonus:!!options.bonus,generated:!!options.generated}};
  if(run.signal.aborted) { controller=null; fixturePlayback.busy=false; return; }
  fixturePlayback.busy=true; fixturePlayback.releasingSticky=false; fixturePlayback.roundTotal=0; fixturePlayback.bonusTotal=0; fixturePlayback.remaining=0; fixturePlayback.completed=0; fixturePlayback.granted=0; fixturePlayback.sticky=[]; fixturePlayback.inBonus=false; fixturePlayback.message=''; fixturePlayback.budget=(input as {spinBudget:number}).spinBudget; stateBet.winBookEventAmount=0;
  const presentedWins=new Set<number>();
@@ -67,7 +78,7 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
    if(run.signal.aborted) return;
    fixturePlayback.status=e.type;
    if(e.type==='reveal') {
-    if(e.gameType==='basegame') eventEmitter.broadcast({type:'winSignHide'});
+    if(animate)bonusEnding.arm(planBonusEnding(book.events,e));
     stateGame.gameType=e.gameType;
     fixturePlayback.message=''; fixturePlayback.collisions=[]; fixturePlayback.cuePositions=[];
     const mapped = mapPaddedBoard(e.board) as RawSymbol[][];
@@ -77,6 +88,7 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
      fixturePlayback.rolling=true;
      try {
       await stateGameDerived.enhancedBoard.spin({revealEvent:{index:e.index,type:'reveal',board:mapped,anticipation:scatterAnticipation(mapped, stateBet.isTurbo),paddingPositions:e.paddingPositions},paddingBoard:config.paddingReels[e.gameType as keyof typeof config.paddingReels]});
+      if(!run.signal.aborted)bonusEnding.begin('landed');
      } finally { stateGame.activePayline=[]; fixturePlayback.rolling=false; }
     } else stateGameDerived.enhancedBoard.settle(mapped);
    } else if(e.type==='goldenCropPick') {
@@ -110,7 +122,18 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
     fixturePlayback.completed=e.completedBonusSpins;
     fixturePlayback.remaining=e.remaining;
     fixturePlayback.granted=e.totalGranted;
+    const grantSound=extraSpinSound(e);
+    if(animate && grantSound) {
+     fixturePlayback.remaining=e.remaining-e.grantedExtraSpins;
+     fixturePlayback.granted=e.totalGranted-e.grantedExtraSpins;
+     for(let i=0;i<e.grantedExtraSpins;i++){
+      if(run.signal.aborted)return;
+      fixturePlayback.remaining++;fixturePlayback.granted++;
+      eventEmitter.broadcast({type:'soundOnce',name:grantSound});await delay(140);
+     }
+    }
     if(animate && fixturePlayback.inBonus) await delay(cues.length ? 700 : 650);
+    if(animate && !run.signal.aborted)bonusEnding.begin('result');
    } else if(e.type==='winInfo') {
     // Present the union of all paying cells once, regardless of line count.
     if(animate && e.wins.length) {
@@ -125,12 +148,15 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
       fixturePlayback.linePayouts=e.wins.map((w:any,i:number)=>({amount:w.win,positions:w.positions,line:w.meta?.lineIndex??i+1,multiplier:w.meta?.lineMultiplier??1}));
       const lineTotal=fixturePlayback.linePayouts.reduce((sum,w)=>sum+w.amount,0);
       if(award && award.amount>lineTotal)fixturePlayback.linePayouts.push({amount:award.amount-lineTotal,line:0,positions:[{reel:2,row:2}]});
+      const spinPayout = award?.amount ?? e.totalWin ?? lineTotal;
+      if(spinPayout>0 && (!fixturePlayback.inBonus || spinPayout<1000)) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_drop'});
       await delay(getWinTiming().paylines);
       if(run.signal.aborted)return;
       fixturePlayback.linePayouts=[];
       if(award){
        presentedWins.add(award.index);
-       await presentTemplatePayout({amount:fixturePlayback.inBonus ? fixturePlayback.roundTotal : award.amount,animate,signal:run.signal,emitter:eventEmitter,winLevelData:{...winLevelMap[2],presentDuration:350}});
+       if(fixturePlayback.inBonus && award.amount>0) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_pour'});
+       await presentTemplatePayout({amount:fixturePlayback.inBonus ? fixturePlayback.roundTotal : award.amount,payoutSound:undefined,animate,signal:run.signal,emitter:eventEmitter,winLevelData:{...winLevelMap[2],presentDuration:350}});
       }
      } finally {
       fixturePlayback.linePayouts=[];
@@ -143,12 +169,15 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
     fixturePlayback.completed=0;
     fixturePlayback.remaining=e.totalFs; fixturePlayback.granted=e.totalFs;
     fixturePlayback.message=`${e.totalFs} FREE SPINS`;
-    if(animate){eventEmitter.broadcast({type:'soundOnce',name:'sfx_scatter_win_v2'});await celebrateSeeds(e.totalFs,run.signal,()=>{stateGame.gameType='freegame';});}
+    if(animate){await celebrateSeeds(e.totalFs,run.signal,()=>{stateGame.gameType='freegame';eventEmitter.broadcast({type:'soundMusic',name:'bgm_freespin'});},event=>eventEmitter.broadcast(event));}
    } else if(e.type==='freeSpinEnd') {
-    bonusWin.amount=e.amount;
-    fixturePlayback.message=`BONUS COMPLETE · ${e.amount/100}×`;
-    if(animate) await delay(1000);
-    if(run.signal.aborted) return;
+    const revealSummary=()=>{
+     bonusWin.amount=e.amount;
+     fixturePlayback.message=`BONUS COMPLETE · ${e.amount/100}×`;
+    };
+    if(animate){
+     if(!await bonusEnding.finish(revealSummary) || run.signal.aborted)return;
+    }else revealSummary();
     if(animate && fixturePlayback.sticky.length) {
      fixturePlayback.releasingSticky=true;
      await delay(320);
@@ -159,12 +188,20 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
    } else if(e.type==='setWin' && options.generated && !presentedWins.has(e.index)) {
     // Generated winLevel=1 is a math placeholder. Use the template's ordinary
     // count-up for local review, without inventing big-win thresholds or awards.
-    if(e.amount>0) await presentTemplatePayout({amount:fixturePlayback.inBonus ? fixturePlayback.roundTotal : e.amount,animate,signal:run.signal,emitter:eventEmitter,winLevelData:winLevelMap[2]});
+    if(animate && e.amount>0) eventEmitter.broadcast({type:'soundOnce',name:!fixturePlayback.inBonus || e.amount<1000?'sfx_money_drop':'sfx_money_pour'});
+    if(e.amount>0) await presentTemplatePayout({amount:fixturePlayback.inBonus ? fixturePlayback.roundTotal : e.amount,payoutSound:undefined,animate,signal:run.signal,emitter:eventEmitter,winLevelData:winLevelMap[2]});
    } else if(e.type==='setTotalWin') {
     stateBet.winBookEventAmount=e.amount;
    }
   }
   fixturePlayback.status='Complete';
- } catch(error) { fixturePlayback.error=String(error); throw error; }
+ } catch(error) { bonusEnding.cancel();eventEmitter.broadcast({type:'soundInteractionsStop'}); fixturePlayback.error=String(error); throw error; }
  finally { stateGame.activePayline=[]; fixturePlayback.rolling=false; controller=null; fixturePlayback.pick=null; fixturePlayback.busy=false; eventEmitter.broadcast({type:'stopButtonEnable'}); }
+}
+
+// Reuses the exact validated event book; no new math-server request or wagering.
+export async function replayAudioBonus(){
+ const saved=audioWorkbench.lastBonus;
+ if(!saved || fixturePlayback.busy)return;
+ await playFixture(structuredClone(saved.input),{...saved.options,animate:true,startAtBonus:true});
 }

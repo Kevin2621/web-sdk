@@ -1,13 +1,13 @@
+import { stateLayoutDerived } from './stateLayout';
 import _ from 'lodash';
+import { visibleScatterCount } from './scatterSound.mjs';
 import { playerSpeed } from './playerSpeed.svelte';
 import type { Tween } from 'svelte/motion';
 
-import { stateBet } from 'state-shared';
 import { createEnhanceBoard, createReelForSpinning } from 'utils-slots';
 import { createGetWinLevelDataByWinLevelAlias } from 'utils-shared/winLevel';
 
 import type { GameType, RawSymbol, SymbolState } from './types';
-import { stateLayoutDerived } from './stateLayout';
 import { winLevelMap } from './winLevelMap';
 import { eventEmitter } from './eventEmitter';
 import {
@@ -19,18 +19,13 @@ import {
 	SPIN_OPTIONS_FAST,
 	SPIN_OPTIONS_MEDIUM,
 	INITIAL_SYMBOL_STATE,
-	SCATTER_LAND_SOUND_MAP,
 } from './constants';
 
 const onSymbolLand = ({ rawSymbol }: { rawSymbol: RawSymbol }) => {
 	if (rawSymbol.suppressFixtureLanding) return;
 	if (rawSymbol.name === 'S') {
 		eventEmitter.broadcast({ type: 'scatterLandingThud' });
-		eventEmitter.broadcast({ type: 'soundScatterCounterIncrease' });
-		eventEmitter.broadcast({
-			type: 'soundOnce',
-			name: SCATTER_LAND_SOUND_MAP[scatterLandIndex()],
-		});
+		eventEmitter.broadcast({ type: 'soundScatterLand' });
 	}
 
 	if (rawSymbol.name === 'W') {
@@ -41,6 +36,9 @@ const onSymbolLand = ({ rawSymbol }: { rawSymbol: RawSymbol }) => {
 	}
 };
 
+let finalScatterReel = -1;
+let singleLandingSound = false;
+let landingSoundPlayed = false;
 const board = _.range(BOARD_DIMENSIONS.x).map((reelIndex) => {
 	const reel = createReelForSpinning({
 		reelIndex,
@@ -48,11 +46,15 @@ const board = _.range(BOARD_DIMENSIONS.x).map((reelIndex) => {
 		initialSymbols: INITIAL_BOARD[reelIndex],
 		initialSymbolState: INITIAL_SYMBOL_STATE,
 		onReelStopping: () => {
+			if (singleLandingSound && landingSoundPlayed) return;
+			landingSoundPlayed = true;
 			eventEmitter.broadcast({
 				type: 'soundOnce',
-				name: 'sfx_reel_stop_1',
-				forcePlay: !stateBet.isTurbo,
+				name: singleLandingSound ? 'sfx_reel_stop_1' : (['sfx_reel_stop_1', 'sfx_reel_stop_2', 'sfx_reel_stop_3', 'sfx_reel_stop_4', 'sfx_reel_stop_5'] as const)[reelIndex],
 			});
+		},
+		onSpinTravelStart: (duration) => {
+			if (reelIndex === finalScatterReel) eventEmitter.broadcast({type:'soundScatterRiserPlan',duration});
 		},
 		onSymbolLand,
 		landOnImpact: true,
@@ -82,21 +84,16 @@ export type MultiplierSymbol = {
 };
 
 export const stateGame = $state({
+	scatterCounter: 0,
 	board,
 	activePayline: [] as {reel:number;row:number}[],
 	gameType: 'basegame' as GameType,
 	multiplierBoard: [] as (MultiplierSymbol | undefined)[][],
-	scatterCounter: 0,
 });
 
 const boardLayout = () => ({
 	x: stateLayoutDerived.mainLayout().width * 0.5,
-	// Bring the full-size board closer to the desktop controls; all board-attached
-	// artwork and signs use this same position.
-	y: stateLayoutDerived.mainLayout().height * 0.5 - (
-		stateLayoutDerived.canvasSizes().width > 900 && stateLayoutDerived.canvasSizes().height > 540
-			? 28 / stateLayoutDerived.mainLayout().scale : 0
-	),
+	y: stateLayoutDerived.mainLayout().height * 0.5,
 	anchor: { x: 0.5, y: 0.5 },
 	pivot: { x: BOARD_SIZES.width / 2, y: BOARD_SIZES.height / 2 },
 	...BOARD_SIZES,
@@ -105,14 +102,26 @@ const boardLayout = () => ({
 const boardRaw = () =>
 	board.map((reel) => reel.reelState.symbols.map((reelSymbol) => reelSymbol.rawSymbol));
 
-const scatterLandIndex = () => {
-	if (stateGame.scatterCounter > 5) return 5;
-	if (stateGame.scatterCounter < 1) return 1;
-	return stateGame.scatterCounter as 1 | 2 | 3 | 4 | 5;
-};
 
 const { enhanceBoard } = createEnhanceBoard();
-const enhancedBoard = enhanceBoard({ board: stateGame.board });
+const rawEnhancedBoard = enhanceBoard({ board: stateGame.board });
+const enhancedBoard = {
+ ...rawEnhancedBoard,
+ async spin(args: Parameters<typeof rawEnhancedBoard.spin>[0]) {
+  // Capture speed for this spin so changing the control cannot add extra impacts.
+  singleLandingSound = playerSpeed.mode === 2;
+  landingSoundPlayed = false;
+  const visibleCount = visibleScatterCount(args.revealEvent.board);
+  finalScatterReel = args.revealEvent.board.findLastIndex(reel => reel.slice(1,-1).some(s => s.name==='S'&&!s.suppressFixtureLanding));
+  // Reel callbacks include padding too. Never count or sound hidden symbols.
+  const board = args.revealEvent.board.map(reel => reel.map((symbol,index) =>
+   index === 0 || index === reel.length - 1 ? {...symbol,suppressFixtureLanding:true} : symbol));
+  eventEmitter.broadcast({type:'soundScatterSequenceStart',total:visibleCount,baseGame:stateGame.gameType==='basegame'});
+  try { return await rawEnhancedBoard.spin({...args,revealEvent:{...args.revealEvent,board}}); }
+  catch(error) { eventEmitter.broadcast({type:'soundScatterSequenceCancel'});throw error; }
+  finally { finalScatterReel=-1; }
+ },
+};
 
 export const { getWinLevelDataByWinLevelAlias } = createGetWinLevelDataByWinLevelAlias({
 	winLevelMap,
@@ -123,7 +132,6 @@ export const stateGameDerived = {
 	onSymbolLand,
 	boardLayout,
 	boardRaw,
-	scatterLandIndex,
 	enhancedBoard,
 	getWinLevelDataByWinLevelAlias,
 };

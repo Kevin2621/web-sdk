@@ -10,12 +10,19 @@ profiles['multiplier-wilds']={label:'40/60 target · 25% base hits · Picks off'
 export async function validateGeneratedResponse(response) {
  const profile=response?.profile??'natural';
  if(!Object.hasOwn(profiles,profile)||profiles[profile].hash!==(response.lookupSha256??null))throw Error('Weighted profile mismatch');
+ const mode=response?.mode??'base';
+ if(!['base','bonus'].includes(mode)||(mode==='bonus'&&profile!=='multiplier-wilds'))throw Error('Unsupported purchase mode');
  const multiplied=usesMultiplierRules(profile);
  if(response?.protocol!=='wp-local-1'||response.configSha256!==(multiplied?config.multiplierConfigSha256:config.configSha256)) throw Error('Local math configuration mismatch');
  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(response.bookJson));
  const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
  if(hash!==response.sha256) throw Error('Generated book integrity mismatch');
  const book=JSON.parse(response.bookJson);
+ if(mode==='bonus') {
+  const entry=book.events?.[0];
+  if(book.entryMode!=='standardBonusBuy'||entry?.type!=='freeSpinTrigger'||entry.spinId!==-1||entry.totalFs!==10||entry.purchase!==true||entry.positions?.length!==0)throw Error('Invalid purchased entry');
+  if(book.events.some(e=>e.type==='reveal'&&e.gameType!=='freegame')||book.events.filter(e=>e.type==='freeSpinTrigger').length!==1)throw Error('Purchased bonus contains base play');
+ } else if(book.entryMode&&book.entryMode!=='base')throw Error('Unexpected purchased entry');
  if(book.gameId!=='wild_pickins'||book.schemaVersion!==(multiplied?4:2)||book.fixtureOnly!==true||book.lineSetId!=='WP-L25-experiment1'||book.roundCap!==500000||book.spinBudget!==30) throw Error('Unsupported generated book');
  if(multiplied&&book.fixtureMath?.settlementPolicy!=='accumulation')throw Error('Accumulation settlement required');
  if(!book.fixtureMath?.paytable||!book.fixtureMath?.bonusPaytable)throw Error('Separate paytables required');
@@ -46,11 +53,11 @@ export async function validateGeneratedResponse(response) {
  if(final.type!=='finalWin'||final.amount!==sum||sum>book.roundCap)throw Error('Generated final total mismatch');
  return book;
 }
-export async function requestGeneratedRound(seed,roundId,signal,profile='natural') {
+export async function requestGeneratedRound(seed,roundId,signal,profile='natural',mode='base') {
  if(!Object.hasOwn(profiles,profile))throw Error('Unknown playtest profile');
- const res=await fetch(`http://127.0.0.1:8025/round?seed=${seed}&id=${roundId}&profile=${encodeURIComponent(profile)}`,{signal});
+ const res=await fetch(`http://127.0.0.1:8025/round?seed=${seed}&id=${roundId}&profile=${encodeURIComponent(profile)}&mode=${encodeURIComponent(mode)}`,{signal});
  if(!res.ok)throw Error(`Local math request failed (${res.status})`);
  const payload=await res.json();
- if(payload.seed!==seed||payload.roundId!==roundId||(payload.profile??'natural')!==profile)throw Error('Generated round identity mismatch');
+ if(payload.seed!==seed||payload.roundId!==roundId||(payload.profile??'natural')!==profile||(payload.mode??'base')!==mode)throw Error('Generated round identity mismatch');
  return payload;
 }

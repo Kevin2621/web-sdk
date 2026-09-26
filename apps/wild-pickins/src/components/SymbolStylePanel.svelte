@@ -65,7 +65,7 @@
 		<div class="panel">
 			<h3>High symbols</h3>
 			<div class="high-previews">
-				<PreviewCanvas width={280} height={280} label="High symbols: wheat, corn and tomatoes">
+				<PreviewCanvas width={280} height={280} label="High symbols: corn, apples and pumpkin">
 					{#key animationId}
 						{#each highPreviews as name, index}
 							<Container x={70 + (index % 2) * 140} y={70 + Math.floor(index / 2) * 140}>
@@ -88,7 +88,7 @@
 				><input type="checkbox" bind:checked={symbolStyle.livePreview} /> Edit live letter artwork</label
 			>
 			{#if !symbolStyle.livePreview}
-				<p>Showing baked letter images. Enable live editing to audition style changes.</p>
+				<p>Showing refreshed letter images. Enable live editing to audition style changes.</p>
 			{:else}
 				<label
 					><input type="checkbox" bind:checked={symbolStyle.generated} /> Generated artwork</label

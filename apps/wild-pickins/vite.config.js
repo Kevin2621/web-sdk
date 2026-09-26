@@ -1,4 +1,7 @@
 // @ts-ignore
 import config from 'config-vite';
 
-export default config();
+import { audioLibraryPlugin } from './scripts/audio-library-plugin.mjs';
+const configured = config();
+configured.plugins = [...(configured.plugins ?? []), audioLibraryPlugin()];
+export default configured;

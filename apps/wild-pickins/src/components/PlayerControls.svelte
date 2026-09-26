@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
+
 	import { bonusWin, resetBonusWin } from '../game/bonusWin.svelte';
 	import { playerMotion } from '../game/playerMotion.svelte';
 	import { slide } from 'svelte/transition';
@@ -20,17 +21,22 @@
 	import { playerLabel } from '../game/playerLabels';
 	import { SlotControlBar } from 'components-ui-html';
 	import money from '../game/playerMoney';
+	import BonusMenu from './BonusMenu.svelte';
+	import { stateMeta } from 'state-shared';
+	import config from '../game/config';
 	import defaultMath from '../game/playerPaytable.json';
 	let {
 		simulated = false,
 		busy = false,
 		onspin,
+		onbuy,
 		math = defaultMath,
 		multiplierRules = false,
 	}: {
 		simulated?: boolean;
 		busy?: boolean;
 		onspin?: () => Promise<AutoplayRound | void>;
+		onbuy?: () => Promise<AutoplayRound | void>;
 		math?: typeof defaultMath;
 		multiplierRules?: boolean;
 	} = $props();
@@ -180,7 +186,10 @@
 	}
 	const betLocked = $derived(locked || running || stateBet.autoSpinsCounter > 0);
 	function setAmount(value: number) {
-		if (!betLocked && levels.includes(value)) stateBet.betAmount = value;
+		if (!betLocked && levels.includes(value) && value !== stateBet.betAmount) {
+			stateBet.betAmount = value;
+			context.eventEmitter.broadcast({ type: 'soundPressGeneral' });
+		}
 	}
 	function openAuto() {
 		closeMenu();
@@ -194,6 +203,7 @@
 			return;
 		}
 		if (locked || !canAfford || stateConfig.jurisdiction.disabledAutoplay) return;
+		context.eventEmitter.broadcast({ type: 'soundPressGeneral' });
 		autoPanel.show();
 		autoOpen = true;
 		autoPanel.focus({ preventScroll: true });
@@ -282,14 +292,14 @@
 		running = $state(false),
 		chosen = $state(10);
 	const symbolNames: Record<string, string> = {
-		C01: 'Wheat',
-		C02: 'Corn',
-		C03: 'Tomato',
-		C04: 'Stone',
-		C05: 'Wagon wheel',
-		C06: 'Horseshoe',
-		C07: 'Pinecone',
-		C08: 'Clay pot',
+		C01: 'Corn',
+		C02: 'Apples',
+		C03: 'Pumpkin',
+		C04: 'A',
+		C05: 'K',
+		C06: 'Q',
+		C07: 'J',
+		C08: '10',
 	};
 	const t = (key: string) => playerLabel(language, key, stateUrlDerived.social());
 	const canAfford = $derived(simulated || stateBetDerived.isBetCostAvailable());
@@ -318,16 +328,34 @@
 			)[key] || key,
 		);
 	}
+	const bonusMeta = $derived(stateMeta.betModeMeta?.BONUS ?? stateMeta.betModeMeta?.bonus);
+	const bonusCost = $derived(simulated ? config.betModes.bonus.cost : (bonusMeta?.costMultiplier ?? config.betModes.bonus.cost));
+	const bonusAvailable = $derived(simulated ? !!onbuy : bonusMeta?.type === 'buy');
 	function bonus() {
-		if (!betLocked && !simulated && !stateConfig.jurisdiction.disabledBuyFeature)
-			stateModal.modal = { name: 'buyBonus' };
+		if (betLocked || stateConfig.jurisdiction.disabledBuyFeature) return;
+		void closeMenu(); void closeAuto(false);
+		stateBet.isSpaceHold = false;
+		stateModal.modal = { name: 'buyBonus' };
+	}
+	async function buyBonus() {
+		if (betLocked || !bonusAvailable || stateConfig.jurisdiction.disabledBuyFeature || (!simulated && stateBet.balanceAmount < stateBet.betAmount * bonusCost)) return;
+		stateModal.modal = null;
+		resetBonusWin();
+		context.eventEmitter.broadcast({ type: 'soundPressBet' });
+		if (onbuy) {
+			const result = await onbuy();
+			if (result) lastWin = result.win;
+		} else {
+			stateBet.activeBetModeKey = stateMeta.betModeMeta?.BONUS ? 'BONUS' : 'bonus';
+			context.eventEmitter.broadcast({ type: 'bet' });
+		}
 	}
 	async function spin() {
 		if (locked || !canAfford || stateModal.modal || menu?.open || autoPanel?.open) return;
 		resetBonusWin();
-		context.eventEmitter.broadcast({ type: 'soundPressBet' });
+		if (!running && !stateBet.autoSpinsCounter) context.eventEmitter.broadcast({ type: 'soundPressBet' });
 		if (onspin) return await onspin();
-		else context.eventEmitter.broadcast({ type: 'bet' });
+		else { stateBet.activeBetModeKey = 'BASE'; context.eventEmitter.broadcast({ type: 'bet' }); }
 	}
 	async function auto() {
 		if (
@@ -374,6 +402,7 @@
 		}
 	}
 	function settings() {
+		context.eventEmitter.broadcast({ type: 'soundPressGeneral' });
 		if (menu.open) {
 			closeMenu();
 			return;
@@ -429,6 +458,9 @@
 	}
 </script>
 
+{#if stateModal.modal?.name === 'buyBonus'}
+ <BonusMenu label={controlLabel} {simulated} cost={bonusCost} {levels} disabled={betLocked || !bonusAvailable || stateConfig.jurisdiction.disabledBuyFeature} onamount={setAmount} onclose={() => stateModal.modal = null} onbuy={buyBonus}/>
+{/if}
 <svelte:document onkeydown={controlKey} onkeyup={controlKey} onpointerdown={dismissMenus} />
 <div class="stop-status" role="status">
 	{stopQueued ? 'Autoplay will stop after this round.' : stopReason}
@@ -454,7 +486,7 @@
 		reducedMotion={motionReduced}
 		autoSetup={autoOpen}
 		spinDisabled={!canAfford || (autoOpen && !readyToStart)}
-		bonusDisabled={simulated || stateConfig.jurisdiction.disabledBuyFeature}
+		bonusDisabled={betLocked || stateConfig.jurisdiction.disabledBuyFeature}
 		speedDisabled={stateConfig.jurisdiction.disabledTurbo}
 		showAuto={!stateConfig.jurisdiction.disabledAutoplay}
 		auto={autoplayActive}
@@ -474,7 +506,7 @@
 		formatAmount={(value) => money.formatMoney(value, stateBet.currency, language).text}
 		onamountchange={setAmount}
 		onspin={pressSpin}
-		onspeedchange={cyclePlayerSpeed}
+		onspeedchange={() => { cyclePlayerSpeed(); context.eventEmitter.broadcast({ type: 'soundPressGeneral' }); }}
 		onautochange={openAuto}
 		onmenu={settings}
 		onbonus={bonus}

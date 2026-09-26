@@ -10,7 +10,6 @@ export type EmitterEvent =
 	| EmitterEventUi
 	| EmitterEventModal
 	| EmitterEventGame
-	| { type: 'scatterLandingThud' }
-	| { type: 'winSignHide' };
+	| { type: 'scatterLandingThud' };
 
 export const { eventEmitter } = createEventEmitter<EmitterEvent>();

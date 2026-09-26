@@ -1,55 +1,31 @@
 <script lang="ts">
-	import { SpineProvider, SpineTrack, Container, Sprite } from 'pixi-svelte';
-	import { FadeContainer, LoadingProgress } from 'components-pixi';
-	import { MainContainer } from 'components-layout';
-
-	import { getContext } from '../game/context';
-	import TransitionAnimation from './TransitionAnimation.svelte';
-	import PressToContinue from './PressToContinue.svelte';
-
-	type Props = {
-		onloaded: () => void;
-	};
-
-	const props: Props = $props();
-	const context = getContext();
-
-	let loadingType = $state<'start' | 'transition'>('start');
+ import { getContext } from '../game/context';
+ const { onloaded } = $props<{ onloaded: () => void }>();
+ const context = getContext();
+ function proceed() {
+  if (context.stateApp.loaded) onloaded();
+ }
 </script>
 
-<!-- logo and loading progress -->
-<FadeContainer show={loadingType === 'start'}>
-	<MainContainer>
-		<Container
-			x={context.stateLayoutDerived.mainLayout().width * 0.5}
-			y={context.stateLayoutDerived.mainLayout().height * 0.5}
-		>
-			<SpineProvider key="loader" width={300}>
-				<SpineTrack trackIndex={0} animationName={'title_screen'} loop timeScale={3} />
-			</SpineProvider>
-			{#if !context.stateApp.loaded}
-				<LoadingProgress y={250} width={1967 * 0.2} height={346 * 0.2}>
-					{#snippet background(sizes)}
-						<Sprite key="progressBarBackground.png" {...sizes} />
-					{/snippet}
-					{#snippet progress(sizes)}
-						<Sprite key="progressBar.png" {...sizes} />
-					{/snippet}
-					{#snippet frame(sizes)}
-						<Sprite key="progressBarFrame.png" {...sizes} />
-					{/snippet}
-				</LoadingProgress>
-			{/if}
-		</Container>
-	</MainContainer>
-</FadeContainer>
+<div class="intro-screen" aria-label="Wild Pickins test loading screen">
+ <div class="intro-content">
+  <h1>TEST</h1>
+  <p>Wild Pickins</p>
 
-<!-- press to continue -->
-<FadeContainer show={loadingType === 'start' && context.stateApp.loaded}>
-	<PressToContinue onpress={() => (loadingType = 'transition')} />
-</FadeContainer>
+   <button class="continue-button" onclick={proceed} disabled={!context.stateApp.loaded}>
+    {context.stateApp.loaded ? 'Continue' : 'Loading…'}
+   </button>
 
-<!-- transition between the loading screen and the game -->
-<FadeContainer show={loadingType === 'transition'}>
-	<TransitionAnimation oncomplete={props.onloaded} />
-</FadeContainer>
+ </div>
+</div>
+
+<style>
+ .intro-screen { position:fixed; inset:0; z-index:10000; display:grid; place-items:center; background:#18201b; color:#f5ebd4; font-family:Georgia,serif; }
+ .intro-content { text-align:center; padding:24px; }
+ h1 { font-size:clamp(48px,10vw,88px); letter-spacing:.15em; margin:0; }
+ p { font-size:20px; margin:18px 0 28px; }
+ button { display:block; margin:14px auto; padding:13px 36px; border:1px solid #9e927b; border-radius:6px; color:inherit; background:transparent; font:inherit; cursor:pointer; }
+ .continue-button { background:#ebd4a4; color:#18201b; min-width:180px; }
+ button:disabled { opacity:.5; cursor:wait; }
+ button:focus-visible { outline:3px solid #fff; outline-offset:4px; }
+</style>
