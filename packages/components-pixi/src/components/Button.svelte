@@ -58,8 +58,8 @@
 
 <Container
 	{...containerProps}
-	eventMode="static"
-	cursor={disabled ? 'not-allowed' : 'pointer'}
+	eventMode={disabled ? 'none' : 'static'}
+	cursor={disabled ? 'default' : 'pointer'}
 	pivot={anchorToPivot({ sizes, anchor })}
 	onpointerover={() => {
 		if (disabled) return;

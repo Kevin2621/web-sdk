@@ -1,7 +1,10 @@
 import { CURTAIN_HANDOFF } from './seedCurtain.mjs';
+import type { RawSymbol } from './types';
+// Keep Continue unavailable until the metal close finishes.
+const BONUS_CLOSE_DURATION_MS = 1490.045351473923;
 export const seedCelebration = $state({
  active:false,progress:0,displayAward:0,award:0,waiting:false,continuing:false,
- bursts:0,burstSource:'',exitProgress:-1,sprayProgress:-1,
+ bursts:0,burstSource:'',exitProgress:-1,sprayProgress:-1,openTriggerBags:[] as RawSymbol[],
 });
 let finishCurrent:(()=>void)|undefined;
 let resumeCurrent:(()=>void)|undefined;
@@ -14,13 +17,13 @@ export function seedBagBurst(source:string){
  if(source==='reward')burstCurrent?.();
 }
 export function continueSeedCelebration(){resumeCurrent?.();}
-export function cancelSeedCelebration(){finishCurrent?.();}
-export async function celebrateSeeds(award:number,signal?:AbortSignal,onCovered?:()=>void, emitSound:(event:{type:'soundOnce'|'soundStop';name:'jng_intro_fs'|'sfx_bonus_yeehaw'|'sfx_bonus_open'|'sfx_bonus_close'|'sfx_fs_respins'})=>void=()=>{}){
+export function cancelSeedCelebration(){finishCurrent?.();seedCelebration.openTriggerBags=[];}
+export async function celebrateSeeds(award:number,signal?:AbortSignal,onCovered?:()=>void, emitSound:(event:{type:'soundOnce'|'soundStop';name:'jng_intro_fs'|'sfx_bonus_yeehaw'|'sfx_bonus_open'|'sfx_bonus_close'|'sfx_fs_respins'}|{type:'soundBonusContinue'})=>void=()=>{}){
  cancelSeedCelebration();if(signal?.aborted)return;
- Object.assign(seedCelebration,{active:true,progress:0,displayAward:0,award,waiting:false,continuing:false,bursts:0,burstSource:'',exitProgress:-1,sprayProgress:-1});
+ Object.assign(seedCelebration,{active:true,progress:0,displayAward:0,award,waiting:false,continuing:false,bursts:0,burstSource:'',exitProgress:-1,sprayProgress:-1,openTriggerBags:[]});
  emitSound({type:'soundOnce',name:'jng_intro_fs'});
  const start=performance.now();
- let cheered=false,opened=false,locked=false,lastCount=0;
+ let cheered=false,opened=false,locked=false,lastCount=0,closeFinishedAt=Infinity;
  await new Promise<void>(resolve=>{
   let frame=0,finished=false,covered=false,popFinished=false;
   let clickAt:number|undefined,burstAt:number|undefined;
@@ -59,13 +62,17 @@ export async function celebrateSeeds(award:number,signal?:AbortSignal,onCovered?
      lastCount=now;seedCelebration.displayAward++;
      emitSound({type:'soundOnce',name:'sfx_fs_respins'});
     }
-    if(seedCelebration.displayAward===award && !locked){locked=true;emitSound({type:'soundOnce',name:'sfx_bonus_close'});}
+    if(seedCelebration.displayAward===award && !locked){
+     locked=true;closeFinishedAt=now+BONUS_CLOSE_DURATION_MS;
+     emitSound({type:'soundOnce',name:'sfx_bonus_close'});
+    }
     seedCelebration.progress=Math.min(.78,(now-start)/8000);
-    if(seedCelebration.progress>=.78 && locked){
+    if(seedCelebration.progress>=.78 && locked && now>=closeFinishedAt){
      seedCelebration.waiting=true;
      resumeCurrent=()=>{
-      resumeCurrent=undefined;clickAt=performance.now();
+     resumeCurrent=undefined;clickAt=performance.now();
       seedCelebration.waiting=false;seedCelebration.continuing=true;
+      emitSound({type:'soundBonusContinue'});
       completePop=()=>{popFinished=true;completePop=undefined;};
       burstCurrent=()=>{if(burstAt===undefined)burstAt=performance.now();};
       frame=requestAnimationFrame(tick);

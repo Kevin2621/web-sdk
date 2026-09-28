@@ -18,7 +18,7 @@
 	options={stateConfig.betAmountOptions}
 	onchange={(value) => {
 		stateBet.betAmount = value;
-		eventEmitter.broadcast({ type: 'soundPressGeneral' });
+		eventEmitter.broadcast({ type: 'soundPressGeneral', action: 'playAmount' });
 	}}
 >
 	{#snippet children({ disabledDown, disabledUp, toggleDown, toggleUp })}

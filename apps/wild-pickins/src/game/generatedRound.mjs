@@ -9,19 +9,33 @@ profiles['multiplier-wilds']={label:'40/60 target · 25% base hits · Picks off'
 // it is deliberately not a replacement RGS/browser mathematical validator.
 export async function validateGeneratedResponse(response) {
  const profile=response?.profile??'natural';
- if(!Object.hasOwn(profiles,profile)||profiles[profile].hash!==(response.lookupSha256??null))throw Error('Weighted profile mismatch');
  const mode=response?.mode??'base';
- if(!['base','bonus'].includes(mode)||(mode==='bonus'&&profile!=='multiplier-wilds'))throw Error('Unsupported purchase mode');
+ const tier={standard_bonus_buy_medium:{cost:200,spins:15,scatters:4,hash:'mediumBonusHash'},standard_bonus_buy_high:{cost:500,spins:20,scatters:5,hash:'highBonusHash'}}[mode];
+ if(!['base','bonus','standard_bonus_buy_medium','standard_bonus_buy_high'].includes(mode)||(mode==='bonus'&&!['multiplier-wilds','candidate-1m-2','candidate-corrected-1m-1'].includes(profile))||(tier&&profile!=='candidate-corrected-1m-1'))throw Error('Unsupported purchase mode');
+ if(!Object.hasOwn(profiles,profile))throw Error('Weighted profile mismatch');
+ const expectedHash=tier?profiles[profile][tier.hash]:mode==='bonus'&&profiles[profile].bonusHash?profiles[profile].bonusHash:profiles[profile].hash;
+ if(expectedHash!==(response.lookupSha256??null))throw Error('Weighted profile mismatch');
  const multiplied=usesMultiplierRules(profile);
- if(response?.protocol!=='wp-local-1'||response.configSha256!==(multiplied?config.multiplierConfigSha256:config.configSha256)) throw Error('Local math configuration mismatch');
+ const expectedConfigHash=profiles[profile].configHash??(multiplied?config.multiplierConfigSha256:config.configSha256);
+ if(response?.protocol!=='wp-local-1'||response.configSha256!==expectedConfigHash) throw Error('Local math configuration mismatch');
  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(response.bookJson));
  const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
  if(hash!==response.sha256) throw Error('Generated book integrity mismatch');
  const book=JSON.parse(response.bookJson);
- if(mode==='bonus') {
-  const entry=book.events?.[0];
-  if(book.entryMode!=='standardBonusBuy'||entry?.type!=='freeSpinTrigger'||entry.spinId!==-1||entry.totalFs!==10||entry.purchase!==true||entry.positions?.length!==0)throw Error('Invalid purchased entry');
-  if(book.events.some(e=>e.type==='reveal'&&e.gameType!=='freegame')||book.events.filter(e=>e.type==='freeSpinTrigger').length!==1)throw Error('Purchased bonus contains base play');
+ if(tier) {
+  const reveals=book.events?.filter(e=>e.type==='reveal')??[];
+  const entries=book.events?.filter(e=>e.type==='freeSpinTrigger')??[];
+  if(response.tierId!==mode||response.purchaseCost!==tier.cost||response.initialSpins!==tier.spins||book.entryMode&&book.entryMode!=='base'||reveals[0]?.gameType!=='basegame'||entries.length!==1||entries[0].totalFs!==tier.spins||entries[0].spinId!==0||entries[0].positions?.length!==tier.scatters||entries[0].purchase===true||reveals[0].underlyingBoard?.flat().filter(s=>s==='S').length!==tier.scatters||reveals[1]?.stickyBefore?.length!==0||reveals.slice(1).some(e=>e.gameType!=='freegame'))throw Error('Invalid purchased tier trigger round');
+ } else if(mode==='bonus') {
+  if(profile==='candidate-corrected-1m-1') {
+   const reveals=book.events?.filter(e=>e.type==='reveal')??[];
+   const entries=book.events?.filter(e=>e.type==='freeSpinTrigger')??[];
+   if(book.entryMode&&book.entryMode!=='base'||reveals[0]?.gameType!=='basegame'||entries.length!==1||entries[0].totalFs!==10||entries[0].spinId!==0||entries[0].positions?.length!==3||entries[0].purchase===true||reveals.slice(1).some(e=>e.gameType!=='freegame'))throw Error('Invalid purchased trigger round');
+  } else {
+   const entry=book.events?.[0];
+   if(book.entryMode!=='standardBonusBuy'||entry?.type!=='freeSpinTrigger'||entry.spinId!==-1||entry.totalFs!==10||entry.purchase!==true||entry.positions?.length!==0)throw Error('Invalid purchased entry');
+   if(book.events.some(e=>e.type==='reveal'&&e.gameType!=='freegame')||book.events.filter(e=>e.type==='freeSpinTrigger').length!==1)throw Error('Purchased bonus contains base play');
+  }
  } else if(book.entryMode&&book.entryMode!=='base')throw Error('Unexpected purchased entry');
  if(book.gameId!=='wild_pickins'||book.schemaVersion!==(multiplied?4:2)||book.fixtureOnly!==true||book.lineSetId!=='WP-L25-experiment1'||book.roundCap!==500000||book.spinBudget!==30) throw Error('Unsupported generated book');
  if(multiplied&&book.fixtureMath?.settlementPolicy!=='accumulation')throw Error('Accumulation settlement required');

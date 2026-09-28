@@ -7,17 +7,25 @@ export default {
 	sound: { type: 'audio', src: `${base}/assets/audio/sounds.json`, preload: true },
  wpScatterBag: {
   type: 'spine',
-  src: { atlas: `${base}/assets/spines/scatter-bag/skeleton-animated.atlas`, skeleton: `${base}/assets/spines/scatter-bag/skeleton-animated.json`, scale: 1 },
+  src: { atlas: `${base}/assets/spines/scatter-bag/spine.atlas`, skeleton: `${base}/assets/spines/scatter-bag/skeleton-animated.json`, scale: 1 },
  },
-	wpBaseScene: {
+	wpWildSpine: {
 		type: 'spine',
 		src: {
-			atlas: `${base}/assets/spines/base-scene/skeletons.atlas`,
-			skeleton: `${base}/assets/spines/base-scene/skeleton.json`,
+			atlas: `${base}/assets/spines/W/skeleton.atlas`,
+			skeleton: `${base}/assets/spines/W/skeleton.json`,
 			scale: 1,
 		},
 	},
-	...Object.fromEntries(['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'L4', 'L5', 'W', 'S'].map(name =>
+	wpBaseScene: {
+		type: 'spine',
+		src: {
+			atlas: `${base}/assets/spines/environment-board/skeletons.atlas`,
+			skeleton: `${base}/assets/spines/environment-board/skeleton.json`,
+			scale: 1,
+		},
+	},
+	...Object.fromEntries(['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'L4', 'L5', 'S'].map(name =>
 		[`wpRefresh${name}`, { type: 'sprite' as const, src: refreshAsset(name) }])),
 	wpRefreshEnvironment: { type: 'sprite', src: refreshAsset('environment-v3'), preload: true },
 	wpRefreshFrame: { type: 'sprite', src: refreshAsset('board-frame') },
@@ -154,14 +162,6 @@ export default {
 			scale: 2,
 		},
 	},
-	W: {
-		type: 'spine',
-		src: {
-			atlas: new URL('../../assets/spines/symbols3/symbols3.atlas', import.meta.url).href,
-			skeleton: new URL('../../assets/spines/symbols3/W.json', import.meta.url).href,
-			scale: 2,
-		},
-	},
 	reelsFrame: {
 		type: 'sprites',
 		src: new URL('../../assets/sprites/reelsFrame/reels_frame.json', import.meta.url).href,
@@ -193,14 +193,6 @@ export default {
 	purpleFont: {
 		type: 'font',
 		src: new URL('../../assets/fonts/purpleFont/mm_purple.xml', import.meta.url).href,
-	},
-	bigwin: {
-		type: 'spine',
-		src: {
-			atlas: new URL('../../assets/spines/bigwin/big_wins.atlas', import.meta.url).href,
-			skeleton: new URL('../../assets/spines/bigwin/mm_bigwin.json', import.meta.url).href,
-			scale: 2,
-		},
 	},
 	globalMultiplier: {
 		type: 'spine',

@@ -21,14 +21,19 @@
 	import BoardBase from './BoardBase.svelte';
 	import StickyFixtureOverlay from './StickyFixtureOverlay.svelte';
 	import GoldenCropOverlay from './GoldenCropOverlay.svelte';
-	import LinePayouts from './LinePayouts.svelte';
+	import WinLines from './WinLines.svelte';
+	import WildLandingOverlay from './WildLandingOverlay.svelte';
+	import { cancelWinLinePresentation } from '../game/winLinePresentation.svelte';
 
 	const context = getContext();
 
 	let show = $state(true);
 
 	context.eventEmitter.subscribeOnMount({
-		stopButtonClick: () => context.stateGameDerived.enhancedBoard.stop(),
+		stopButtonClick: () => {
+			context.stateGameDerived.enhancedBoard.stop();
+			cancelWinLinePresentation();
+		},
 		boardSettle: ({ board }) => context.stateGameDerived.enhancedBoard.settle(board),
 		boardShow: () => (show = true),
 		boardHide: () => (show = false),
@@ -59,9 +64,10 @@
 	<BoardContext animate={true}>
 		<BoardContainer>
 			<BoardBase />
+			<WildLandingOverlay />
 		</BoardContainer>
 	</BoardContext>
 	<StickyFixtureOverlay />
 	<GoldenCropOverlay />
-	<LinePayouts />
+	<WinLines />
 {/if}

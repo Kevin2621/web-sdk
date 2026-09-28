@@ -1,13 +1,12 @@
+import { normalizeReplay } from './replay.mjs';
 import { AUDIO_WORKBENCH_ENABLED } from './audioWorkbenchEnabled';
 import { audioWorkbench } from './audioWorkbench.svelte';
 import { bonusEnding } from './bonusEndingController';
-import { planBonusEnding } from './bonusEnding.mjs';
+import { bonusEndingProfile, planBonusEnding } from './bonusEnding.mjs';
 import { bonusWin, resetBonusWin, startBonusWin } from './bonusWin.svelte';
-import { getWinTiming } from './playerSpeed.svelte';
-import { celebrateSeeds } from './seedCelebration.svelte';
+import { presentWinLines, cancelWinLinePresentation } from './winLinePresentation.svelte';
+import { celebrateSeeds, seedCelebration } from './seedCelebration.svelte';
 import { scatterAnticipation } from './scatterAnticipation';
-import { presentTemplatePayout } from './templatePayout.mjs';
-import { winLevelMap } from './winLevelMap';
 import { validateGeneratedResponse } from './generatedRound.mjs';
 import config from './config';
 import { bonusCues } from './bonusCues.mjs';
@@ -27,12 +26,13 @@ export const fixtureWilds = $state({multipliers:[] as {reel:number;row:number;mu
 export const fixturePlayback = $state({ linePayouts:[] as {amount:number;positions:{reel:number;row:number}[];line:number;multiplier?:number;label?:string}[], busy:false, error:'', status:'Ready', pick:null as null | {reel:number;row:number;phase:string;progress:number;crop:string}, roundTotal:0, bonusTotal:0, remaining:0, completed:0, granted:0, budget:0, inBonus:false, releasingSticky:false, rolling:false, message:'', cuePositions:[] as {reel:number;row:number}[], collisions:[] as {reel:number;row:number}[], sticky:[] as {reel:number;row:number}[] });
 let controller: AbortController | null = null;
 export function cancelFixturePlayback() {
+	seedCelebration.openTriggerBags=[];
  fixtureWilds.multipliers=[];
  controller?.abort();
+ cancelWinLinePresentation();
  eventEmitter.broadcast({type:'soundInteractionsStop'});
  fixturePlayback.linePayouts=[];
  stateGame.activePayline=[];
- eventEmitter.broadcast({type:'winHide'});
  stateGameDerived.enhancedBoard.stop();
  fixturePlayback.releasingSticky=false; fixturePlayback.rolling=false; fixturePlayback.pick=null; fixturePlayback.collisions=[]; fixturePlayback.cuePositions=[]; fixturePlayback.sticky=[]; fixturePlayback.inBonus=false; fixturePlayback.remaining=0; fixturePlayback.completed=0; fixturePlayback.message='';
  stateGame.gameType='basegame';
@@ -50,16 +50,22 @@ export const playBonusFixture = (input: unknown, options: {animate?:boolean;star
 
 export const playGeneratedRound = (response: unknown, options: {animate?:boolean} = {}) => playFixture(response, {...options,generated:true});
 
-async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boolean;generated?:boolean;startAtBonus?:boolean} = {}) {
+export const playReplayRound = (data: unknown) => playFixture(data, {replay:true,generated:true});
+
+async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boolean;generated?:boolean;startAtBonus?:boolean;replay?:boolean} = {}) {
  if (fixturePlayback.busy) return;
  bonusEnding.cancel();
  resetBonusWin();
  fixturePlayback.error='';
  fixturePlayback.busy=true;
- const originalInput=import.meta.env.DEV ? structuredClone(input) : undefined;
  const run = new AbortController(); controller=run;
  run.signal.addEventListener('abort',()=>bonusEnding.cancel(),{once:true});
- try { if(options.generated) input=await validateGeneratedResponse(input); else if(options.bonus) await validateBonusFixture(input); else validateBaseFixture(input); } catch(error) {
+ let originalInput: unknown;
+ try {
+  // Storybook supplies args as reactive proxies; structuredClone rejects them.
+  originalInput=import.meta.env.DEV && input != null ? JSON.parse(JSON.stringify(input)) : undefined;
+  if(options.replay) input=normalizeReplay(input).book; else if(options.generated) input=await validateGeneratedResponse(input); else if(options.bonus) await validateBonusFixture(input); else validateBaseFixture(input);
+ } catch(error) {
   controller=null; fixturePlayback.busy=false;
   fixturePlayback.error=String(error); throw error;
  }
@@ -88,9 +94,10 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
      fixturePlayback.rolling=true;
      try {
       await stateGameDerived.enhancedBoard.spin({revealEvent:{index:e.index,type:'reveal',board:mapped,anticipation:scatterAnticipation(mapped, stateBet.isTurbo),paddingPositions:e.paddingPositions},paddingBoard:config.paddingReels[e.gameType as keyof typeof config.paddingReels]});
+      seedCelebration.openTriggerBags=[];
       if(!run.signal.aborted)bonusEnding.begin('landed');
      } finally { stateGame.activePayline=[]; fixturePlayback.rolling=false; }
-    } else stateGameDerived.enhancedBoard.settle(mapped);
+    } else {stateGameDerived.enhancedBoard.settle(mapped);seedCelebration.openTriggerBags=[];}
    } else if(e.type==='goldenCropPick') {
     await runPickSequence({animate,signal:run.signal,wait:delay,
      frame:(phase:string,progress:number)=>{ fixturePlayback.pick={...e.target,phase,progress,crop:e.expectedCrop}; },
@@ -135,49 +142,50 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
     if(animate && fixturePlayback.inBonus) await delay(cues.length ? 700 : 650);
     if(animate && !run.signal.aborted)bonusEnding.begin('result');
    } else if(e.type==='winInfo') {
-    // Present the union of all paying cells once, regardless of line count.
+    // Show each paying line and merge their amounts before the next payout step.
     if(animate && e.wins.length) {
      try {
-      for(const w of e.wins) for(const p of w.positions) stateGame.board[p.reel].reelState.symbols[p.row].symbolState='win';
-      // Present the authoritative spin award while the symbols are raised.
-      // Full Harvest setWin may include a top-up beyond winInfo.totalWin.
+      // Full Harvest setWin may include a top-up beyond the paying line total.
       const after=book.events.slice(book.events.indexOf(e)+1);
       const nextReveal=after.findIndex(event=>event.type==='reveal');
       const award=after.slice(0,nextReveal<0?undefined:nextReveal).find(event=>event.type==='setWin');
      
-      fixturePlayback.linePayouts=e.wins.map((w:any,i:number)=>({amount:w.win,positions:w.positions,line:w.meta?.lineIndex??i+1,multiplier:w.meta?.lineMultiplier??1}));
-      const lineTotal=fixturePlayback.linePayouts.reduce((sum,w)=>sum+w.amount,0);
-      if(award && award.amount>lineTotal)fixturePlayback.linePayouts.push({amount:award.amount-lineTotal,line:0,positions:[{reel:2,row:2}]});
+      const lineTotal=e.wins.reduce((sum:number,w:any)=>sum+w.win,0);
       const spinPayout = award?.amount ?? e.totalWin ?? lineTotal;
       if(spinPayout>0 && (!fixturePlayback.inBonus || spinPayout<1000)) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_drop'});
-      await delay(getWinTiming().paylines);
+      await presentWinLines(e.wins.map((w:any)=>({amount:w.win,positions:w.positions})),run.signal);
       if(run.signal.aborted)return;
-      fixturePlayback.linePayouts=[];
       if(award){
        presentedWins.add(award.index);
-       if(fixturePlayback.inBonus && award.amount>0) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_pour'});
-       await presentTemplatePayout({amount:fixturePlayback.inBonus ? fixturePlayback.roundTotal : award.amount,payoutSound:undefined,animate,signal:run.signal,emitter:eventEmitter,winLevelData:{...winLevelMap[2],presentDuration:350}});
+       if(fixturePlayback.inBonus && award.amount>=1000 && !bonusEnding.active) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_pour'});
       }
      } finally {
-      fixturePlayback.linePayouts=[];
-      for(const reel of stateGame.board) for(const symbol of reel.reelState.symbols) symbol.symbolState='static';
+      if(run.signal.aborted) cancelWinLinePresentation();
      }
     }
    } else if(e.type==='freeSpinTrigger') {
+    await eventEmitter.broadcastAsync({type:'soundBonusEntryReady'});
     startBonusWin();
     fixturePlayback.inBonus=true; fixturePlayback.sticky=[];
     fixturePlayback.completed=0;
     fixturePlayback.remaining=e.totalFs; fixturePlayback.granted=e.totalFs;
     fixturePlayback.message=`${e.totalFs} FREE SPINS`;
-    if(animate){await celebrateSeeds(e.totalFs,run.signal,()=>{stateGame.gameType='freegame';eventEmitter.broadcast({type:'soundMusic',name:'bgm_freespin'});},event=>eventEmitter.broadcast(event));}
+    if(animate){await celebrateSeeds(e.totalFs,run.signal,()=>{stateGame.gameType='freegame';},event=>eventEmitter.broadcast(event));if(!run.signal.aborted)eventEmitter.broadcast({type:'soundMusic',name:'bgm_freespin'});}
+    else {stateGame.gameType='freegame';eventEmitter.broadcast({type:'soundMusic',name:'bgm_freespin'});}
    } else if(e.type==='freeSpinEnd') {
     const revealSummary=()=>{
      bonusWin.amount=e.amount;
      fixturePlayback.message=`BONUS COMPLETE · ${e.amount/100}×`;
     };
     if(animate){
-     if(!await bonusEnding.finish(revealSummary) || run.signal.aborted)return;
-    }else revealSummary();
+     if(!await bonusEnding.finish(revealSummary,e.amount) || run.signal.aborted)return;
+    }else {
+     revealSummary();
+     const tier=bonusEndingProfile(e.amount).tier;
+     eventEmitter.broadcast({type:'soundBonusEnding',phase:'summary',tier});
+     eventEmitter.broadcast({type:'soundBonusEnding',phase:'return',tier});
+     eventEmitter.broadcast({type:'soundBonusEnding',phase:'complete',tier});
+    }
     if(animate && fixturePlayback.sticky.length) {
      fixturePlayback.releasingSticky=true;
      await delay(320);
@@ -186,10 +194,8 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
     fixturePlayback.releasingSticky=false;
     fixturePlayback.sticky=[]; fixturePlayback.collisions=[]; fixturePlayback.cuePositions=[]; fixturePlayback.inBonus=false; fixturePlayback.remaining=0; stateGame.gameType='basegame';
    } else if(e.type==='setWin' && options.generated && !presentedWins.has(e.index)) {
-    // Generated winLevel=1 is a math placeholder. Use the template's ordinary
-    // count-up for local review, without inventing big-win thresholds or awards.
-    if(animate && e.amount>0) eventEmitter.broadcast({type:'soundOnce',name:!fixturePlayback.inBonus || e.amount<1000?'sfx_money_drop':'sfx_money_pour'});
-    if(e.amount>0) await presentTemplatePayout({amount:fixturePlayback.inBonus ? fixturePlayback.roundTotal : e.amount,payoutSound:undefined,animate,signal:run.signal,emitter:eventEmitter,winLevelData:winLevelMap[2]});
+    // Standalone generated payouts still get their sound; setTotalWin updates the HUD.
+    if(animate && e.amount>0 && (!fixturePlayback.inBonus || e.amount<1000 || !bonusEnding.active)) eventEmitter.broadcast({type:'soundOnce',name:!fixturePlayback.inBonus || e.amount<1000?'sfx_money_drop':'sfx_money_pour'});
    } else if(e.type==='setTotalWin') {
     stateBet.winBookEventAmount=e.amount;
    }

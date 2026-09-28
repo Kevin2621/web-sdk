@@ -45,8 +45,9 @@
       7680.5442176871
     ],
     "sfx_anticipation_start": [
-      263000,
-      1000
+      567015.5102040815,
+      2874.53514739229,
+      true
     ],
     "sfx_bigwin_coinloop": [
       265000,
@@ -265,6 +266,31 @@
       554198.6848072562,
       2796.1678004535147,
       false
+    ],
+    "sfx_farm_entry_riser": [
+      0,
+      6034.286,
+      false
+    ],
+    "sfx_bonus_continue_spell": [
+      0,
+      3395.918,
+      false
+    ],
+    "sfx_bonus_continue_wood_zap": [
+      0,
+      1875.034,
+      false
+    ],
+    "sfx_bonus_summary_modest": [
+      0,
+      3030.204,
+      false
+    ],
+    "sfx_bonus_summary_strong": [
+      0,
+      6034.286,
+      false
     ]
   },
   "src": [
@@ -272,10 +298,10 @@
   ],
   "config": {
     "bgm_freespin": {
-      "volume": 0.14
+      "volume": 0.3
     },
     "bgm_main": {
-      "volume": 0.11
+      "volume": 0.14
     },
     "bgm_winlevel_big": {
       "volume": 1
@@ -293,160 +319,175 @@
       "volume": 1
     },
     "jng_intro_fs": {
-      "volume": 1
+      "volume": 0.4
     },
     "sfx_anticipation": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_anticipation_start": {
-      "volume": 1
+      "volume": 0.2
     },
     "sfx_bigwin_coinloop": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_btn_general": {
-      "volume": 1
+      "volume": 0.38
     },
     "sfx_btn_spin": {
-      "volume": 1
+      "volume": 0.48888888888888893
     },
     "sfx_fs_respins": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_combine_a": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_combine_b": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_explosion_a": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_explosion_b": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_explosion_c": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_landing": {
-      "volume": 1
+      "volume": 1.06
     },
     "sfx_multiplier_reset": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_up": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_update": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_multiplier_win": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_reel_stop_1": {
-      "volume": 0.45
+      "volume": 0.14222222222222222
     },
     "sfx_reel_stop_2": {
-      "volume": 0.45
+      "volume": 0.14222222222222222
     },
     "sfx_reel_stop_3": {
-      "volume": 0.45
+      "volume": 0.14222222222222222
     },
     "sfx_reel_stop_4": {
-      "volume": 0.45
+      "volume": 0.14222222222222222
     },
     "sfx_reel_stop_5": {
-      "volume": 0.45
+      "volume": 0.14222222222222222
     },
     "sfx_royals_landing": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_scatter_reveal": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_scatter_stop_1": {
-      "volume": 1
+      "volume": 0.6666666666666666
     },
     "sfx_scatter_stop_2": {
-      "volume": 1
+      "volume": 0.6666666666666666
     },
     "sfx_scatter_stop_3": {
-      "volume": 1
+      "volume": 0.6666666666666666
     },
     "sfx_scatter_stop_4": {
-      "volume": 1
+      "volume": 0.6666666666666666
     },
     "sfx_scatter_stop_5": {
-      "volume": 1
+      "volume": 0.6666666666666666
     },
     "sfx_scatter_win": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_scatter_win_v2": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_superfreespin": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_symbols_landing": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_wild_explode": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_winlevel_end": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_winlevel_nice": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_winlevel_small": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_winlevel_standard": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_winlevel_substantial": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_youwon_panel": {
-      "volume": 1
+      "volume": 0.4
     },
     "tumble_win_1": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "tumble_win_2": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "tumble_win_3": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "tumble_win_4": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "tumble_win_5": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_bonus_yeehaw": {
-      "volume": 1
+      "volume": 0.5
     },
     "sfx_bonus_open": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_bonus_close": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_money_drop": {
-      "volume": 1
+      "volume": 0.79
     },
     "sfx_money_pour": {
-      "volume": 1
+      "volume": 0.8888888888888888
     },
     "sfx_bonus_ending_riser": {
-      "volume": 1
+      "volume": 0.35
     },
     "sfx_scatter_riser": {
-      "volume": 1
+      "volume": 0.45
+    },
+    "sfx_farm_entry_riser": {
+      "volume": 0.35
+    },
+    "sfx_bonus_continue_spell": {
+      "volume": 0.55
+    },
+    "sfx_bonus_continue_wood_zap": {
+      "volume": 0.55
+    },
+    "sfx_bonus_summary_modest": {
+      "volume": 0.38
+    },
+    "sfx_bonus_summary_strong": {
+      "volume": 0.4
     }
   }
 }

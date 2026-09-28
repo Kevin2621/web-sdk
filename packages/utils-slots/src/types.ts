@@ -41,7 +41,7 @@ type ReelCreateOptions<TRawSymbol extends object, TSymbolState extends string> =
 	reelIndex: number;
 	symbolHeight: number;
 	onReelStopping: () => void;
-	onSymbolLand: (args: { rawSymbol: TRawSymbol }) => void;
+	onSymbolLand: (args: { rawSymbol: TRawSymbol; reelSymbol?: { id: object; symbolY: () => number }; landingBatch?: object }) => void;
 };
 
 export type SpinningReelCreateOptions<

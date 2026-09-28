@@ -38,6 +38,8 @@ def main():
         ('money-pour.mp3', ['sfx_money_pour'], False, 0.5),
         ('scatter-riser.mp3', ['sfx_scatter_riser'], False, 0.55),
         ('bonus-ending-riser.mp3', ['sfx_bonus_ending_riser'], False, 0.55),
+        # The bundled tick remains a sprite fallback; runtime spin playback uses
+        # static/assets/audio/effects/symbolFastWhoosh.wav instead.
         ('spin.mp3', ['sfx_btn_spin'], True, 0.45),
         ('reel-stop.mp3', [f'sfx_reel_stop_{n}' for n in range(1, 6)], False, 0.6),
     ]
@@ -71,13 +73,55 @@ def main():
                         '-c:a', 'libmp3lame', '-b:a', '192k', str(temp / 'sounds.mp3')], check=True)
         (AUDIO / 'sounds.mp3').write_bytes((temp / 'sounds.mp3').read_bytes())
     # Old alternative encodings must not take precedence over the new MP3 sprite.
-    for config in catalogue['config'].values():
-        config['volume'] = 1
-    catalogue['config']['bgm_main']['volume'] = 0.11
-    catalogue['config']['bgm_freespin']['volume'] = 0.14
-    catalogue['config']['sfx_btn_spin']['volume'] = 1
+    # Keep the 75/75/75 starting sliders, with the music/effects balance of the
+    # preferred screenshot at approximately 70/70/80. The effects gain below
+    # already matches that reference within 0.04 dB.
+    for name, config in catalogue['config'].items():
+        config['volume'] = 1 if name.startswith('bgm_') else 8 / 9
+    catalogue['config']['bgm_main']['volume'] = 0.14
+    catalogue['config']['bgm_freespin']['volume'] = 0.30
+    catalogue['config']['sfx_btn_spin']['volume'] = 0.55 * 8 / 9
+    # Keep the 59 ms control click below the spin cue, especially during bet stepping.
+    catalogue['config']['sfx_btn_general']['volume'] = 0.38
+    # Tiny follow-up mix pass: Wild +0.5 dB, money-bag drop about -1 dB.
+    # The five scatter hits retain their shared level.
+    catalogue['config']['sfx_multiplier_landing']['volume'] = 1.06
+    catalogue['config']['sfx_money_drop']['volume'] = 0.79
+    # Keep every scatter landing at one level, 2.5 dB below the former mix.
+    # The anticipation riser and bonus entry retain their separate gains.
+    for scatter in range(1, 6):
+        catalogue['config'][f'sfx_scatter_stop_{scatter}']['volume'] = 0.75 * 8 / 9
+    # Keep the bonus transition music near the bed instead of letting several
+    # full-level one-shots dominate it. Accent hits can still sit above it.
+    for name, volume in {
+        'sfx_scatter_riser': 0.45,
+        'sfx_anticipation_start': 0.20,
+        'jng_intro_fs': 0.40,
+        'sfx_bonus_yeehaw': 0.50,
+        'sfx_bonus_ending_riser': 0.35,
+        'sfx_youwon_panel': 0.40,
+    }.items():
+        catalogue['config'][name]['volume'] = volume
+    # The anticipation tick shares the original tick recording retained in
+    # the sprite, while runtime uses its standalone WAV for a clean loop.
+    catalogue['sprite']['sfx_anticipation_start'] = [*catalogue['sprite']['sfx_btn_spin'][:2], True]
+    catalogue['sprite'].pop('sfx_ultra_toggle', None)
+    catalogue['config'].pop('sfx_ultra_toggle', None)
+
+    # The healing spell ships as its original MP3 in a standalone Howl.
+    catalogue['sprite']['sfx_bonus_continue_spell'] = [0, 3395.918, False]
+    catalogue['config']['sfx_bonus_continue_spell'] = {'volume': 0.55}
+    catalogue['sprite']['sfx_bonus_continue_wood_zap'] = [0, 1875.034, False]
+    catalogue['config']['sfx_bonus_continue_wood_zap'] = {'volume': 0.55}
+    catalogue['sprite']['sfx_bonus_summary_modest'] = [0, 3030.204, False]
+    catalogue['config']['sfx_bonus_summary_modest'] = {'volume': 0.38}
+    catalogue['sprite']['sfx_bonus_summary_strong'] = [0, 6034.286, False]
+    catalogue['config']['sfx_bonus_summary_strong'] = {'volume': 0.40}
+    catalogue['sprite']['sfx_farm_entry_riser'] = [0, 6034.286, False]
+    catalogue['config']['sfx_farm_entry_riser'] = {'volume': 0.35}
     for reel in range(1, 6):
-        catalogue['config'][f'sfx_reel_stop_{reel}']['volume'] = 0.45
+        # Runtime routes this cue to effects/reelStopWood.wav; retain the sprite fallback.
+        catalogue['config'][f'sfx_reel_stop_{reel}']['volume'] = 0.16 * 8 / 9
     catalogue['src'] = ['./assets/audio/sounds.mp3']
     (AUDIO / 'sounds.json').write_text(json.dumps(catalogue, indent=2) + '\n')
     (APP / 'src/game/audioSprite.json').write_text(json.dumps(catalogue, indent=2) + '\n')

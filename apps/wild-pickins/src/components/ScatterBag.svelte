@@ -7,6 +7,6 @@
   onburst?: () => void; oncomplete?: () => void;
  } = $props();
 </script>
-<SpineProvider key="wpScatterBag" {x} {y} scale={size / 1254}>
+<SpineProvider key="wpScatterBag" {x} {y} height={size}>
  <ScatterBagTrack {animation} {onburst} {oncomplete} />
 </SpineProvider>

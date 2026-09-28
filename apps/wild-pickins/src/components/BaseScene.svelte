@@ -3,9 +3,10 @@
 	import { getContext } from '../game/context';
 	import { sceneRegistration } from '../game/artRefresh';
 	import Board from './Board.svelte';
-	import BoardSceneLayers from './BoardSceneLayers.svelte';
+	import PlayBoardSpine from './PlayBoardSpine.svelte';
 	import Anticipations from './Anticipations.svelte';
 
+	const { arriving = false } = $props<{ arriving?: boolean }>();
 	const context = getContext();
 	const board = $derived(context.stateGameDerived.boardLayout());
 	const scene = $derived(sceneRegistration(board));
@@ -20,12 +21,12 @@
 	});
 </script>
 
-<!-- Spine owns the environment and board art. Slot children draw after the backing,
-     before the frame; inverse scaling preserves the existing game/HTML coordinates. -->
-<SpineProvider key="wpBaseScene" x={origin.x} y={origin.y}
+<!-- The Spine board bone carries the backing, frame, and reel content together. -->
+<Container x={origin.x} y={origin.y}>
+<SpineProvider key="wpBaseScene" x={0} y={0}
 	scale={{ x: scene.scaleX, y: scene.scaleY }}>
-	<BoardSceneLayers />
-	<SpineSlot slotName="board-back">
+	<PlayBoardSpine {arriving} />
+	<SpineSlot slotName="play-board">
 		<Container x={-origin.x / scene.scaleX} y={-origin.y / scene.scaleY}
 			scale={{ x: 1 / scene.scaleX, y: 1 / scene.scaleY }}>
 			{#if context.stateGameDerived.hasActiveWin()}
@@ -42,3 +43,4 @@
 		</Container>
 	</SpineSlot>
 </SpineProvider>
+</Container>

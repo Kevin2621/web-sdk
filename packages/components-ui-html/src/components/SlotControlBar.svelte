@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { cubicOut, cubicIn } from 'svelte/easing';
+	import { draggablePanel } from './draggablePanel';
+	import { registerDismissiblePopup } from './popupDismissal';
 	/** Presentation only: the host game owns wagers, round results and autoplay. */
 	let {
 		variant = 'game',
@@ -17,6 +19,7 @@
 		balanceNote = '',
 		spinning = false,
 		disabled = false,
+		amountDisabled = false,
 		speed = $bindable(1),
 		auto = $bindable(false),
 		autoSetup = false,
@@ -50,6 +53,7 @@
 		win?: number;
 		spinning?: boolean;
 		disabled?: boolean;
+		amountDisabled?: boolean;
 		spinDisabled?: boolean;
 		bonusDisabled?: boolean;
 		speedDisabled?: boolean;
@@ -81,9 +85,11 @@
 		return () => clearTimeout(timer);
 	});
 	let stakeElement: HTMLDivElement;
-	function dismissPresets(event: PointerEvent) {
-		if (event.target instanceof Node && !stakeElement?.contains(event.target)) presetsOpen = false;
-	}
+	onMount(() => registerDismissiblePopup({
+		isOpen: () => presetsOpen,
+		contains: (target) => !!stakeElement?.querySelector('.presets')?.contains(target),
+		close: () => { presetsOpen = false; },
+	}));
 	$effect(() => {
 		if (locked || menuOpen || autoSetup) presetsOpen = false;
 	});
@@ -91,6 +97,9 @@
 		[...new Set(amounts.filter((n) => Number.isFinite(n) && n > 0))].sort((a, b) => a - b),
 	);
 	let locked = $derived(disabled || spinning || auto);
+	let autoDisabled = $derived(
+		!autoSetup && (stopQueued || ((disabled || spinning || spinDisabled) && !auto)),
+	);
 	let index = $derived(
 		Math.max(
 			0,
@@ -142,7 +151,6 @@
 </script>
 
 <svelte:document
-	onpointerdown={dismissPresets}
 	onkeydown={(event) => {
 		if (event.key === 'Escape') presetsOpen = false;
 	}}
@@ -215,8 +223,8 @@
 				<div class="stake" bind:this={stakeElement}>
 					<button
 						class="amount"
-						disabled={locked || !levels.length}
-						aria-expanded={presetsOpen && !locked}
+						disabled={locked || amountDisabled || !levels.length}
+						aria-expanded={presetsOpen && !locked && !amountDisabled}
 						aria-label={`${label('Play')} ${formatAmount(amount)}`}
 						onclick={() => (presetsOpen = !presetsOpen)}
 					>
@@ -239,18 +247,19 @@
 							value={index}
 							step="1"
 							aria-valuetext={formatAmount(amount)}
-							disabled={locked || levels.length < 2}
+							disabled={locked || amountDisabled || levels.length < 2}
 							oninput={(event) => select(levels[Number(event.currentTarget.value)])}
 						/>
 					</div>
-					{#if presetsOpen && !locked}
+					{#if presetsOpen && !locked && !amountDisabled}
 						<div
 							class="presets"
+							use:draggablePanel={{ header: '.preset-heading', key: variant === 'bonus' ? 'bonus-bet-amount' : 'bet-amount' }}
 							role="group"
 							aria-label="Common play amounts"
-							inert={!presetsOpen || locked}
-							in:fly={{ y: 6, duration: reducedMotion ? 0 : 120, easing: cubicOut }}
-							out:fly={{ y: 6, duration: reducedMotion ? 0 : 120, easing: cubicIn }}
+								inert={!presetsOpen || locked || amountDisabled}
+							in:fly={{ y: 6, duration: reducedMotion ? 0 : 160, easing: cubicOut }}
+							out:fly={{ y: 6, duration: reducedMotion ? 0 : 160, easing: cubicIn }}
 						>
 							<div class="preset-heading">
 								<span>{label('Play')}</span>
@@ -283,7 +292,7 @@
 						<button
 							class="step-btn"
 							aria-label={`${label('Play')} +`}
-							disabled={locked || !levels.some((n) => n > amount)}
+							disabled={locked || amountDisabled || !levels.some((n) => n > amount)}
 							onpointerdown={(event) => startHold(event, 1)}
 							onpointerleave={stopHold}
 							onclick={(event) => arrowClick(event, 1)}
@@ -293,7 +302,7 @@
 						<button
 							class="step-btn"
 							aria-label={`${label('Play')} −`}
-							disabled={locked || !levels.some((n) => n < amount)}
+							disabled={locked || amountDisabled || !levels.some((n) => n < amount)}
 							onpointerdown={(event) => startHold(event, -1)}
 							onpointerleave={stopHold}
 							onclick={(event) => arrowClick(event, -1)}
@@ -304,6 +313,7 @@
 					<div class="actions" class:no-auto={!showAuto}>
 						<button
 							class="speed"
+							aria-pressed={speed > 1}
 							disabled={disabled || speedDisabled}
 							aria-label={`${label('Speed')} ${speedText || speed}`}
 							title={`${label('Speed')} ${speedText || speed}`}
@@ -363,10 +373,9 @@
 							<button
 								class="auto"
 								aria-label={autoSetup ? label('Close') : auto ? label('Stop') : label('Auto')}
-								title={autoSetup ? label('Close') : label('Auto')}
+								title={autoDisabled ? undefined : autoSetup ? label('Close') : label('Auto')}
 								aria-expanded={autoSetup}
-								disabled={!autoSetup &&
-									(stopQueued || ((disabled || spinning || spinDisabled) && !auto))}
+								disabled={autoDisabled}
 								aria-pressed={auto}
 								onclick={() => {
 									if (onautochange) onautochange(!auto);
@@ -400,16 +409,20 @@
 		width: 100%;
 	}
 	.slot-controls {
+		--ui-hover: var(--control-hover, #414b54);
+		--ui-active: var(--control-active, #52616b);
+		--ui-selected: var(--control-selected, #9ba5ae);
+		--ui-edge: var(--control-edge, #87949e);
+		--ui-focus: #bddcff;
 		--height: clamp(48px, 7.2cqw, 90px);
 		--spin: clamp(78px, 11.6cqw, 145px);
 		--space: clamp(10px, 1.4cqw, 18px);
 		--line: #41444a;
 		--surface: #282c32;
-		--hover: #ffffff12;
 		display: flex;
 		align-items: center;
 		gap: var(--space);
-		color: #f5f5f5;
+		color: var(--control-text, #e5e8ea);
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 	}
 	* {
@@ -425,17 +438,28 @@
 		cursor: pointer;
 		-webkit-tap-highlight-color: transparent;
 	}
-	button:hover:not(:disabled) {
-		background-image: linear-gradient(var(--hover), var(--hover));
+	.motion-enabled button:not(:disabled) {
+		transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease,
+			scale 70ms ease-out;
+	}
+	:is(.menu, .amount, .step-btn, .speed:not([aria-pressed='true']), .auto:not([aria-pressed='true'])):hover:not(:disabled) {
+		background: var(--ui-hover);
+	}
+	:is(.menu, .amount, .auto)[aria-expanded='true']:not(:disabled) {
+		background: var(--ui-active);
+		box-shadow: inset 0 0 0 1px var(--ui-edge);
 	}
 	button:focus-visible,
 	input:focus-visible {
-		outline: 2px solid white;
+		outline: 2px solid var(--ui-focus);
 		outline-offset: 3px;
 	}
 	button:disabled,
 	input:disabled {
 		cursor: default;
+	}
+	button:disabled {
+		pointer-events: none;
 	}
 	button:disabled svg,
 	.amount:disabled .value {
@@ -469,8 +493,8 @@
 		justify-content: center;
 		gap: 3px;
 		clip-path: polygon(12% 0, 88% 0, 100% 12%, 100% 88%, 88% 100%, 12% 100%, 0 88%, 0 12%);
-		background-color: #f6ca43;
-		color: #302609;
+		background-color: var(--ui-selected);
+		color: #23282d;
 		font-size: clamp(10px, 1.15cqw, 15px);
 		font-weight: 750;
 		letter-spacing: 0.055em;
@@ -481,7 +505,7 @@
 		inset: 0;
 		width: 100%;
 		height: 100%;
-		stroke: #806017;
+		stroke: #59636d;
 		stroke-width: 1;
 		opacity: 0.45;
 		pointer-events: none;
@@ -492,8 +516,11 @@
 		stroke-width: 1.8;
 	}
 	.bonus:focus-visible {
-		outline: none;
-		background-color: #ffe493;
+		outline: 2px solid var(--ui-focus);
+		background-color: #adb6be;
+	}
+	.bonus:hover:not(:disabled) {
+		background-color: #adb6be;
 	}
 	.bonus:focus-visible .bonus-rim {
 		stroke-width: 3;
@@ -663,6 +690,12 @@
 		touch-action: none;
 		user-select: none;
 	}
+	.step-btn:disabled,
+	.step-btn:disabled:hover,
+	.step-btn:disabled:active {
+		background: transparent;
+		box-shadow: none;
+	}
 	.step-btn svg {
 		width: 22px;
 		height: 22px;
@@ -705,6 +738,13 @@
 	.speed small {
 		font-size: 11px;
 	}
+	.speed[aria-pressed='true'] {
+		background: var(--ui-active);
+		box-shadow: inset 0 0 0 1px var(--ui-edge);
+	}
+	.speed[aria-pressed='true']:hover:not(:disabled) {
+		background: #5d6c76;
+	}
 	/* Scale around the visible controls, excluding the overlap beneath Spin. */
 	.speed {
 		transform-origin: calc(50% - var(--spin) / 4) 50%;
@@ -727,13 +767,18 @@
 		height: var(--spin);
 		display: grid;
 		place-items: center;
-		border: 1px solid #60646b;
+		border: 1px solid var(--ui-edge);
 		border-radius: 50%;
-		background: linear-gradient(#363b43, #22262c);
+		background: linear-gradient(#6d7882, #4b5660);
+		color: #e4e9ed;
 		box-shadow: 0 3px 8px #0004;
 	}
 	.spin:hover:not(:disabled) {
-		background: #3b4048;
+		background: linear-gradient(#79858f, #58646f);
+		border-color: #a5afb8;
+	}
+	.spin:active:not(:disabled) {
+		background: linear-gradient(#596670, #404b55);
 	}
 	.spin svg {
 		width: 72%;
@@ -741,7 +786,7 @@
 		aspect-ratio: 1;
 	}
 	.remaining-spins {
-		fill: #282c32;
+		fill: #23282d;
 		stroke: none;
 		font-size: 12px;
 		font-weight: 700;
@@ -770,11 +815,12 @@
 		stroke-width: 2.25;
 	}
 	.auto[aria-pressed='true'] {
-		background: #e4e7eb;
-		color: #24282e;
+		background: var(--ui-active);
+		color: #f5f5f5;
+		box-shadow: inset 0 0 0 1px var(--ui-edge);
 	}
 	.auto[aria-pressed='true']:hover:not(:disabled) {
-		background: #fff;
+		background: #5d6c76;
 	}
 	.auto[aria-pressed='true'] svg {
 		transform: translateY(-4px);
@@ -807,6 +853,9 @@
 		box-shadow: 0 4px 16px #0003;
 	}
 	.preset-heading {
+		cursor: grab;
+		touch-action: none;
+		user-select: none;
 		position: absolute;
 		inset: 0 0 auto;
 		z-index: 1;
@@ -824,6 +873,8 @@
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 	}
+	.preset-heading:active { cursor: grabbing; }
+	.preset-heading button { cursor: pointer; }
 	.preset-close {
 		width: 32px;
 		height: 32px;
@@ -862,10 +913,17 @@
 		overflow-wrap: anywhere;
 	}
 	.preset-btn[aria-pressed='true'] {
-		background: #fff;
-		color: #0d0e11;
-		border-color: #fff;
+		background: var(--ui-selected);
+		color: #23282d;
+		border-color: #b5bec6;
 		font-weight: 700;
+	}
+	.preset-btn:hover:not(:disabled):not([aria-pressed='true']) {
+		background: var(--ui-hover);
+		border-color: var(--ui-edge);
+	}
+	.preset-btn[aria-pressed='true']:hover:not(:disabled) {
+		background: #adb6be;
 	}
 
 	@container slotbar (max-width: 620px) {
@@ -983,9 +1041,6 @@
 		.bonus-only .stake { grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr); }
 		.bonus-only .slider-wrapper { padding-inline: 10px; }
 	}
-	.motion-enabled button {
-		transition: scale 50ms ease-out;
-	}
 	.menu,
 	.step-btn,
 	.speed,
@@ -996,5 +1051,8 @@
 	}
 	.motion-enabled button:active:not(:disabled) {
 		scale: var(--press-scale, 0.98);
+	}
+	.motion-enabled button:disabled {
+		transition: none;
 	}
 </style>

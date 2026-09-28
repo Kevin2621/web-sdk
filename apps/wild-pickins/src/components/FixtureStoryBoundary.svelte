@@ -1,11 +1,11 @@
 <script lang="ts">
  import { onDestroy, type Snippet } from 'svelte';
  import { cancelFixtureAction } from '../game/fixturePlayback.svelte';
- let { action, data, children }: { action: unknown; data: unknown; children: Snippet } = $props();
+ let { storyKey, children }: { storyKey: string; children: Snippet } = $props();
  // Storybook can reuse the story module when selecting another named story.
- // React to the active snippet's inputs rather than relying on module teardown.
+ // A stable story key avoids cancelling a running action when args are refreshed.
  $effect(() => {
-  action; data;
+  storyKey;
   return () => cancelFixtureAction();
  });
  onDestroy(cancelFixtureAction);

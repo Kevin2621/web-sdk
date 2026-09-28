@@ -3,11 +3,17 @@
 
 	export type EmitterEventSound =
 		| { type: 'soundMusic'; name: MusicName }
-		| { type: 'soundScatterSequenceStart'; total: number; baseGame: boolean }
+		| { type: 'soundPressSpin' }
+		| { type: 'soundPressPlayAmount' }
+		| { type: 'soundPressSpeed' }
+		| { type: 'soundScatterSequenceStart'; total: number; baseGame: boolean; anticipation: boolean }
 		| { type: 'soundScatterLand' }
-		| { type: 'soundScatterRiserPlan'; duration: number }
+		| { type: 'soundScatterFinalTravel'; duration: number }
+		| { type: 'soundScatterFinalImpact' }
+		| { type: 'soundBonusEntryReady' }
+		| { type: 'soundBonusContinue' }
 		| { type: 'soundScatterSequenceCancel' }
-		| {type:'soundBonusEnding';phase:'begin'|'summary'|'return'|'cancel'|'complete'}
+		| {type:'soundBonusEnding';phase:'begin'|'summary'|'return'|'cancel'|'complete';tier:'quiet'|'modest'|'strong'|'grand'}
 		| { type: 'soundCue'; name: SoundEffectName }
 		| { type: 'soundOnce'; name: SoundEffectName; forcePlay?: boolean }
 		| { type: 'soundLoop'; name: SoundEffectName }
@@ -28,19 +34,69 @@
 	import { getContext } from '../game/context';
 	import { audioWorkbench } from '../game/audioWorkbench.svelte';
 	import { bonusEnding } from '../game/bonusEndingController';
-	import { createScatterSound, createScatterRiser } from '../game/scatterSound.mjs';
+	import { createScatterSound } from '../game/scatterSound.mjs';
+	import { bonusEndingTiming } from '../game/bonusEnding.mjs';
 
 	const context = getContext();
 
 	const cues = new Map<SoundEffectName, { timer: ReturnType<typeof setTimeout>; finish: () => void }>();
 	const musicCues = new Set<SoundEffectName>(['jng_intro_fs', 'sfx_winlevel_small', 'sfx_youwon_panel']);
 	const priorityCues = new Set<SoundEffectName>(['jng_intro_fs', 'sfx_winlevel_small', 'sfx_youwon_panel', 'sfx_money_drop', 'sfx_money_pour', 'sfx_bonus_yeehaw', 'sfx_bonus_ending_riser']);
+	const reelStopRates=[0.97,1.02,1,0.96,1.04];
+	let reelStopCount=0;
+	let lastUiClickAt = -Infinity;
+	let lastSpinCueAt = -Infinity;
+	function playUiClick() {
+		const now = performance.now();
+		if (now - lastUiClickAt < 110) return;
+		lastUiClickAt = now;
+		sound.players.once.play({ name: 'sfx_btn_general' });
+	}
+	function playSpinCue() {
+		const now = performance.now();
+		if (now - lastSpinCueAt < 120) return;
+		lastSpinCueAt = now;
+		sound.stop({ name: 'sfx_btn_spin' });
+		sound.players.once.play({ name: 'sfx_btn_spin' });
+	}
 	let duckTimer: ReturnType<typeof setTimeout> | undefined;
 	let duckUntil = 0;
 	let isDucked = false;
+	let baseTriggerFade = false;
+	let finalReelImpactAt: number | undefined;
+	let secondScatterLanded = false;
+	let bonusEntryCueAt = 0;
+	let riserStartedAt: number | undefined;
+	let riserRate = 1;
+	let riserStartTimer: ReturnType<typeof setTimeout> | undefined;
+	const riserAttackClearanceMs = 160;
+	// The useful part of 006343 ends about a second before its WAV tail.
+	const riserActiveMs = 3900;
+	function alignRiserToFinalImpact() {
+		if(riserStartedAt===undefined || finalReelImpactAt===undefined)return;
+		const now=performance.now();
+		const remaining=Math.max(1,finalReelImpactAt-now);
+		const played=(now-riserStartedAt)*riserRate;
+		const rate=Math.max(.65,Math.min(1.8,(riserActiveMs-played)/remaining));
+		if(rate>0){riserStartedAt=now-played/rate;riserRate=rate;sound.players.once.rate({name:'sfx_scatter_riser',rate});}
+	}
+	function fadeBaseToFinalImpact() {
+		if(!secondScatterLanded || finalReelImpactAt===undefined)return;
+		baseTriggerFade=true;
+		sound.players.music.fade({name:'bgm_main',from:1,to:0,duration:Math.max(0,finalReelImpactAt-performance.now())});
+		secondScatterLanded=false;
+	}
 	function setBedLevel(from:number,to:number,duration:number) {
 		for(const name of ['bgm_main','bgm_freespin'] as const)
+			if(name !== 'bgm_main' || !baseTriggerFade)
 			sound.players.music.fade({name,from,to,duration});
+	}
+	function restoreTriggerBase(duration=250) {
+		finalReelImpactAt=undefined;
+		secondScatterLanded=false;
+		if(!baseTriggerFade)return;
+		baseTriggerFade=false;
+		sound.players.music.fade({name:'bgm_main',from:0,to:1,duration});
 	}
 	function restoreBed() {
 		clearTimeout(duckTimer);
@@ -61,20 +117,47 @@
 		},Math.max(0,duckUntil-performance.now()));
 	}
 	let ending = false;
-	const scatterRiser = createScatterRiser({
-	 play: (rate:number) => {
-	  sound.players.once.play({name:'sfx_scatter_riser'});
-	  sound.players.once.rate({name:'sfx_scatter_riser',rate});
-	 },
-	 stop: () => sound.stop({name:'sfx_scatter_riser'}),
-	 duration: () => (audioWorkbench.audio ?? context.stateApp.loadedAssets.sound as LoadedAudio<SoundName>).sprite.sfx_scatter_riser[1],
-	});
 	const scatterSound = createScatterSound({
-	 startRiser: (duration:number) => scatterRiser.plan(duration),
-	 stopRiser: () => scatterRiser.cancel(),
+	 startTick: () => sound.players.loop.play({name:'sfx_anticipation_start'}),
+	 stopTick: () => sound.stop({name:'sfx_anticipation_start'}),
+	 onSecondScatter: () => {
+	  secondScatterLanded=true;
+	  fadeBaseToFinalImpact();
+	 },
+	 onFinalImpact: () => {
+	  if(baseTriggerFade || secondScatterLanded){
+	   baseTriggerFade=true;
+	   secondScatterLanded=false;
+	   sound.players.music.fade({name:'bgm_main',from:0,to:0,duration:0});
+	  }
+	 },
+	 onFinalScatter: (name:SoundEffectName) => {
+	  const audio=audioWorkbench.audio ?? context.stateApp.loadedAssets.sound as LoadedAudio<SoundName>;
+	  // Bring the orchestral downbeat under the scatter hit's decay.
+	  bonusEntryCueAt=performance.now()+Math.min(600,audio.sprite[name][1]*.3);
+	 },
+	 onMiss: () => {
+	  bonusEntryCueAt=0;
+	  clearTimeout(riserStartTimer);
+	  riserStartTimer=undefined;
+	  riserStartedAt=undefined;
+	  sound.players.once.fade({name:'sfx_scatter_riser',from:1,to:0,duration:180});
+	  restoreTriggerBase(2500);
+	 },
+	 startRiser: () => {
+	  // Preserve the second scatter's click, then clear its guitar tail so the
+	  // bass drop at the start of 006343 can be heard on its own.
+	  sound.players.once.fade({name:'sfx_scatter_stop_2',from:1,to:.42,duration:riserAttackClearanceMs});
+	  clearTimeout(riserStartTimer);
+	  riserStartTimer=setTimeout(()=>{
+	   riserStartTimer=undefined;
+	   riserStartedAt=performance.now();riserRate=1;
+	   sound.players.once.play({name:'sfx_scatter_riser'});
+	   alignRiserToFinalImpact();
+	  },riserAttackClearanceMs);
+	 },
+	 stopRiser: () => {clearTimeout(riserStartTimer);riserStartTimer=undefined;riserStartedAt=undefined;sound.stop({name:'sfx_scatter_riser'});},
 	 play: (name:SoundEffectName) => sound.players.once.play({name,forcePlay:true}),
-	 // Original recording levels: no automatic music ducking.
-	 setBaseGain: () => {},
 	});
 
 	function stopCue(name: SoundEffectName) {
@@ -85,8 +168,9 @@
 	function playCue(name: SoundEffectName) {
 		if (musicCues.has(name)) for (const other of musicCues) if (other !== name) stopCue(other);
 		stopCue(name);
-		duckBed(name);
+		if(!ending)duckBed(name);
 		sound.players.once.play({ name });
+		if(name==='jng_intro_fs')sound.players.once.fade({name,from:0,to:1,duration:80});
 		const audio = audioWorkbench.audio ?? context.stateApp.loadedAssets.sound as LoadedAudio<SoundName>;
 		return new Promise<void>((finish) => {
 			const timer = setTimeout(() => stopCue(name), audio.sprite[name][1]);
@@ -94,30 +178,90 @@
 		});
 	}
 	function clearCues() { for (const name of [...cues.keys()]) stopCue(name); }
-	onDestroy(()=>{clearTimeout(duckTimer);scatterRiser.cancel();bonusEnding.cancel();clearCues();});
+	onDestroy(()=>{clearTimeout(duckTimer);scatterSound.reset();bonusEnding.cancel();clearCues();});
 
 	context.eventEmitter.subscribeOnMount({
-		soundScatterSequenceStart: ({total,baseGame}) => scatterSound.start(total,baseGame),
+		soundScatterSequenceStart: ({total,baseGame,anticipation}) => {
+			bonusEntryCueAt=0;
+			finalReelImpactAt=undefined;
+			secondScatterLanded=false;
+			scatterSound.start(total,baseGame,anticipation);
+		},
 		soundScatterLand: () => scatterSound.land(),
-		soundScatterRiserPlan: ({duration}) => scatterSound.planRiser(duration),
-		soundScatterSequenceCancel: () => scatterSound.reset(),
-		soundBonusEnding: ({phase}) => {
-			if(import.meta.env.DEV)audioWorkbench.phase=({begin:'Ending buildup',summary:'Bonus total revealed',return:'Returning to base music',cancel:'Stopped',complete:'Complete'})[phase];
+		soundScatterFinalTravel: ({duration}) => {
+			finalReelImpactAt=performance.now()+duration;
+			fadeBaseToFinalImpact();
+			alignRiserToFinalImpact();
+		},
+		soundScatterFinalImpact: () => scatterSound.finalImpact(),
+		soundBonusEntryReady: async () => {
+			sound.stop({name:'sfx_anticipation_start'});
+			const remaining=bonusEntryCueAt-performance.now();
+			if(remaining>0)await waitForTimeout(remaining);
+			bonusEntryCueAt=0;
+			// Direct bonus previews have no scatter fade. Silence the base bed
+			// before the entry cue in both fixtures and normal play.
+			baseTriggerFade=true;
+			sound.players.music.fade({name:'bgm_main',from:0,to:0,duration:0});
+			clearTimeout(riserStartTimer);
+			riserStartTimer=undefined;
+			riserStartedAt=undefined;
+			sound.players.once.fade({name:'sfx_scatter_riser',from:1,to:0,duration:100});
+		},
+		soundBonusContinue: () => {
+			// Start both accents and the bonus bed on the Continue press.
+			stopCue('jng_intro_fs');
+			clearTimeout(duckTimer);
+			duckTimer=undefined;duckUntil=0;isDucked=false;
+			sound.players.once.play({name:'sfx_bonus_continue_wood_zap',forcePlay:true});
+			sound.players.once.play({name:'sfx_bonus_continue_spell',forcePlay:true});
+			sound.players.music.play({name:'bgm_freespin'});
+			if(baseTriggerFade){
+				baseTriggerFade=false;
+				finalReelImpactAt=undefined;
+				secondScatterLanded=false;
+				sound.players.music.fade({name:'bgm_main',from:0,to:1,duration:0});
+			}
+		},
+		soundScatterSequenceCancel: () => { bonusEntryCueAt=0; scatterSound.reset(); restoreTriggerBase(); },
+		soundBonusEnding: ({phase,tier}) => {
+			if(import.meta.env.DEV)audioWorkbench.phase=phase==='begin' ? ({quiet:'Settling bonus',modest:'Level 1 finish',strong:'Level 2 finish',grand:'Orchestral buildup'})[tier] : ({summary:'Bonus total revealed',return:'Returning to base music',cancel:'Stopped',complete:'Complete'} as const)[phase];
 			if(phase==='begin'){
+				const bedFrom=isDucked ? .75 : 1;
 				ending=true;clearCues();
-				sound.stop({name:'sfx_bigwin_coinloop'});
-				duckBed('sfx_bonus_ending_riser');
-				sound.players.once.play({name:'sfx_bonus_ending_riser'});
+				clearTimeout(duckTimer);duckTimer=undefined;duckUntil=0;isDucked=false;
+				// The long coin pour belongs to the previous spin, never the exit.
+				void sound.players.once.fade({name:'sfx_money_pour',from:1,to:0,duration:220});
+				if(tier==='grand'){
+					sound.players.music.fade({name:'bgm_freespin',from:bedFrom,to:0,duration:bonusEndingTiming.duck});
+					sound.players.once.play({name:'sfx_bonus_ending_riser'});
+					// The riser grows beneath a possible final small-payout bag drop.
+					sound.players.once.fade({name:'sfx_bonus_ending_riser',from:.35,to:1,duration:2200});
+				}else if(tier==='quiet')sound.players.music.fade({name:'bgm_freespin',from:bedFrom,to:0,duration:400});
+				else sound.players.music.fade({name:'bgm_freespin',from:bedFrom,to:0,duration:650});
 			}else if(phase==='summary'){
+				sound.stop({name:'sfx_bonus_ending_riser'});
 				sound.stop({name:'bgm_freespin'});
-				duckBed('sfx_youwon_panel');
-				sound.players.once.play({name:'sfx_youwon_panel'});
+				if(tier==='modest')sound.players.once.play({name:'sfx_bonus_summary_modest'});
+				else if(tier==='strong')sound.players.once.play({name:'sfx_bonus_summary_strong'});
+				else if(tier==='grand')sound.players.once.play({name:'sfx_youwon_panel'});
 			}else if(phase==='return'){
+				// Resume the paused base loop at its existing position, starting silent.
+				// The summary duck must not interrupt this longer return fade.
+				clearTimeout(duckTimer);
+				duckTimer=undefined;duckUntil=0;isDucked=false;
+				sound.players.music.fade({name:'bgm_main',from:0,to:0,duration:0});
 				sound.players.music.play({name:'bgm_main'});
+				sound.players.music.fade({name:'bgm_main',from:0,to:1,duration:bonusEndingTiming.returnFade});
 			}else{
 				ending=false;
 				sound.stop({name:'sfx_bonus_ending_riser'});
-				if(phase==='cancel')sound.stop({name:'sfx_youwon_panel'});
+				if(phase==='cancel'){
+					for(const name of ['sfx_bonus_summary_modest','sfx_bonus_summary_strong','sfx_youwon_panel'] as const)sound.stop({name});
+					const bed=context.stateGame.gameType==='freegame'?'bgm_freespin':'bgm_main';
+					sound.players.music.play({name:bed});
+					sound.players.music.fade({name:bed,from:1,to:1,duration:0});
+				}
 			}
 		},
 		// ui
@@ -131,13 +275,20 @@
 				sound.players.music.play({ name: 'bgm_main' });
 			}
 		},
-		soundPressGeneral: () => sound.players.once.play({ name: 'sfx_btn_general' }),
-		soundPressBet: () => sound.players.once.play({ name: 'sfx_btn_general' }),
+		// Generic menu, dialog, and selection actions are intentionally silent.
+		soundPressGeneral: ({ action }) => {
+			if (action === 'playAmount' || action === 'speed') playUiClick();
+		},
+		soundPressPlayAmount: playUiClick,
+		soundPressSpeed: playUiClick,
+		soundPressBet: () => { if (context.stateXstateDerived.isIdle()) playSpinCue(); },
+		soundPressSpin: playSpinCue,
 		// scatterCounter
 		soundScatterCounterIncrease: () => context.stateGame.scatterCounter++,
 		soundScatterCounterClear: () => (context.stateGame.scatterCounter = 0),
 		soundInteractionsStop: () => {
 			scatterSound.reset();
+			restoreTriggerBase();
 			bonusEnding.cancel();
 			clearCues();
 			restoreBed();
@@ -150,31 +301,40 @@
 		// game
 		soundMusic: ({ name }) => {
 			if(ending)return;
-			if(name==='bgm_main')scatterSound.reset();
+			if(name==='bgm_main'){scatterSound.reset();restoreTriggerBase();}
 			stopCue('jng_intro_fs');
 			sound.players.music.play({ name });
+			if(name==='bgm_freespin' && baseTriggerFade){
+				// The base bed is paused now; prepare its original level for the return.
+				baseTriggerFade=false;
+				finalReelImpactAt=undefined;
+				secondScatterLanded=false;
+				sound.players.music.fade({name:'bgm_main',from:0,to:1,duration:0});
+			}
 		},
 		soundCue: ({ name }) => playCue(name),
 		soundLoop: ({ name }) => sound.players.loop.play({ name }),
 		soundOnce: ({ name, forcePlay }) => {
 			if (musicCues.has(name)) { void playCue(name); return; }
-			if (name === 'sfx_fs_respins') sound.stop({ name });
-			duckBed(name);
+			// Ultra uses the same reel-stop cue each round. Restart its short tail so
+			// a following fast spin still gets a landing without stacking impacts.
+			const reelStop=name.startsWith('sfx_reel_stop_');
+			if (name === 'sfx_fs_respins' || reelStop) sound.stop({ name });
+			if(!ending)duckBed(name);
 			sound.players.once.play({ name, forcePlay: name === 'sfx_money_drop' || forcePlay });
+			if(reelStop)sound.players.once.rate({name,rate:reelStopRates[reelStopCount++%reelStopRates.length]});
 		},
 		soundStop: ({ name }) => { if (cues.has(name as SoundEffectName)) stopCue(name as SoundEffectName); else sound.stop({ name }); },
 	});
 
-	// Follow actual motion for manual spins, autoplay, bonus spins and fixtures.
+	// Reel travel has no continuous sound. A manual spin press supplies the start cue.
 	$effect(() => {
 		const spinning = context.stateGame.board.some((reel) => reel.reelState.motion === 'spinning');
 		untrack(() => {
 			if (spinning) {
 				stopCue('sfx_winlevel_small');
 				sound.stop({ name: 'sfx_money_pour' });
-				sound.players.loop.play({ name: 'sfx_btn_spin' });
 			}
-			else sound.stop({ name: 'sfx_btn_spin' });
 		});
 	});
 

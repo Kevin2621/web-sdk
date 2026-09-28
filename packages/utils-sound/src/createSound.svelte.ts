@@ -19,6 +19,7 @@ function createSound<TSoundName extends string>() {
 	let loadedAudio: LoadedAudio<TSoundName>;
 	let loaded = $state(false);
 	let visibilityState = $state<DocumentVisibilityState>('visible');
+	let destroyCurrent: (() => void) | undefined;
 	let players: {
 		music: Player<TSoundName, PlayMusic>;
 		loop: Player<TSoundName, PlayLoop>;
@@ -26,6 +27,9 @@ function createSound<TSoundName extends string>() {
 	};
 
 	const load = (loadedAudioValue: LoadedAudio<TSoundName>, sources: Partial<Record<TSoundName, string>> = {}) => {
+		// Storybook can mount the next fixture before the previous one unmounts.
+		// Release the old audio generation before replacing the shared players.
+		destroyCurrent?.();
 		// loadedAudio
 		loadedAudio = loadedAudioValue;
 
@@ -63,16 +67,20 @@ function createSound<TSoundName extends string>() {
 		document.addEventListener('visibilitychange', onVisibilityStateChange);
 		loaded = true;
 
+		let destroyed = false;
 		const destroy = () => {
-			loaded = false;
+			if (destroyed) return;
+			destroyed = true;
 			removeActivation();
 			document.removeEventListener('visibilitychange', onVisibilityStateChange);
-
-			if (players) {
-				players.music.howl.unload();
-				
+			// Unload this generation's Howls, even if a later load replaced players.
+			howl.unload();
+			if (destroyCurrent === destroy) {
+				destroyCurrent = undefined;
+				loaded = false;
 			}
 		};
+		destroyCurrent = destroy;
 
 		return {
 			destroy,

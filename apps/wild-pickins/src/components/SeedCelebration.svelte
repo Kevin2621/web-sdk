@@ -9,15 +9,18 @@
  import { playerLanguage } from '../game/playerLanguage.svelte';
  import { playerLabel } from '../game/playerLabels';
  import { seedCelebration, cancelSeedCelebration, continueSeedCelebration, completeSeedContinue, seedBagBurst } from '../game/seedCelebration.svelte';
+ import { SCATTER_BAG_REEL_SCALE, SYMBOL_SIZE } from '../game/constants';
+ import { getSymbolX } from '../game/utils';
  const context=getContext();
  const layout=$derived(context.stateLayoutDerived.mainLayout());
  const board=$derived(context.stateGameDerived.boardLayout());
- const bags=$derived(context.stateGame.board.flatMap((reel,x)=>reel.reelState.symbols.slice(1,4).flatMap((s,y)=>s.rawSymbol.name==='S'?[{x,y}]:[])));
+ const bags=$derived(context.stateGame.board.flatMap((reel,x)=>reel.reelState.symbols.slice(1,4).flatMap((s,y)=>s.rawSymbol.name==='S'?[{x,y,rawSymbol:s.rawSymbol}]:[])));
 
  const seedArt=new URL('../../assets/art-v1/celebration-seedart.png',import.meta.url).href;
- const size=$derived(120*layout.scale);
+ const size=$derived(SYMBOL_SIZE*layout.scale);
  const centerX=$derived(layout.x+(board.x-layout.width/2)*layout.scale);
  const boardTop=$derived(layout.y+(board.y-layout.height/2-board.height/2)*layout.scale);
+ const bagX=(reel:number)=>centerX+(getSymbolX(reel)-board.width/2)*layout.scale;
  const centerY=$derived(boardTop+board.height*layout.scale*.45);
  const signWidth=$derived(board.width*.4*layout.scale);
  const signHeight=$derived(signWidth*.26);
@@ -43,7 +46,7 @@
  const entranceSeeds=$derived(bags.flatMap(bag=>{
   const id=`${bag.x}:${bag.y}`,volley=volleys[id];
   return volley?volley.seeds.map(seed=>({id:`${id}:${seed.id}`,at:volley.at,seed,
-   x:centerX+(bag.x-2)*size,y:boardTop+(bag.y+.12)*size,size})):[];
+   x:bagX(bag.x),y:boardTop+(bag.y+.12)*size,size})):[];
  }));
  const entryCurtain=$derived(clamp((progress-ENTRY_CURTAIN_START)/(ENTRY_CURTAIN_END-ENTRY_CURTAIN_START)));
  const entryReveal=$derived(progress<ENTRY_CURTAIN_START?0:seedWaveReveal(entranceSeeds.map((v,index)=>
@@ -54,7 +57,7 @@
  const spray=$derived(seedCelebration.sprayProgress);
  let rewardDialog:HTMLDialogElement;
  $effect(()=>{if(seedCelebration.active)rewardDialog?.showModal();else rewardDialog?.close();});
- function confirm(event:Event){event.stopPropagation();if(seedCelebration.waiting)continueSeedCelebration();}
+ function confirm(event:Event){event.stopPropagation();if(seedCelebration.waiting){seedCelebration.openTriggerBags=bags.map(bag=>bag.rawSymbol);continueSeedCelebration();}}
  function keyConfirm(event:KeyboardEvent){event.stopPropagation();if(event.key==='Enter'||event.key===' '){event.preventDefault();if(!event.repeat)confirm(event);}}
  const packetReveal=$derived(clamp((progress-.57)/.12));
  onDestroy(cancelSeedCelebration);
@@ -78,7 +81,7 @@
   <PreviewCanvas width={canvas.width} height={canvas.height} label="Scatter bags">
    {#if progress < .425}
     {#each bags as bag (`${bag.x}:${bag.y}`)}
-     <ScatterBag x={centerX+(bag.x-2)*size} y={boardTop+(bag.y+.5)*size} size={size*.96} animation="shake_open" onburst={()=>burst(`${bag.x}:${bag.y}`)} />
+     <ScatterBag x={bagX(bag.x)} y={boardTop+(bag.y+.5)*size} size={size*SCATTER_BAG_REEL_SCALE} animation="shake_open" onburst={()=>burst(`${bag.x}:${bag.y}`)} />
     {/each}
    {/if}
   </PreviewCanvas>
@@ -114,7 +117,16 @@
    </svg>
    <div class="reward-subtitle" style:opacity={clamp((progress-.65)/.08)}>WILD FREE SPINS</div>
   </div>
-  {#if seedCelebration.waiting}<button class="continue" onclick={confirm}>Click or tap anywhere to continue</button>{/if}
+  {#if seedCelebration.waiting}
+   <button class="continue" onclick={confirm}>
+    <span class="continue-body">
+     <svg class="continue-shine" viewBox="0 0 320 58" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="317" height="55" rx="11" pathLength="100" />
+     </svg>
+     <span class="continue-label">Click or tap anywhere to continue</span>
+    </span>
+   </button>
+  {/if}
  </div>
  {/if}
  {#if seedCelebration.active && context.stateApp.loaded}
@@ -140,8 +152,15 @@
  .reward-words{top:-8%;font-size:clamp(22px,4vw,36px);letter-spacing:.08em}
  .seed-number{position:absolute;left:12%;top:5%;width:76%;height:25%;overflow:visible;filter:drop-shadow(0 3px 2px #452209)}
  .reward-subtitle{top:31%;font-size:clamp(18px,3vw,28px)}
- .continue{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);padding:14px 22px;border:1px solid #a48b5b;border-radius:12px;background:#302b24;color:#f2e6cd;font:600 16px system-ui;cursor:pointer;max-width:90vw}
+ .continue{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);padding:0;border:0;background:transparent;color:#f2e6cd;font:600 16px system-ui;cursor:pointer;max-width:90vw}
+ .continue-body{position:relative;display:block;padding:14px 22px;border:1px solid #a48b5b;border-radius:12px;background:#302b24;box-shadow:0 3px 7px #0d120c66;animation:continue-lift 4.4s ease-in-out infinite;will-change:transform}
+ .continue-label{position:relative;z-index:1;white-space:normal}
+ .continue-shine{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);overflow:visible;pointer-events:none}
+ .continue-shine rect{fill:none;stroke:#fff1ac;stroke-width:3;stroke-linecap:round;stroke-dasharray:11 89;stroke-dashoffset:12;filter:drop-shadow(0 0 5px #ffe487);opacity:0;animation:continue-outline-shine 4.4s ease-in-out infinite}
+ @keyframes continue-lift{0%,13%,87%,100%{transform:translateY(0) rotate(0)}23%{transform:translateY(-9px) rotate(-1deg)}33%{transform:translateY(-9px) rotate(1deg)}43%{transform:translateY(-9px) rotate(-.8deg)}53%{transform:translateY(-9px) rotate(.8deg)}65%{transform:translateY(-9px) rotate(0)}78%{transform:translateY(0) rotate(0)}}
+ @keyframes continue-outline-shine{0%,20%{opacity:0;stroke-dashoffset:12}25%{opacity:1;stroke-dashoffset:12}63%{opacity:1;stroke-dashoffset:-49}69%,100%{opacity:0;stroke-dashoffset:-49}}
  .continue:focus-visible{outline:3px solid #fff0a0}
+ @media(prefers-reduced-motion:reduce){.continue-body,.continue-shine rect{animation:none}.continue-body{will-change:auto}}
  .celebration{position:fixed;inset:0;pointer-events:none;z-index:9998}
  .shade{position:absolute;inset:0;background:#131c13}
  img{position:absolute;object-fit:contain}

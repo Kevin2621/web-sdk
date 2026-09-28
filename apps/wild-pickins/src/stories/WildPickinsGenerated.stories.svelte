@@ -30,6 +30,21 @@
  <GeneratedPlaytest profile="candidate-3" />
 </Story>
 
-<Story name="500k Candidate 1 weighted" exportName="Candidate500k1Weighted">
+<Story name="Historical 500k Candidate 1 tuned pays" exportName="Candidate500k1Weighted">
  <GeneratedPlaytest profile="candidate-500k-1" />
+</Story>
+<Story name="Historical 1m Candidate 2 tuned pays" exportName="Candidate1m2Weighted">
+ <GeneratedPlaytest profile="candidate-1m-2" />
+</Story>
+<Story name="Corrected paytable 500k Candidate 3 feel matched" exportName="Corrected500kCandidate3Feel">
+ <GeneratedPlaytest profile="candidate-corrected-500k-3-feel" />
+</Story>
+<Story name="Corrected paytable 1m Candidate 1 with session stats" exportName="Corrected1mCandidate1">
+ <GeneratedPlaytest profile="candidate-corrected-1m-1" />
+</Story>
+<Story name="Standard Bonus Buy High · 500× · 20 spins" exportName="StandardBonusBuyHigh">
+ <GeneratedPlaytest profile="candidate-corrected-1m-1" buyTier="high" />
+</Story>
+<Story name="Standard Bonus Buy Medium · 200× · 15 spins" exportName="StandardBonusBuyMedium">
+ <GeneratedPlaytest profile="candidate-corrected-1m-1" buyTier="medium" />
 </Story>

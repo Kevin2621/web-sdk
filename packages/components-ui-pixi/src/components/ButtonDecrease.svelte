@@ -15,13 +15,14 @@
 	);
 
 	const onpress = () => {
-		context.eventEmitter.broadcast({ type: 'soundPressGeneral' });
-
 		const nextSmaller = [...stateConfig.betAmountOptions]
 			.sort((a, b) => b - a)
 			.find((option) => option < stateBet.betAmount);
 
+		const previous = stateBet.betAmount;
 		stateBetDerived.setBetAmount(nextSmaller || smallest);
+		if (stateBet.betAmount !== previous)
+			context.eventEmitter.broadcast({ type: 'soundPressGeneral', action: 'playAmount' });
 	};
 </script>
 

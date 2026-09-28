@@ -11,6 +11,7 @@
  const {fixtureOnly=false}=$props<{fixtureOnly?:boolean}>();
  const context=getContext();
  let open=$state(false), selected=$state('sfx_bonus_ending_riser');
+ let rehearsalAmount=$state(10000);
  let draft=$state(defaultAudioSettings(audioCatalogue));
  let message=$state(''), error=$state(''), previewing=$state(false), rehearsing=$state(false);
  let previewTimer:ReturnType<typeof setTimeout>|undefined;
@@ -64,9 +65,9 @@
   if(!await apply())return;
   rehearsing=true;const run=++generation;
   context.eventEmitter.broadcast({type:'soundMusic',name:'bgm_freespin'});
-  bonusEnding.arm({startAt:'landed',reason:'audition'});bonusEnding.begin('landed');
-  message='Rehearsing the real ending controller. Watch the phase label.';
-  try{await bonusEnding.finish(()=>{});}
+  bonusEnding.arm({startAt:'landed',reason:'audition',total:rehearsalAmount});bonusEnding.begin('landed');
+  message=`Rehearsing the ${rehearsalAmount/100}× ending. Watch the phase label.`;
+  try{await bonusEnding.finish(()=>{},rehearsalAmount);}
   catch(e){error=String(e);}
   finally{if(run===generation){rehearsing=false;message='Ending rehearsal complete.';}}
  }
@@ -112,19 +113,20 @@
     <optgroup label="All audio assets · MP3">{#each matching as [id,entry]}<option value={id}>{entry.label} — {entry.path.split('/')[0]}</option>{/each}</optgroup>
    </select></label>
    {#if audioLibrary[cue.source]}<small class="recording-path">{audioLibrary[cue.source].path}</small>{/if}
-   <label>Volume · {Math.round(cue.volume*100)}%<input aria-label="Cue volume" type="range" min="0" max="1" step="0.01" bind:value={cue.volume}/></label>
+   <label>Volume · {Math.round(cue.volume*100)}%<input aria-label="Cue volume" type="range" min="0" max={selected==='sfx_multiplier_landing'?1.1:1} step="0.01" bind:value={cue.volume}/></label>
    <div class="pair"><label>Start in clip (ms)<input type="number" min="0" max={duration-1} step="1" bind:value={cue.start}/></label>
    <label>End in clip (ms)<input type="number" min={cue.start+1} max={duration} step="1" bind:value={cue.end}/></label></div>
    <small>Full recording: {(duration/1000).toFixed(3)} s. Loop behavior follows the game event.</small>
    {#if selected==='sfx_reel_stop_1'}<button onclick={()=>{for(const n of [2,3,4,5])draft.cues[`sfx_reel_stop_${n}`]={...cue};message='Copied to all five reel landings in the draft.';}}>Use for all five reels</button>{/if}
    <div class="actions"><button onclick={apply}>Apply changes</button><button onclick={preview}>Apply & preview cue</button></div>
    <details open><summary>Bonus ending timing</summary>
-    <label>Buildup before total reveal (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.leadIn}/></label>
-    <label>Lower bonus music over (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.duck}/></label>
-    <label>Base music overlap with summary (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.returnOverlap}/></label>
-    <label>Base music fade-in (ms)<input type="number" min="0" max={draft.ending.returnOverlap} step="100" bind:value={draft.ending.returnFade}/></label>
-    <small>Summary length follows its selected clip. Fade-in must fit within overlap.</small>
+    <label>Grand buildup before total reveal (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.leadIn}/></label>
+    <label>Grand bonus-music handoff (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.duck}/></label>
+    <label>Grand base-music overlap with sting (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.returnOverlap}/></label>
+    <label>Base music fade-in (ms)<input type="number" min="0" max="30000" step="100" bind:value={draft.ending.returnFade}/></label>
+    <small>These buildup and overlap controls apply to 100× and larger bonuses. The base fade applies to every tier.</small>
    </details>
+   <label>Ending rehearsal payout<select bind:value={rehearsalAmount}><option value={500}>5× · restrained</option><option value={2500}>25× · Level 1</option><option value={7200}>72× · Level 2</option><option value={10000}>100× · full orchestral</option></select></label>
    <div class="actions"><button onclick={ending}>Apply & rehearse ending</button><button onclick={replay} disabled={!audioWorkbench.lastBonus}>Apply & replay last bonus</button></div>
   </fieldset>
   <div class="actions"><button onclick={stop} disabled={!available}>Stop audition / replay</button><button onclick={save} disabled={locked}>Save applied in browser</button></div>

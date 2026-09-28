@@ -9,6 +9,16 @@ body {
 :root {
 	--scrollbar-size: 6px;
 	--grey: #cccccc;
+	/* Neutral control colors shared by games; art direction stays in the game scene. */
+	--control-text: #e5e8ea;
+	--control-muted: #adb5bb;
+	--control-heading: #e1e5e7;
+	--control-hover: #414b54;
+	--control-active: #52616b;
+	--control-selected: #9ba5ae;
+	--control-edge: #87949e;
+	--control-accent: #dfc58d;
+	--control-positive: #a9c891;
 }
 
 .scrollY {

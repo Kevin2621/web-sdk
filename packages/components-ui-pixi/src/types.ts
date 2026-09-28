@@ -15,7 +15,7 @@ export type EmitterEventUi =
 	| { type: 'drawerButtonHide' }
 	// sound
 	| { type: 'soundBetMode'; betModeKey: string }
-	| { type: 'soundPressGeneral' }
+	| { type: 'soundPressGeneral'; action?: 'playAmount' | 'speed' }
 	| { type: 'soundPressBet' }
 	// bet services
 	| { type: 'resumeBet' }

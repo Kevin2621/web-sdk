@@ -1,12 +1,14 @@
 <script lang="ts">
 	import ArtSymbol from './ArtSymbol.svelte';
+	import WildSpine from './WildSpine.svelte';
 	import { symbolRanks, symbolArtwork } from '../game/symbolStyle.svelte';
 	import SymbolSpine from './SymbolSpine.svelte';
 	import SymbolSprite from './SymbolSprite.svelte';
 	import { getSymbolInfo } from '../game/utils';
 	import type { SymbolState, RawSymbol } from '../game/types';
 	import { getContext } from '../game/context';
-	import { BitmapText } from 'pixi-svelte';
+	import { BitmapText, Container } from 'pixi-svelte';
+	import { seedCelebration } from '../game/seedCelebration.svelte';
 
 	type Props = {
 		x?: number;
@@ -20,10 +22,26 @@
 	const props: Props = $props();
 	const context = getContext();
 	const symbolInfo = $derived(getSymbolInfo({ rawSymbol: props.rawSymbol, state: props.state }));
+	const holdScatterOpen = $derived(seedCelebration.openTriggerBags.includes(props.rawSymbol) && (props.state === 'static' || props.state === 'postWinStatic' || props.state === 'spin'));
 	const isSprite = $derived(symbolInfo.type === 'sprite');
 </script>
 
-{#if symbolRanks[props.rawSymbol.name] || symbolArtwork[props.rawSymbol.name]}
+{#if props.rawSymbol.name === 'W'}
+	<WildSpine x={props.x} y={props.y} state={props.state} multiplier={props.rawSymbol.multiplier} oncomplete={props.oncomplete} />
+{:else if props.rawSymbol.name === 'S'}
+	<!-- Keep reel scatters hidden under the opening celebration, then restore
+	     them before the falling seeds reveal the bonus board. -->
+	<Container alpha={seedCelebration.active && seedCelebration.exitProgress < 0 ? 0 : 1}>
+		<SymbolSpine
+			loop={holdScatterOpen ? false : props.loop ?? (props.state === 'static' || props.state === 'postWinStatic' || props.state === 'spin')}
+			symbolInfo={holdScatterOpen ? { ...symbolInfo, animationName: 'open_hold' } : symbolInfo}
+			x={props.x}
+			y={props.y}
+			showWinFrame={false}
+			listener={{ complete: props.oncomplete }}
+		/>
+	</Container>
+{:else if symbolRanks[props.rawSymbol.name] || symbolArtwork[props.rawSymbol.name]}
 	<ArtSymbol
 		x={props.x}
 		y={props.y}
@@ -51,7 +69,7 @@
 	/>
 {/if}
 
-{#if props.rawSymbol.multiplier}
+{#if props.rawSymbol.multiplier && props.rawSymbol.name !== 'W'}
 	<BitmapText
 		anchor={0.5}
 		x={(props.x??0)+30}

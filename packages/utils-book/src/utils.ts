@@ -1,5 +1,5 @@
 import { PUBLIC_CHROMATIC } from 'envs';
-import { stateUrlDerived } from 'state-shared';
+import { stateUrlDerived, stateUi } from 'state-shared';
 import { requestEndEvent } from 'rgs-requests';
 
 import type { BaseBookEvent } from './types';
@@ -9,7 +9,8 @@ export function recordBookEvent<TBookEvent extends BaseBookEvent>({
 }: {
 	bookEvent: TBookEvent;
 }) {
-	if (PUBLIC_CHROMATIC || stateUrlDerived.replay()) {
+	if (stateUi.config.mode === 'replay' || stateUrlDerived.replay()) return;
+	if (PUBLIC_CHROMATIC) {
 		console.log('mock request end-event:', { index: bookEvent.index, type: bookEvent.type });
 		return;
 	}

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import type { RawSymbol, SymbolState } from './types';
 
 export const SYMBOL_SIZE = 120;
+export const SCATTER_BAG_REEL_SCALE = 1.18;
 // Rectangular reel cells preserve the source frame; symbol artwork stays proportional.
 export const SYMBOL_WIDTH = sceneBoardSize.width / 5;
 
@@ -133,7 +134,7 @@ const SPIN_OPTIONS_SHARED = {
 	reelBounceBackSpeed: 0.15,
 	reelSpinSpeedBeforeBounce: 5,
 	reelPaddingMultiplierNormal: 1.2,
-	reelPaddingMultiplierAnticipated: 10,
+	reelPaddingMultiplierAnticipated: 7.5,
 	reelSpinDelay: 90,
 };
 
@@ -156,7 +157,7 @@ export const SPIN_OPTIONS_MEDIUM = {
  ...SPIN_OPTIONS_DEFAULT,
  reelPreSpinSpeed: 3.8,
  reelSpinSpeed: 4.45,
- reelPaddingMultiplierAnticipated: 5,
+ reelPaddingMultiplierAnticipated: 6.5,
  reelSpinDelay: 45,
  reelBounceSizeMulti: 0.175,
 };
@@ -188,8 +189,8 @@ const l2Static = { type: 'sprite', assetKey: 'l2.webp', sizeRatios: { width: 1, 
 const l3Static = { type: 'sprite', assetKey: 'l3.webp', sizeRatios: { width: 1, height: 1 } };
 const l4Static = { type: 'sprite', assetKey: 'l4.webp', sizeRatios: { width: 1, height: 1 } };
 
-const sStatic = { type: 'sprite', assetKey: 's.png', sizeRatios: { width: 1, height: 1 } };
-const wStatic = { type: 'sprite', assetKey: 'w.png', sizeRatios: { width: 1, height: 1 } };
+const sStatic = { type: 'spine', assetKey: 'wpScatterBag', animationName: 'closed_idle', sizeRatios: { width: SCATTER_BAG_REEL_SCALE, height: SCATTER_BAG_REEL_SCALE } };
+const wStatic = { type: 'spine', assetKey: 'wpWildSpine', animationName: 'animation', sizeRatios: { width: 1, height: 1 } };
 
 
 export const SYMBOL_INFO_MAP = {
@@ -299,18 +300,14 @@ export const SYMBOL_INFO_MAP = {
 	},
 	W: {
 		explosion,
-		postWinStatic: {
-			type: 'sprite',
-			assetKey: 'explodedW.png',
-			sizeRatios: { width: 1, height: 1 },
-		},
+		postWinStatic: wStatic,
 		static: wStatic,
 		spin: wStatic,
-		win: { type: 'spine', assetKey: 'W', animationName: 'wild_dynamite', sizeRatios: { width: 1, height: 1 } },
+		win: wStatic,
 		land: {
 			type: 'spine',
-			assetKey: 'W',
-			animationName: 'wild_dynamite_land',
+			assetKey: 'wpWildSpine',
+			animationName: 'wild_land',
 			sizeRatios: { width: 1, height: 1 },
 		},
 	},
@@ -318,18 +315,8 @@ export const SYMBOL_INFO_MAP = {
 		explosion,
 		postWinStatic: sStatic,
 		static: sStatic,
-		spin: {
-			type: 'spine',
-			assetKey: 'S',
-			animationName: 'scatter_spin',
-			sizeRatios: { width: 1, height: 1 },
-		},
-		win: { type: 'spine', assetKey: 'S', animationName: 'scatter_win', sizeRatios: { width: 1, height: 1 } },
-		land: {
-			type: 'spine',
-			assetKey: 'S',
-			animationName: 'scatter_land',
-			sizeRatios: { width: 1, height: 1 },
-		},
+		spin: sStatic,
+		win: { type: 'spine', assetKey: 'wpScatterBag', animationName: 'bag_shake', sizeRatios: { width: SCATTER_BAG_REEL_SCALE, height: SCATTER_BAG_REEL_SCALE } },
+		land: { type: 'spine', assetKey: 'wpScatterBag', animationName: 'bag_land', sizeRatios: { width: SCATTER_BAG_REEL_SCALE, height: SCATTER_BAG_REEL_SCALE } },
 	},
 } as const;

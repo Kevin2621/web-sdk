@@ -13,13 +13,14 @@
 	const disabled = $derived(!context.stateXstateDerived.isIdle() || stateBet.betAmount === biggest);
 
 	const onpress = () => {
-		context.eventEmitter.broadcast({ type: 'soundPressGeneral' });
-
 		const nextBigger = [...stateConfig.betAmountOptions]
 			.sort((a, b) => a - b)
 			.find((option) => option > stateBet.betAmount);
 
+		const previous = stateBet.betAmount;
 		stateBetDerived.setBetAmount(nextBigger || biggest);
+		if (stateBet.betAmount !== previous)
+			context.eventEmitter.broadcast({ type: 'soundPressGeneral', action: 'playAmount' });
 	};
 </script>
 

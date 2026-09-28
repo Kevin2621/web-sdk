@@ -11,7 +11,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "render:letters": "node --experimental-strip-types scripts/render-letters.mjs",
-    "test:audio": "node --experimental-strip-types --test src/game/scatterSound.test.mjs src/game/interactionCues.test.mjs src/game/templatePayout.test.mjs src/game/bonusCues.test.mjs src/game/seedCelebration.test.mjs src/game/bonusEnding.test.mjs src/game/audioWorkbench.test.mjs"
+    "test:audio": "node --experimental-strip-types --test src/game/scatterSound.test.mjs src/game/interactionCues.test.mjs src/game/bonusCues.test.mjs src/game/seedCelebration.test.mjs src/game/bonusEnding.test.mjs src/game/audioWorkbench.test.mjs",
+    "test:ui": "node --test src/components/uiIsolation.test.mjs",
+    "test:replay": "node --test src/game/replay.test.mjs"
   },
   "type": "module",
   "devDependencies": {

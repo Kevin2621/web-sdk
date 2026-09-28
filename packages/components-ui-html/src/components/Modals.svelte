@@ -14,6 +14,7 @@
 	type Props = {
 		version: Snippet;
 		bonusModes?: string[];
+		showLegacyInformation?: boolean;
 	};
 
 	const props: Props = $props();
@@ -25,12 +26,14 @@
 <ModalBuyBonusConfirm />
 <ModalAutoSpin />
 <ModalAutoSpinMessage />
-<ModalPayTable>
-	{@render props.version()}
-</ModalPayTable>
-<ModalGameRules>
-	{@render props.version()}
-</ModalGameRules>
+{#if props.showLegacyInformation !== false}
+	<ModalPayTable>
+		{@render props.version()}
+	</ModalPayTable>
+	<ModalGameRules>
+		{@render props.version()}
+	</ModalGameRules>
+{/if}
 <ModalSettings />
 
 <style lang="scss">

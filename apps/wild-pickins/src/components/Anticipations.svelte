@@ -1,28 +1,11 @@
 <script lang="ts">
 	import { stateBet } from 'state-shared';
-	import { OnMount } from 'components-shared';
 
 	import { getContext } from '../game/context';
 	import Anticipation from './Anticipation.svelte';
 
 	const context = getContext();
-	const hasAnticipation = $derived(
-		!stateBet.isTurbo && context.stateGame.board.some((reel) => reel.reelState.anticipating),
-	);
 </script>
-
-{#if hasAnticipation}
-	<OnMount
-		onmount={() => {
-			context.eventEmitter.broadcast({ type: 'soundLoop', name: 'sfx_anticipation' });
-
-
-			return () => {
-				context.eventEmitter.broadcast({ type: 'soundStop', name: 'sfx_anticipation' });
-			};
-		}}
-	/>
-{/if}
 
 {#each context.stateGame.board as reel}
 	{#if !stateBet.isTurbo && reel.reelState.anticipating}

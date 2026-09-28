@@ -1,8 +1,8 @@
 import { bonusEnding } from './bonusEndingController';
-import { planBonusEnding } from './bonusEnding.mjs';
+import { bonusEndingProfile, planBonusEnding } from './bonusEnding.mjs';
 import { bonusWin, resetBonusWin, startBonusWin, updateBonusWin } from './bonusWin.svelte';
 import { autoplaySettings } from './playerAutoplay';
-import { celebrateSeeds } from './seedCelebration.svelte';
+import { celebrateSeeds, seedCelebration } from './seedCelebration.svelte';
 import { scatterAnticipation } from './scatterAnticipation';
 import _ from 'lodash';
 
@@ -11,44 +11,11 @@ import { stateBet, stateUi } from 'state-shared';
 
 import { eventEmitter } from './eventEmitter';
 import { playBookEvent } from './utils';
-import { winLevelMap, type WinLevel, type WinLevelData } from './winLevelMap';
+import { winLevelMap, type WinLevel } from './winLevelMap';
 import { stateGame, stateGameDerived } from './stateGame.svelte';
+import { presentWinLines } from './winLinePresentation.svelte';
 import type { BookEvent, BookEventOfType, BookEventContext } from './typesBookEvent';
-import type { Position } from './types';
 import config from './config';
-
-const winLevelSoundsPlay = ({ winLevelData }: { winLevelData: WinLevelData }) => {
-	if (bonusEnding.active) return;
-	if (winLevelData?.alias === 'max') eventEmitter.broadcastAsync({ type: 'uiHide' });
-	if (stateGame.gameType === 'basegame') return;
-	if (winLevelData?.sound?.sfx) {
-		eventEmitter.broadcast({ type: 'soundOnce', name: winLevelData.sound.sfx });
-	}
-	if (winLevelData?.sound?.bgm) {
-		eventEmitter.broadcast({ type: 'soundMusic', name: winLevelData.sound.bgm });
-	}
-	if (winLevelData?.type === 'big') {
-		eventEmitter.broadcast({ type: 'soundLoop', name: 'sfx_bigwin_coinloop' });
-	}
-};
-
-const winLevelSoundsStop = () => {
-	eventEmitter.broadcast({ type: 'soundStop', name: 'sfx_bigwin_coinloop' });
-	if (stateBet.activeBetModeKey === 'SUPERSPIN' || stateGame.gameType === 'freegame') {
-		// Resume bonus music after a win celebration.
-		eventEmitter.broadcast({ type: 'soundMusic', name: 'bgm_freespin' });
-	}
-	// Base payouts leave the relaxing music running underneath the money drop.
-	eventEmitter.broadcastAsync({ type: 'uiShow' });
-};
-
-const animateSymbols = async ({ positions }: { positions: Position[] }) => {
-	eventEmitter.broadcast({ type: 'boardShow' });
-	await eventEmitter.broadcastAsync({
-		type: 'boardWithAnimateSymbols',
-		symbolPositions: positions,
-	});
-};
 
 let presentedLinePayout = false;
 
@@ -68,26 +35,29 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 			revealEvent: { ...bookEvent, anticipation: scatterAnticipation(bookEvent.board, stateBet.isTurbo) },
 			paddingBoard: config.paddingReels[bookEvent.gameType],
 		});
+		seedCelebration.openTriggerBags = [];
 		bonusEnding.begin('landed');
 	},
 	winInfo: async (bookEvent: BookEventOfType<'winInfo'>, { bookEvents }: BookEventContext) => {
         const following = bookEvents.slice(bookEvents.indexOf(bookEvent) + 1);
         const nextReveal = following.findIndex(event => event.type === 'reveal');
         const award = following.slice(0, nextReveal < 0 ? undefined : nextReveal).find(event => event.type === 'setWin');
-        const spinPayout = award?.amount ?? bookEvent.totalWin;
+		const spinPayout = award?.amount ?? bookEvent.totalWin;
         presentedLinePayout = spinPayout > 0;
         if (spinPayout > 0 && (stateGame.gameType === 'basegame' || spinPayout < 1000))
          eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_drop'});
-		const cells = new Map<string, Position>();
-		for (const win of bookEvent.wins) for (const p of win.positions) cells.set(`${p.reel}:${p.row}`, p);
-		if (cells.size) await animateSymbols({ positions: [...cells.values()] });
-        if(stateGame.gameType==='freegame' && spinPayout>0) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_pour'});
+		if (bookEvent.wins.length) {
+			eventEmitter.broadcast({ type: 'boardShow' });
+			await presentWinLines(bookEvent.wins.map(win => ({amount:win.win,positions:win.positions})));
+		}
+        if(stateGame.gameType==='freegame' && spinPayout>=1000 && !bonusEnding.active) eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_pour'});
 	},
 	setTotalWin: async (bookEvent: BookEventOfType<'setTotalWin'>) => {
 		stateBet.winBookEventAmount = bookEvent.amount;
 		updateBonusWin(bookEvent.amount);
 	},
 	freeSpinTrigger: async (bookEvent: BookEventOfType<'freeSpinTrigger'>) => {
+        await eventEmitter.broadcastAsync({type:'soundBonusEntryReady'});
         startBonusWin(stateBet.winBookEventAmount);
         if (autoplaySettings.stopOnBonus) stateBet.autoSpinsCounter=0;
         eventEmitter.broadcast({type:'freeSpinCounterUpdate',current:0,total:bookEvent.totalFs});
@@ -121,14 +91,15 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		stateUi.freeSpinCounterTotal = bookEvent.total;
 	},
 	freeSpinEnd: async (bookEvent: BookEventOfType<'freeSpinEnd'>) => {
-        const winLevelData = winLevelMap[bookEvent.winLevel as WinLevel];
+		const outcome=bonusEndingProfile(bookEvent.amount);
+		const winLevelData = {...winLevelMap[outcome.winLevel as WinLevel],presentDuration:outcome.countUp};
         await eventEmitter.broadcastAsync({type:'uiHide'});
         const completed = await bonusEnding.finish(async()=>{
          bonusWin.amount=bookEvent.amount;
          eventEmitter.broadcast({type:'boardFrameGlowHide'});
          eventEmitter.broadcast({type:'freeSpinOutroShow'});
          await eventEmitter.broadcastAsync({type:'freeSpinOutroCountUp',amount:bookEvent.amount,winLevelData});
-        });
+        },bookEvent.amount);
         if(!completed)return;
         stateGame.gameType='basegame';
 		eventEmitter.broadcast({ type: 'freeSpinOutroHide' });
@@ -140,20 +111,12 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		eventEmitter.broadcast({ type: 'drawerButtonHide' });
 	},
 	setWin: async (bookEvent: BookEventOfType<'setWin'>) => {
-        if (!presentedLinePayout && bookEvent.amount > 0 && (stateGame.gameType === 'basegame' || bookEvent.amount < 1000))
-         eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_drop'});
+        if (!presentedLinePayout && bookEvent.amount > 0) {
+         if(stateGame.gameType==='basegame' || bookEvent.amount<1000)eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_drop'});
+         else if(!bonusEnding.active)eventEmitter.broadcast({type:'soundOnce',name:'sfx_money_pour'});
+        }
         presentedLinePayout = false;
-		const winLevelData = winLevelMap[bookEvent.winLevel as WinLevel];
-
-		eventEmitter.broadcast({ type: 'winShow' });
-		winLevelSoundsPlay({ winLevelData });
-		await eventEmitter.broadcastAsync({
-			type: 'winUpdate',
-			amount: bookEvent.amount,
-			winLevelData,
-		});
-		winLevelSoundsStop();
-		eventEmitter.broadcast({ type: 'winHide' });
+		// The line presentation and settled round total own the visible payout.
 	},
 	finalWin: async (bookEvent: BookEventOfType<'finalWin'>) => {
 		// Do nothing

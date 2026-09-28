@@ -24,20 +24,24 @@ test('Continue waits for coverage, ignores repeat input, and abort clears work',
   const m=await import('./seedCelebration.svelte.ts');let covers=0;
   const sounds=[];
   const run=m.celebrateSeeds(10,undefined,()=>covers++,e=>sounds.push(e));
-  for(let i=0;i<10;i++)tick(4560+i*160);tick(6300);
+  for(let i=0;i<10;i++)tick(4560+i*160);
   assert.equal(m.seedCelebration.displayAward,10);
   assert.equal(sounds.filter(e=>e.type==='soundOnce'&&e.name==='sfx_fs_respins').length,10);
   assert.equal(sounds.filter(e=>e.type==='soundOnce'&&e.name==='sfx_bonus_close').length,1);
-  assert.equal(m.seedCelebration.waiting,true);assert.equal(covers,0);
+  assert.equal(m.seedCelebration.waiting,false);assert.equal(covers,0);
+  m.continueSeedCelebration();assert.equal(sounds.filter(e=>e.type==='soundBonusContinue').length,0);
+  tick(7400);assert.equal(m.seedCelebration.waiting,false);
+  tick(7550);assert.equal(m.seedCelebration.waiting,true);
   m.continueSeedCelebration();m.continueSeedCelebration();assert.equal(frames.size,1);
+  assert.equal(sounds.filter(e=>e.type==='soundBonusContinue').length,1);
   m.seedBagBurst('reward');tick(100);assert.equal(covers,0);
   m.completeSeedContinue();m.completeSeedContinue();assert.equal(frames.size,1);
   tick(900);assert.equal(covers,1);assert.ok(m.seedCelebration.exitProgress>=.35&&m.seedCelebration.exitProgress<=.55);
   tick(2000);await run;assert.equal(m.seedCelebration.active,false);assert.equal(covers,1);
   const abort=new AbortController();const canceled=m.celebrateSeeds(15,abort.signal);
-  for(let i=0;i<20;i++)tick(4560+i*160);tick(9000);m.continueSeedCelebration();abort.abort();await canceled;
+  for(let i=0;i<20;i++)tick(4560+i*160);tick(9000);tick(11000);assert.equal(m.seedCelebration.waiting,true);m.continueSeedCelebration();abort.abort();await canceled;
   assert.equal(frames.size,0);m.completeSeedContinue();assert.equal(frames.size,0);
-  const fallback=m.celebrateSeeds(20);for(let i=0;i<20;i++)tick(4560+i*160);tick(9000);m.continueSeedCelebration();
+  const fallback=m.celebrateSeeds(20);for(let i=0;i<20;i++)tick(4560+i*160);tick(9000);assert.equal(m.seedCelebration.waiting,false);tick(11000);m.continueSeedCelebration();
   tick(4000);assert.equal(m.seedCelebration.exitProgress,.35);assert.equal(m.seedCelebration.active,true);
   tick(5000);await fallback;assert.equal(frames.size,0);
  }finally{for(const [k,v]of Object.entries(originals)){if(v===undefined)delete globalThis[k];else globalThis[k]=v;}}

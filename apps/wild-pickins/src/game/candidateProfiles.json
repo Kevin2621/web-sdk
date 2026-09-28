@@ -8,7 +8,30 @@
     "hash": "938cdf0640982c94c1636f4d39ce375b24fc4cb4a15516d91de66adda82ef38c"
   },
   "candidate-500k-1": {
-    "label": "500k pool \u00b7 Candidate 1 \u00b7 Weighted",
+    "label": "HISTORICAL \u00b7 500k Candidate 1 \u00b7 tuned pays",
     "hash": "e4644d0e1ab6b2be50d4b8a7dfa6f31250d6b1067be64cb420649676786ab182"
+  },
+  "candidate-1m-2": {
+    "label": "HISTORICAL \u00b7 1m Candidate 2 \u00b7 tuned pays",
+    "hash": "79376bb51c56fbaa1276cee28387dba91bd5840ee91833fa83cdc30275090be6",
+    "bonusHash": "b3ae6d324f2a5f647fc9a282b9dca88a209408411ef80b46088b51f23f2c7ee4"
+  },
+  "candidate-corrected-500k-3": {
+    "label": "PRELIMINARY · Corrected paytable · 500k Candidate 3",
+    "hash": "a6ef2c6cdd11cc75fa1426980d02e65dec14209a214a29e270211dd073e7dee8",
+    "configHash": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881"
+  },
+  "candidate-corrected-500k-3-feel": {
+    "label": "Corrected paytable · 500k Candidate 3 · feel matched",
+    "hash": "e72825ae5624ddc5a80ec2cb52338504cbd3ccf983cdc1cb10625c8cea3ce352",
+    "configHash": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881"
+  },
+  "candidate-corrected-1m-1": {
+    "label": "Corrected paytable · 1m Candidate 1 · session stats",
+    "hash": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4",
+    "bonusHash": "bd7814807841ce6a0d9952502a2c1863df806aab6463500b548645ad553870bf",
+    "mediumBonusHash": "7b0f6a4f2baa96fdf957f5c38dd84da643871089ae06c177e28c1e2d9aef7f6d",
+    "highBonusHash": "76aaba775d5dc826ffbadf66a5292c67f41b3f79107460c511ca50f3de4316b6",
+    "configHash": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881"
   }
 }

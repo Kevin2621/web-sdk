@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Symbol from './Symbol.svelte';
 	import { fixturePlayback } from '../game/fixturePlayback.svelte';
-	import { stateGame } from '../game/stateGame.svelte';
+	import { stateGame, wildLandingInstances } from '../game/stateGame.svelte';
 	import SymbolWrap from './SymbolWrap.svelte';
 	import { getSymbolInfo, getSymbolX } from '../game/utils';
 	import type { ReelSymbol } from '../game/stateGame.svelte';
@@ -17,7 +17,7 @@
 	);
 </script>
 
-{#if !fixturePlayback.sticky.some(p=>p.reel===props.reelIndex && stateGame.board[p.reel].reelState.symbols[p.row+1]===props.reelSymbol) && !(fixturePlayback.pick && ['lift','reveal'].includes(fixturePlayback.pick.phase) && fixturePlayback.pick.reel===props.reelIndex && stateGame.board[props.reelIndex].reelState.symbols[fixturePlayback.pick.row+1]===props.reelSymbol)}
+{#if !wildLandingInstances.has(props.reelSymbol.id) && !fixturePlayback.sticky.some(p=>p.reel===props.reelIndex && stateGame.board[p.reel].reelState.symbols[p.row+1]===props.reelSymbol) && !(fixturePlayback.pick && ['lift','reveal'].includes(fixturePlayback.pick.phase) && fixturePlayback.pick.reel===props.reelIndex && stateGame.board[props.reelIndex].reelState.symbols[fixturePlayback.pick.row+1]===props.reelSymbol)}
 <SymbolWrap
 	x={getSymbolX(props.reelIndex)}
 	y={props.reelSymbol.symbolY()}

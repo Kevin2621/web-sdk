@@ -13,7 +13,7 @@
 	const disabled = $derived(stateBet.isSpaceHold);
 
 	const onpress = () => {
-		context.eventEmitter.broadcast({ type: 'soundPressGeneral' });
+		context.eventEmitter.broadcast({ type: 'soundPressGeneral', action: 'speed' });
 		stateBetDerived.updateIsTurbo(!stateBet.isTurbo, { persistent: true });
 	};
 

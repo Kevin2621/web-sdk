@@ -25,7 +25,7 @@ export const symbolLayout = {
 	fontSize: 145,
 };
 export const symbolArtwork: Record<string, { key: string; ratio: number }> = Object.fromEntries(
-	['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'L4', 'L5', 'W', 'S'].map((name) => [
+	['H1', 'H2', 'H3', 'L1', 'L2', 'L3', 'L4', 'L5', 'S'].map((name) => [
 		name,
 		{ key: `wpRefresh${name}`, ratio: 1 },
 	]),
