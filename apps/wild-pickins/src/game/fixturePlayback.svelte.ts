@@ -16,14 +16,14 @@ import { validateBonusFixture } from './bonusFixtureAdapter.mjs';
 import { createFixtureBatch } from './fixtureBatch.mjs';
 import { runPickSequence } from './pickSequence.mjs';
 import { stateBet } from 'state-shared';
-import { stateGame, stateGameDerived } from './stateGame.svelte';
+import { stateGame, stateGameDerived, wildLandingInstances } from './stateGame.svelte';
 import { eventEmitter } from './eventEmitter';
 import { mapPaddedBoard, mapVisibleBoard, validateBaseFixture } from './fixtureAdapter.mjs';
 import type { RawSymbol } from './types';
 
 export const fixtureWilds = $state({multipliers:[] as {reel:number;row:number;multiplier:number}[]});
 
-export const fixturePlayback = $state({ linePayouts:[] as {amount:number;positions:{reel:number;row:number}[];line:number;multiplier?:number;label?:string}[], busy:false, error:'', status:'Ready', pick:null as null | {reel:number;row:number;phase:string;progress:number;crop:string}, roundTotal:0, bonusTotal:0, remaining:0, completed:0, granted:0, budget:0, inBonus:false, releasingSticky:false, rolling:false, message:'', cuePositions:[] as {reel:number;row:number}[], collisions:[] as {reel:number;row:number}[], sticky:[] as {reel:number;row:number}[] });
+export const fixturePlayback = $state({ linePayouts:[] as {amount:number;positions:{reel:number;row:number}[];line:number;multiplier?:number;label?:string}[], busy:false, error:'', status:'Ready', pick:null as null | {reel:number;row:number;phase:string;progress:number;crop:string}, roundTotal:0, bonusTotal:0, remaining:0, completed:0, granted:0, budget:0, inBonus:false, releasingSticky:false, instantSticky:false, rolling:false, message:'', cuePositions:[] as {reel:number;row:number}[], collisions:[] as {reel:number;row:number}[], sticky:[] as {reel:number;row:number}[] });
 let controller: AbortController | null = null;
 export function cancelFixturePlayback() {
 	seedCelebration.openTriggerBags=[];
@@ -34,7 +34,7 @@ export function cancelFixturePlayback() {
  fixturePlayback.linePayouts=[];
  stateGame.activePayline=[];
  stateGameDerived.enhancedBoard.stop();
- fixturePlayback.releasingSticky=false; fixturePlayback.rolling=false; fixturePlayback.pick=null; fixturePlayback.collisions=[]; fixturePlayback.cuePositions=[]; fixturePlayback.sticky=[]; fixturePlayback.inBonus=false; fixturePlayback.remaining=0; fixturePlayback.completed=0; fixturePlayback.message='';
+ fixturePlayback.releasingSticky=false; fixturePlayback.instantSticky=false; fixturePlayback.rolling=false; fixturePlayback.pick=null; fixturePlayback.collisions=[]; fixturePlayback.cuePositions=[]; fixturePlayback.sticky=[]; fixturePlayback.inBonus=false; fixturePlayback.remaining=0; fixturePlayback.completed=0; fixturePlayback.message='';
  stateGame.gameType='basegame';
  eventEmitter.broadcast({type:'soundMusic',name:'bgm_main'});
  for(const reel of stateGame.board) for(const symbol of reel.reelState.symbols) symbol.symbolState='static';
@@ -44,6 +44,17 @@ const batch = createFixtureBatch(cancelFixturePlayback);
 export const cancelFixtureAction = () => batch.cancel();
 export const playFixtureBatch = (books: unknown[]) => batch.play(books, playBaseFixture);
 const delay = (ms:number) => new Promise<void>(resolve=>setTimeout(resolve,ms));
+
+async function finishWildLandingsAt(positions: {reel:number;row:number}[], signal: AbortSignal) {
+ const newCells = new Set(positions.map(p => `${p.reel}:${p.row + 1}`));
+ const landings = wildLandingInstances.active.filter(landing =>
+  newCells.has(`${landing.reelIndex}:${landing.symbol.symbolIndex}`));
+ if (!landings.length) return;
+ const until = performance.now() + 1200;
+ while (!signal.aborted && landings.some(landing => !landing.finished) && performance.now() < until)
+  await delay(16);
+ for (const landing of landings) wildLandingInstances.remove(landing.id);
+}
 
 export const playBaseFixture = (input: unknown, options: {animate?:boolean} = {}) => playFixture(input, options);
 export const playBonusFixture = (input: unknown, options: {animate?:boolean;startAtBonus?:boolean} = {}) => playFixture(input, {...options,bonus:true});
@@ -76,6 +87,7 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
  fixturePlayback.busy=true; fixturePlayback.releasingSticky=false; fixturePlayback.roundTotal=0; fixturePlayback.bonusTotal=0; fixturePlayback.remaining=0; fixturePlayback.completed=0; fixturePlayback.granted=0; fixturePlayback.sticky=[]; fixturePlayback.inBonus=false; fixturePlayback.message=''; fixturePlayback.budget=(input as {spinBudget:number}).spinBudget; stateBet.winBookEventAmount=0;
  const presentedWins=new Set<number>();
  const animate=options.animate!==false;
+ fixturePlayback.instantSticky=!animate;
  try {
   // Validate the complete source book first; preview only skips its base-game lead-in.
   const bonusStart=options.startAtBonus ? book.events.findIndex(e=>e.type==='freeSpinTrigger') : 0;
@@ -105,6 +117,10 @@ async function playFixture(input: unknown, options: {animate?:boolean;bonus?:boo
      clear:()=>{fixturePlayback.pick=null;}
     });
    } else if(e.type==='wildPickinsSpinResult') {
+    const retained = new Set(fixturePlayback.sticky.map(p => `${p.reel}:${p.row}`));
+    const addedSticky = (e.stickyAfter as {reel:number;row:number}[]).filter(p => !retained.has(`${p.reel}:${p.row}`));
+    if(animate && addedSticky.length) await finishWildLandingsAt(addedSticky,run.signal);
+    if(run.signal.aborted)return;
     fixtureWilds.multipliers=e.wildMultipliers??[];
     stateGameDerived.enhancedBoard.settle(mapVisibleBoard(e.finalBoard,e.wildMultipliers) as RawSymbol[][]);
     fixturePlayback.roundTotal=e.roundTotal;

@@ -1,10 +1,8 @@
 <script lang="ts">
- import { Container, Rectangle, Text } from 'pixi-svelte';
+ import { Text } from 'pixi-svelte';
  import WinLineStroke from './WinLineStroke.svelte';
  import BoardContainer from './BoardContainer.svelte';
- import Symbol from './Symbol.svelte';
- import { SYMBOL_SIZE, SYMBOL_WIDTH } from '../game/constants';
- import { stateGame } from '../game/stateGame.svelte';
+ import { SYMBOL_SIZE } from '../game/constants';
  import { getSymbolX } from '../game/utils';
  import { getWinLineTiming, type WinLineSpeed, type WinLinePayoutMode } from '../game/winLineTiming';
  import type { Position } from '../game/types';
@@ -41,7 +39,6 @@
   x: speed === 'ultra' ? getSymbolX(2) : labelPositions.reduce((sum,p)=>sum+p.x,0)/Math.max(1,labelPositions.length),
   y: speed === 'ultra' ? SYMBOL_SIZE*1.5 : labelPositions.reduce((sum,p)=>sum+p.y,0)/Math.max(1,labelPositions.length),
  });
- const winners = $derived([...new Map(wins.flatMap(win => win.positions.map(p => [`${p.reel}:${p.row}`,p] as const))).values()]);
  const ease = (value:number) => {
   const t = Math.max(0, Math.min(1, value));
   return t*t*(3-2*t);
@@ -83,12 +80,6 @@
 {#if wins.length}
  <BoardContainer>
   {#if layer !== 'total' && !boardReleased}
-  <Rectangle width={5*SYMBOL_WIDTH} height={3*SYMBOL_SIZE} backgroundColor={0x08101a} backgroundAlpha={0.65*darkness} />
-  {#each winners as position (`${position.reel}:${position.row}`)}
-   <Container x={getSymbolX(position.reel)} y={(position.row-0.5)*SYMBOL_SIZE} alpha={1-darkness*0.12}>
-    <Symbol state="static" rawSymbol={stateGame.board[position.reel].reelState.symbols[position.row].rawSymbol} />
-   </Container>
-  {/each}
   {#each lineStates as line,index (index)}
    <WinLineStroke points={line.path} drawn={line.drawn} color={0x64b5ff} width={16} alpha={0.22*line.alpha} />
    <WinLineStroke points={line.path} drawn={line.drawn} color={0x9dd6ff} width={8} alpha={0.5*line.alpha} />

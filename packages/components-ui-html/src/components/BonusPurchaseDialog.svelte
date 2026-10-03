@@ -1,5 +1,5 @@
 <script lang="ts">
- import { onMount } from 'svelte';
+ import { onMount, type Snippet } from 'svelte';
  import SlotControlBar from './SlotControlBar.svelte';
  import type { BonusPurchaseContent } from './BonusPurchaseDialog.types';
  let {
@@ -14,6 +14,7 @@
   reducedMotion = false,
   format,
   content,
+  purchaseOptions,
   onamount,
   onclose,
   onbuy,
@@ -29,6 +30,7 @@
   reducedMotion?: boolean;
   format: (n: number) => string;
   content: BonusPurchaseContent;
+  purchaseOptions?: Snippet<[boolean]>;
   onamount: (n: number) => void;
   onclose: () => void;
   onbuy: () => void;
@@ -87,6 +89,7 @@
 			</div>
 			<div class="details">
 				<h2>{content.featuredTitle}</h2>
+				{@render purchaseOptions?.(disabled || confirming)}
 				<p>{content.featuredDescription[0]}<br />{content.featuredDescription[1]}</p>
 				<strong class="price">{format(price)}</strong><span class="cost">{cost}× {content.costCaption}</span>
 				<button class="buy" disabled={disabled || !affordable} onclick={purchase}

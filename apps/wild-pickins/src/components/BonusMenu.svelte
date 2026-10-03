@@ -9,6 +9,8 @@
 		label = (key: string) => key,
 		simulated = false,
 		cost = 100,
+		tier,
+		ontierchange,
 		rtp,
 		maxWinX = 5000,
 		initialSpins = 10,
@@ -23,6 +25,8 @@
 		label?: (key: string) => string;
 		simulated?: boolean;
 		cost?: number;
+		tier?: 'low' | 'medium' | 'high';
+		ontierchange?: (tier: 'low' | 'medium' | 'high') => void;
 		rtp?: number;
 		maxWinX?: number;
 		initialSpins?: number;
@@ -67,4 +71,23 @@
 	{onamount}
 	{onclose}
 	{onbuy}
-/>
+>
+ {#snippet purchaseOptions(locked: boolean)}
+  {#if tier && ontierchange}
+   <label class="tier-picker">Bonus buy
+    <select value={tier} disabled={locked} onchange={(event)=>ontierchange?.(event.currentTarget.value as 'low'|'medium'|'high')}>
+     <option value="low">Low · 50× · 10 free spins</option>
+     <option value="medium">Medium · 200× · 15 free spins</option>
+     <option value="high">High · 500× · 20 free spins</option>
+    </select>
+   </label>
+  {/if}
+ {/snippet}
+</BonusPurchaseDialog>
+
+<style>
+ .tier-picker{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;font-size:14px;font-weight:700}
+ select{max-width:100%;padding:8px;border:1px solid #e9bf64;border-radius:8px;background:#142118;color:#fff7da;font:inherit}
+ select:focus-visible{outline:2px solid #fff1b4;outline-offset:2px}
+ select:disabled{opacity:.6}
+</style>

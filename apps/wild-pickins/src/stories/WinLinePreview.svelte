@@ -1,6 +1,7 @@
 <script lang="ts">
- import { untrack } from 'svelte';
+ import { onDestroy, untrack } from 'svelte';
  import WinLinePresentation from '../components/WinLinePresentation.svelte';
+ import { showWinLinePreview, hideWinLinePreview } from '../game/winLinePresentation.svelte';
  import { stateGameDerived } from '../game/stateGame.svelte';
  import { mapPaddedBoard } from '../game/fixtureAdapter.mjs';
  import { getWinLineTiming, type WinLineSpeed, type WinLinePayoutMode } from '../game/winLineTiming';
@@ -18,6 +19,10 @@
   const source = board;
   untrack(() => stateGameDerived.enhancedBoard.settle(mapPaddedBoard(source)));
  });
+ $effect(() => {
+  showWinLinePreview(wins,elapsed,speed,payoutMode);
+ });
+ onDestroy(hideWinLinePreview);
  $effect(() => {
   const length = duration;
   elapsed = 0;

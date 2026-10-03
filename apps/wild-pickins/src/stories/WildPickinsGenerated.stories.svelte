@@ -39,12 +39,6 @@
 <Story name="Corrected paytable 500k Candidate 3 feel matched" exportName="Corrected500kCandidate3Feel">
  <GeneratedPlaytest profile="candidate-corrected-500k-3-feel" />
 </Story>
-<Story name="Corrected paytable 1m Candidate 1 with session stats" exportName="Corrected1mCandidate1">
+<Story name="Standard Bonus Buys · 50× / 200× / 500×" exportName="Corrected1mCandidate1">
  <GeneratedPlaytest profile="candidate-corrected-1m-1" />
-</Story>
-<Story name="Standard Bonus Buy High · 500× · 20 spins" exportName="StandardBonusBuyHigh">
- <GeneratedPlaytest profile="candidate-corrected-1m-1" buyTier="high" />
-</Story>
-<Story name="Standard Bonus Buy Medium · 200× · 15 spins" exportName="StandardBonusBuyMedium">
- <GeneratedPlaytest profile="candidate-corrected-1m-1" buyTier="medium" />
 </Story>

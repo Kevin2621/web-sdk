@@ -3,10 +3,11 @@
 	import { getContext } from '../game/context';
 
 	const context = getContext();
+	const symbols = $derived(context.stateGame.board.flatMap((reel, reelIndex) =>
+		reel.reelState.symbols.map((reelSymbol, rowIndex) => ({ reelIndex, rowIndex, reelSymbol }))
+	));
 </script>
 
-{#each context.stateGame.board as reel, reelIndex (reelIndex)}
-	{#each reel.reelState.symbols as reelSymbol}
-		<ReelSymbol {reelIndex} {reelSymbol} />
-	{/each}
+{#each symbols as { reelIndex, rowIndex, reelSymbol } (reelSymbol.id)}
+	<ReelSymbol {reelIndex} {rowIndex} {reelSymbol} />
 {/each}

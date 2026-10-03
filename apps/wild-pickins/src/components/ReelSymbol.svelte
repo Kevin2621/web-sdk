@@ -1,31 +1,33 @@
 <script lang="ts">
 	import Symbol from './Symbol.svelte';
 	import { fixturePlayback } from '../game/fixturePlayback.svelte';
+	import { winLinePresentation } from '../game/winLinePresentation.svelte';
 	import { stateGame, wildLandingInstances } from '../game/stateGame.svelte';
 	import SymbolWrap from './SymbolWrap.svelte';
-	import { getSymbolInfo, getSymbolX } from '../game/utils';
+	import { getSymbolX } from '../game/utils';
 	import type { ReelSymbol } from '../game/stateGame.svelte';
 
 	type Props = {
 		reelIndex: number;
+		rowIndex: number;
 		reelSymbol: ReelSymbol;
 	};
 
 	const props: Props = $props();
-	const symbolInfo = $derived(
-		getSymbolInfo({ rawSymbol: props.reelSymbol.rawSymbol, state: props.reelSymbol.symbolState }),
-	);
+	const presentedWinner = $derived(winLinePresentation.active && !winLinePresentation.boardReleased &&
+		winLinePresentation.winnerKeys.has(`${props.reelIndex}:${props.rowIndex}`));
+	const symbolState = $derived(presentedWinner ? 'win' : props.reelSymbol.symbolState);
+	const sticky = $derived(fixturePlayback.sticky.some(p => p.reel === props.reelIndex && p.row + 1 === props.rowIndex));
 </script>
 
-{#if !wildLandingInstances.has(props.reelSymbol.id) && !fixturePlayback.sticky.some(p=>p.reel===props.reelIndex && stateGame.board[p.reel].reelState.symbols[p.row+1]===props.reelSymbol) && !(fixturePlayback.pick && ['lift','reveal'].includes(fixturePlayback.pick.phase) && fixturePlayback.pick.reel===props.reelIndex && stateGame.board[props.reelIndex].reelState.symbols[fixturePlayback.pick.row+1]===props.reelSymbol)}
+{#if !wildLandingInstances.has(props.reelSymbol.id) && !(sticky && stateGame.board[props.reelIndex].reelState.motion === 'stopped') && !(fixturePlayback.pick && ['lift','reveal'].includes(fixturePlayback.pick.phase) && fixturePlayback.pick.reel===props.reelIndex && stateGame.board[props.reelIndex].reelState.symbols[fixturePlayback.pick.row+1]===props.reelSymbol)}
 <SymbolWrap
 	x={getSymbolX(props.reelIndex)}
 	y={props.reelSymbol.symbolY()}
-	animating={symbolInfo.type === 'spine' &&
-		(props.reelSymbol.symbolState === 'land' || props.reelSymbol.symbolState === 'win')}
+	alpha={presentedWinner ? 1 : 1 - winLinePresentation.darkness * 0.65}
 >
 	<Symbol
-		state={props.reelSymbol.symbolState}
+		state={symbolState}
 		rawSymbol={props.reelSymbol.rawSymbol}
 		oncomplete={() => {
 			if (props.reelSymbol.symbolState === 'win') props.reelSymbol.oncomplete();

@@ -15,6 +15,8 @@
 		y?: number;
 		state: SymbolState;
 		rawSymbol: RawSymbol;
+		locked?: boolean;
+		releasing?: boolean;
 		oncomplete?: () => void;
 		loop?: boolean;
 	};
@@ -27,13 +29,13 @@
 </script>
 
 {#if props.rawSymbol.name === 'W'}
-	<WildSpine x={props.x} y={props.y} state={props.state} multiplier={props.rawSymbol.multiplier} oncomplete={props.oncomplete} />
+	<WildSpine x={props.x} y={props.y} state={props.state} multiplier={props.rawSymbol.multiplier} locked={props.locked} releasing={props.releasing} oncomplete={props.oncomplete} />
 {:else if props.rawSymbol.name === 'S'}
 	<!-- Keep reel scatters hidden under the opening celebration, then restore
 	     them before the falling seeds reveal the bonus board. -->
 	<Container alpha={seedCelebration.active && seedCelebration.exitProgress < 0 ? 0 : 1}>
 		<SymbolSpine
-			loop={holdScatterOpen ? false : props.loop ?? (props.state === 'static' || props.state === 'postWinStatic' || props.state === 'spin')}
+			loop={holdScatterOpen ? false : props.loop ?? false}
 			symbolInfo={holdScatterOpen ? { ...symbolInfo, animationName: 'open_hold' } : symbolInfo}
 			x={props.x}
 			y={props.y}

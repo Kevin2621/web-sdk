@@ -27,6 +27,8 @@
 	let {
 		simulated = false,
 		simulatedBonusCost,
+		simulatedBonusTier,
+		onbonustierchange,
 		simulatedBonusRtp,
 		simulatedBonusMaxX,
 		simulatedBonusSpins = 10,
@@ -42,6 +44,8 @@
 	}: {
 		simulated?: boolean;
 		simulatedBonusCost?: number;
+		simulatedBonusTier?: 'low' | 'medium' | 'high';
+		onbonustierchange?: (tier: 'low' | 'medium' | 'high') => void;
 		simulatedBonusRtp?: number;
 		simulatedBonusMaxX?: number;
 		simulatedBonusSpins?: number;
@@ -648,6 +652,8 @@
 		label={controlLabel}
 		{simulated}
 		cost={bonusCost}
+		tier={simulated ? simulatedBonusTier : undefined}
+		ontierchange={onbonustierchange}
 		rtp={simulated ? simulatedBonusRtp : undefined}
 		maxWinX={simulated ? simulatedBonusMaxX : undefined}
 		initialSpins={simulatedBonusSpins}

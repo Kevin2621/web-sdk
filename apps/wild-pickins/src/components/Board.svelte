@@ -13,17 +13,21 @@
 
 <script lang="ts">
 	import { waitForResolve } from 'utils-shared/wait';
-	import { BoardContext } from 'components-shared';
+	import { Container, Graphics, Rectangle } from 'pixi-svelte';
 
 	import { getContext } from '../game/context';
 	import BoardContainer from './BoardContainer.svelte';
 	import BoardMask from './BoardMask.svelte';
 	import BoardBase from './BoardBase.svelte';
 	import StickyFixtureOverlay from './StickyFixtureOverlay.svelte';
+	import StickyRootsBackdrop from './StickyRootsBackdrop.svelte';
 	import GoldenCropOverlay from './GoldenCropOverlay.svelte';
 	import WinLines from './WinLines.svelte';
 	import WildLandingOverlay from './WildLandingOverlay.svelte';
-	import { cancelWinLinePresentation } from '../game/winLinePresentation.svelte';
+	import { cancelWinLinePresentation, winLinePresentation } from '../game/winLinePresentation.svelte';
+	import { fixturePlayback } from '../game/fixturePlayback.svelte';
+	import { SYMBOL_SIZE, SYMBOL_WIDTH } from '../game/constants';
+	import { getSymbolX } from '../game/utils';
 
 	const context = getContext();
 
@@ -54,19 +58,31 @@
 </script>
 
 {#if show}
-	<BoardContext animate={false}>
-		<BoardContainer>
-			<BoardMask />
+	<BoardContainer>
+		<BoardMask />
+		{#if winLinePresentation.active}
+			<Rectangle width={5 * SYMBOL_WIDTH} height={3 * SYMBOL_SIZE}
+				backgroundColor={0x08101a} backgroundAlpha={0.65 * winLinePresentation.darkness} />
+		{/if}
+		<StickyRootsBackdrop />
+		<Container>
+			<!-- The mask is fixed in board coordinates while reel symbols move. -->
+			<Graphics isMask draw={(graphics) => {
+				for (let reel = 0; reel < 5; reel++) {
+					for (let row = 0; row < 3; row++) {
+						if (fixturePlayback.sticky.some(p => p.reel === reel && p.row === row)) continue;
+						graphics.rect(getSymbolX(reel) - SYMBOL_WIDTH / 2,
+							row * SYMBOL_SIZE, SYMBOL_WIDTH, SYMBOL_SIZE);
+					}
+				}
+				graphics.fill(0xffffff);
+			}} />
 			<BoardBase />
-		</BoardContainer>
-	</BoardContext>
-
-	<BoardContext animate={true}>
-		<BoardContainer>
-			<BoardBase />
-			<WildLandingOverlay />
-		</BoardContainer>
-	</BoardContext>
+		</Container>
+	</BoardContainer>
+	<BoardContainer>
+		<WildLandingOverlay />
+	</BoardContainer>
 	<StickyFixtureOverlay />
 	<GoldenCropOverlay />
 	<WinLines />

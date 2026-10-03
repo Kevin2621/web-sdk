@@ -173,8 +173,8 @@ export default {
 	anticipation: {
 		type: 'spine',
 		src: {
-			atlas: new URL('../../assets/spines/anticipation/anticipation.atlas', import.meta.url).href,
-			skeleton: new URL('../../assets/spines/anticipation/anticipation.json', import.meta.url).href,
+			atlas: `${base}/assets/spines/anticipation/anticipation.atlas`,
+			skeleton: `${base}/assets/spines/anticipation/anticipation.json`,
 			scale: 2,
 		},
 	},

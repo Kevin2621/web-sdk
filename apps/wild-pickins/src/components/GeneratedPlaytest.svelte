@@ -27,7 +27,7 @@
  });
  import { requestGeneratedRound, profiles, usesMultiplierRules } from '../game/generatedRound.mjs';
  import { addSessionRound, emptySessionStats } from '../game/sessionStats.mjs';
- let {profile='multiplier-wilds',buyTier='low'}:{profile?:'natural'|'reference'|'quieter-base'|'multiplier-wilds'|'candidate-1'|'candidate-3'|'candidate-500k-1'|'candidate-1m-2'|'candidate-corrected-500k-3'|'candidate-corrected-500k-3-feel'|'candidate-corrected-1m-1';buyTier?:'low'|'medium'|'high'}=$props();
+ let {profile='multiplier-wilds'}:{profile?:'natural'|'reference'|'quieter-base'|'multiplier-wilds'|'candidate-1'|'candidate-3'|'candidate-500k-1'|'candidate-1m-2'|'candidate-corrected-500k-3'|'candidate-corrected-500k-3-feel'|'candidate-corrected-1m-1'}=$props();
  const displayedMath=$derived(
   profile==='candidate-500k-1'||profile==='candidate-1m-2'
    ? multiplierMath
@@ -38,6 +38,7 @@
  let count=$state(0),returned=$state(0),requesting=$state(false),error=$state('');
  let stats=$state(emptySessionStats());
  let showStats=$state(false);
+ let buyTier=$state<'low'|'medium'|'high'>('low');
  let buyArmed=$state(false);
  let armedBetAmount=$state<number|null>(null);
  const triggerBuy=$derived(profile==='candidate-corrected-1m-1');
@@ -105,7 +106,7 @@
    </section>
   {/if}
  </div>
- <PlayerControls simulated simulatedBonusCost={profile==='candidate-1m-2'||profile==='candidate-corrected-1m-1' ? buyCost : undefined} simulatedBonusRtp={profile==='candidate-1m-2'||profile==='candidate-corrected-1m-1' ? 0.967 : undefined} simulatedBonusMaxX={highBuy||mediumBuy?5000:profile==='candidate-1m-2' ? 1755.66 : profile==='candidate-corrected-1m-1' ? 2922.3 : undefined} simulatedBonusSpins={buySpins} simulatedBonusTitle={triggerBuy?`Standard Bonus Buy ${buyLabel}`:'Standard Bonus Buy'} simulatedBonusArmed={buyArmed} simulatedBuyArmsNextSpin={triggerBuy} busy={requesting||fixturePlayback.busy} onspin={()=>spin()} onbuy={triggerBuy?armBuy:profile==='multiplier-wilds'||profile==='candidate-1m-2'?()=>spin(true):undefined} math={displayedMath} multiplierRules={usesMultiplierRules(profile)} goldenPicksEnabled={!profile.startsWith('candidate-corrected')}/>
+ <PlayerControls simulated simulatedBonusTier={triggerBuy?buyTier:undefined} onbonustierchange={(tier)=>{if(!buyArmed&&!requesting&&!fixturePlayback.busy)buyTier=tier;}} simulatedBonusCost={profile==='candidate-1m-2'||profile==='candidate-corrected-1m-1' ? buyCost : undefined} simulatedBonusRtp={profile==='candidate-1m-2'||profile==='candidate-corrected-1m-1' ? 0.967 : undefined} simulatedBonusMaxX={highBuy||mediumBuy?5000:profile==='candidate-1m-2' ? 1755.66 : profile==='candidate-corrected-1m-1' ? 2922.3 : undefined} simulatedBonusSpins={buySpins} simulatedBonusTitle={triggerBuy?`Standard Bonus Buy ${buyLabel}`:'Standard Bonus Buy'} simulatedBonusArmed={buyArmed} simulatedBuyArmsNextSpin={triggerBuy} busy={requesting||fixturePlayback.busy} onspin={()=>spin()} onbuy={triggerBuy?armBuy:profile==='multiplier-wilds'||profile==='candidate-1m-2'?()=>spin(true):undefined} math={displayedMath} multiplierRules={usesMultiplierRules(profile)} goldenPicksEnabled={!profile.startsWith('candidate-corrected')}/>
  {#if error}<p class="error" role="alert">{error}</p>{/if}
 {/if}
 <style>
