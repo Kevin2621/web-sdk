@@ -6,20 +6,24 @@
 	import { getContextApp } from '../context.svelte';
 	import { preloadFont } from '../utils.svelte';
 
-	type Props = { children: Snippet };
+	type Props = { children: Snippet; preloadTemplateFont?: boolean };
 
 	const props: Props = $props();
 	const context = getContextApp();
 
 	let wrap: HTMLDivElement;
 	let initialised = $state(false);
+	let destroyed = false;
+	let application: PIXI.Application<PIXI.Renderer<HTMLCanvasElement>> | undefined;
 
 	const initialiseApplication = async () => {
 		PIXI.Assets.reset();
 
-		await preloadFont();
-		context.stateApp.pixiApplication = new PIXI.Application<PIXI.Renderer<HTMLCanvasElement>>();
-		await context.stateApp.pixiApplication.init({
+		if (props.preloadTemplateFont !== false) await preloadFont();
+		if (destroyed) return;
+		const current = new PIXI.Application<PIXI.Renderer<HTMLCanvasElement>>();
+		application = current;
+		await current.init({
 			autoDensity: true,
 			backgroundAlpha: 0,
 			hello: true,
@@ -32,25 +36,35 @@
 			resizeTo: window,
 		});
 
-		wrap.appendChild(context.stateApp.pixiApplication.canvas);
+		if (destroyed) {
+			current.destroy();
+			application = undefined;
+			return;
+		}
+		context.stateApp.pixiApplication = current;
+		wrap.appendChild(current.canvas);
 
 		// to prevent that you can't scroll the page with touch on the canvas. https://github.com/pixijs/pixijs/issues/4824
-		context.stateApp.pixiApplication.renderer.events.autoPreventDefault = false;
-		context.stateApp.pixiApplication.renderer.canvas.style.touchAction = 'auto';
+		current.renderer.events.autoPreventDefault = false;
+		current.renderer.canvas.style.touchAction = 'auto';
 	};
 
 	onMount(async () => {
 		try {
 			if (!initialised) await initialiseApplication();
-			initialised = true;
+			if (!destroyed) initialised = true;
 		} catch (error) {
 			console.error(error);
 		}
 	});
 
 	onDestroy(() => {
-		if (context.stateApp.pixiApplication) {
-			context.stateApp.pixiApplication.destroy();
+		destroyed = true;
+		if (initialised && application) {
+			application.destroy();
+			if (context.stateApp.pixiApplication === application)
+				context.stateApp.pixiApplication = undefined;
+			application = undefined;
 		}
 	});
 </script>

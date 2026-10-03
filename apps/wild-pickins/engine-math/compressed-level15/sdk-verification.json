@@ -1,0 +1,26 @@
+{
+  "status": "local SDK format checks passed; Engine staging acceptance pending",
+  "indexSha256": "051dec33bec3c87575594d06e9f6fcfa5bdee9a4fdb6def61bc2ed568df3ac2e",
+  "modes": [
+    {
+      "mode": "base",
+      "books": 1024088,
+      "events": 6505863
+    },
+    {
+      "mode": "bonus",
+      "books": 19521,
+      "events": 937335
+    },
+    {
+      "mode": "standard_bonus_buy_medium",
+      "books": 512515,
+      "events": 37332290
+    },
+    {
+      "mode": "standard_bonus_buy_high",
+      "books": 500000,
+      "events": 49859451
+    }
+  ]
+}

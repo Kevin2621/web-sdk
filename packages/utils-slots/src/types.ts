@@ -41,13 +41,24 @@ type ReelCreateOptions<TRawSymbol extends object, TSymbolState extends string> =
 	reelIndex: number;
 	symbolHeight: number;
 	onReelStopping: () => void;
-	onSymbolLand: (args: { rawSymbol: TRawSymbol }) => void;
+	onSymbolLand: (args: {
+		rawSymbol: TRawSymbol;
+		reelSymbol?: { id: object; symbolY: () => number };
+		landingBatch?: object;
+	}) => void;
 };
 
 export type SpinningReelCreateOptions<
 	TRawSymbol extends object,
 	TSymbolState extends string,
-> = ReelCreateOptions<TRawSymbol, TSymbolState>;
+> = ReelCreateOptions<TRawSymbol, TSymbolState> & {
+	/** Start symbol landing effects at impact, before the reel rebounds. */
+	landOnImpact?: boolean;
+	/** Actual remaining travel time before impact, after lift/pre-spin preparation. */
+	onSpinTravelStart?: (duration: number) => void;
+	/** Optional upward anticipation before downward reel motion. */
+	spinStartLift?: () => { distance: number; duration: number } | undefined;
+};
 
 export type CascadingReelCreateOptions<
 	TRawSymbol extends object,

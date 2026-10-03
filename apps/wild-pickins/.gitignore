@@ -1,0 +1,5 @@
+# Large, reproducible Engine math artifacts are separate from the frontend.
+/engine-math/publish_files/
+/engine-math/publish_files.building/
+/engine-math/**/publish_files/
+/engine-math/**/publish_files.building/

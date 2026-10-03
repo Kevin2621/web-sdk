@@ -5,7 +5,10 @@
 	import { stateUrlDerived, stateBet, stateConfig, stateModal, stateUi } from 'state-shared';
 	import { API_AMOUNT_MULTIPLIER, MOST_USED_BET_INDEXES } from 'constants-shared/bet';
 
-	type Props = { children: Snippet };
+	type Props = {
+		children: Snippet;
+		normalizeReplayRound?: (data: unknown) => Record<string, unknown>;
+	};
 
 	const props: Props = $props();
 
@@ -70,7 +73,7 @@
 
 			// round
 			if (authenticateData?.round) {
-				// Example of authenticateData.round 
+				// Example of authenticateData.round
 				// {
 				// 	"betID": 62277967,
 				// 	"amount": 1000000,
@@ -82,12 +85,12 @@
 				// 	"event": null
 				// }
 
-				if(authenticateData.round?.state) {
+				if (authenticateData.round?.state) {
 					// @ts-ignore
-					stateBet.betToResume =  authenticateData.round;
+					stateBet.betToResume = authenticateData.round;
 				}
 
-				if(authenticateData.round?.amount) {
+				if (authenticateData.round?.amount) {
 					const betAmountValue =
 						authenticateData.round.amount > 0
 							? authenticateData.round.amount / API_AMOUNT_MULTIPLIER
@@ -98,7 +101,7 @@
 
 				if (authenticateData.round?.mode) {
 					stateBet.activeBetModeKey = authenticateData.round.mode;
-				};
+				}
 			}
 		} catch (error) {
 			console.error(error);
@@ -107,8 +110,8 @@
 	};
 
 	const handleReplay = async () => {
-		stateBet.betAmount = (stateUrlDerived.amount() / API_AMOUNT_MULTIPLIER) || 0;
-		stateBet.wageredBetAmount = (stateUrlDerived.amount() / API_AMOUNT_MULTIPLIER) || 0;
+		stateBet.betAmount = stateUrlDerived.amount() / API_AMOUNT_MULTIPLIER || 0;
+		stateBet.wageredBetAmount = stateUrlDerived.amount() / API_AMOUNT_MULTIPLIER || 0;
 		stateBet.activeBetModeKey = stateUrlDerived.mode();
 
 		const data = await requestReplay({
@@ -119,10 +122,11 @@
 			event: stateUrlDerived.event(),
 		});
 
-		if(data) {
+		const replayData = props.normalizeReplayRound ? props.normalizeReplayRound(data) : data;
+		if (replayData) {
 			// @ts-ignore
 			stateBet.betToResume = {
-				...data,
+				...replayData,
 				event: '0',
 				active: true,
 				mode: stateUrlDerived.mode(),
@@ -131,13 +135,17 @@
 	};
 
 	onMount(async () => {
-		if(stateUrlDerived.replay()) {
+		if (stateUrlDerived.replay()) {
 			stateUi.config.mode = 'replay';
-			await handleReplay();
+			try {
+				await handleReplay();
+			} catch (error) {
+				stateModal.modal = { name: 'error', error };
+			}
 		} else {
 			stateUi.config.mode = 'default';
 			await authenticate();
-		};
+		}
 
 		authenticated = true;
 	});

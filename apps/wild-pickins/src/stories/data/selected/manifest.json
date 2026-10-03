@@ -1,0 +1,98 @@
+{
+  "profile": "candidate-corrected-1m-1",
+  "configSha256": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881",
+  "bookPayoutScale": 100,
+  "books": {
+    "base-loss": {
+      "mode": "base",
+      "cost": 1,
+      "sourceBookId": 0,
+      "payoutBookUnits": 0,
+      "lookupWeight": 995408422,
+      "bookSha256": "5cc3301979a8faedb709be7ac0078cdeaf88e680b10a048a5722be7f5f438069",
+      "eventsSha256": "418326ed7ad2bc16f1b04441b1c7d5966a77aa3bb656d0b2babaeae5c846a60d",
+      "lookup": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/candidate-corrected-1m-1.csv",
+      "lookupSha256": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4",
+      "sourceManifest": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/manifest.json",
+      "sourceManifestSha256": "80cebf4cdc5b8f76acb9fe0572e9a7d02611fffa752eac40894f057d5ffdbdb8"
+    },
+    "base-win": {
+      "mode": "base",
+      "cost": 1,
+      "sourceBookId": 1,
+      "payoutBookUnits": 100,
+      "lookupWeight": 32820835,
+      "bookSha256": "0540613bda5cc8ed37f86f9c24fccc5c3ef0f3408d7ccfb545295df5033d2d60",
+      "eventsSha256": "2221b71a17299c77194024a8623df267ec67d904bdc8c904f732f4d27be8e20b",
+      "lookup": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/candidate-corrected-1m-1.csv",
+      "lookupSha256": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4",
+      "sourceManifest": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/manifest.json",
+      "sourceManifestSha256": "80cebf4cdc5b8f76acb9fe0572e9a7d02611fffa752eac40894f057d5ffdbdb8"
+    },
+    "natural-bonus-collision": {
+      "mode": "base",
+      "cost": 1,
+      "sourceBookId": 125,
+      "payoutBookUnits": 29110,
+      "lookupWeight": 75001367,
+      "bookSha256": "44fa6cfdaa1dc008d3cc633cfacaa42d1b6f6d8f37fb6fcfd960a9766c2bfae9",
+      "eventsSha256": "16af0e104c7c2c05daf4c34625237a9765038c0be0ce0a0eee529cc148e0c0de",
+      "lookup": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/candidate-corrected-1m-1.csv",
+      "lookupSha256": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4",
+      "sourceManifest": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/manifest.json",
+      "sourceManifestSha256": "80cebf4cdc5b8f76acb9fe0572e9a7d02611fffa752eac40894f057d5ffdbdb8"
+    },
+    "round-cap": {
+      "mode": "base",
+      "cost": 1,
+      "sourceBookId": 1200961,
+      "payoutBookUnits": 500000,
+      "lookupWeight": 3022031,
+      "bookSha256": "b6cc7464ca1b4c1d9a910faa77d44614176cb176d4173ec7707553e515fed9eb",
+      "eventsSha256": "19de4283a80abad8b899efacc387291a2d6ed237d12adf424e82ef3513acc767",
+      "lookup": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/candidate-corrected-1m-1.csv",
+      "lookupSha256": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4",
+      "sourceManifest": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/manifest.json",
+      "sourceManifestSha256": "80cebf4cdc5b8f76acb9fe0572e9a7d02611fffa752eac40894f057d5ffdbdb8"
+    },
+    "buy-50": {
+      "mode": "bonus",
+      "cost": 50,
+      "sourceBookId": 10,
+      "payoutBookUnits": 430,
+      "lookupWeight": 181711684,
+      "bookSha256": "ce1bed5afaae83ec5e6195f6c763a37253d58100090dc327876266ca4e1126e7",
+      "eventsSha256": "1a41c509f170327dec8a5b65761f41be1ab67dc783ef7aae5ac29089ddf24d77",
+      "lookup": "wild-pickins/reports/math/standard-buy-trigger-tail200k-cost50/lookUpTable_bonus.csv",
+      "lookupSha256": "bd7814807841ce6a0d9952502a2c1863df806aab6463500b548645ad553870bf",
+      "sourceManifest": "wild-pickins/reports/math/standard-buy-trigger-tail200k-cost50/manifest.json",
+      "sourceManifestSha256": "529779d5e8a28f0f7dbfa1c937c480e8648056b62ca1d6169c8acff17f123dc2"
+    },
+    "buy-200": {
+      "mode": "standard_bonus_buy_medium",
+      "cost": 200,
+      "sourceBookId": 40000000,
+      "payoutBookUnits": 12720,
+      "lookupWeight": 2611119005,
+      "bookSha256": "6ac0b806d41cd8cf30e4cd4007a77f67cc0ca18069e6b950c9ad547eac220de7",
+      "eventsSha256": "20bb574f4a3efbbdb3beb8ea2164fb589a9e4aca01a357385298ffb5390cca68",
+      "lookup": "wild-pickins/reports/math/standard-buy-medium-optimizer-quartiles-500k-trial1-exact-target/lookUpTable_standard_bonus_buy_medium.csv",
+      "lookupSha256": "26b593df5402d669e489e0d5fe97db8c1ce3fac6a3ab6501d27b900d22570c05",
+      "sourceManifest": "wild-pickins/reports/math/standard-buy-medium-optimizer-quartiles-500k-trial1-exact-target/refinement.json",
+      "sourceManifestSha256": "8d63e3e42e76c2e5d11ffbd752052f489f1d25e5703348d87b2cda45bb882750"
+    },
+    "buy-500": {
+      "mode": "standard_bonus_buy_high",
+      "cost": 500,
+      "sourceBookId": 50000000,
+      "payoutBookUnits": 20560,
+      "lookupWeight": 1906068223,
+      "bookSha256": "eb18466dc650cd4f1fd15b78fa3e60d2b897ecd9ce2c76732cb28e43bc8c7fdc",
+      "eventsSha256": "06bf89bbed7e93e90107564fab00ec36ffa425cd92d24ba4b57ec537a91e18a9",
+      "lookup": "wild-pickins/reports/math/standard-buy-high-optimizer-quartiles-500k-trial2-exact-target/lookUpTable_standard_bonus_buy_high.csv",
+      "lookupSha256": "48091d768a820a3892643ab65e78d05e58d0a3f929c778cdd98535a6b63f95ea",
+      "sourceManifest": "wild-pickins/reports/math/standard-buy-high-optimizer-quartiles-500k-trial2-exact-target/refinement.json",
+      "sourceManifestSha256": "c1d46357aef60ca90072ceed760ed260429898de2d74b4608c5e4634e2a065c8"
+    }
+  }
+}

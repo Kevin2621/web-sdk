@@ -43,8 +43,10 @@ export function createPlayMusic<TSoundName extends string>(options: {
 	const soundPlayMap = {
 		new: (sound: Sound) => newMusic(sound),
 		paused: (sound: Sound) => resumeMusic(sound),
-		playing: (_: Sound) => {
-			// Do nothing
+		playing: (sound: Sound) => {
+			// A requested play can fail under browser autoplay rules. Do not let
+			// our optimistic state prevent the next user gesture from retrying.
+			if (!options.howl.playing(sound.soundId)) resumeMusic(sound);
 		},
 	};
 

@@ -1,4 +1,5 @@
 import App from './App.svelte';
+import PreviewCanvas from './PreviewCanvas.svelte';
 import Text, { type Props as TextProps } from './Text.svelte';
 import Container, { type Props as ContainerProps } from './Container.svelte';
 import Rectangle, { type Props as RectangleProps } from './Rectangle.svelte';
@@ -26,6 +27,7 @@ import BitmapText, { type Props as BitmapTextProps } from './BitmapText.svelte';
 import ParticleEmitter, { type Props as ParticleEmitterProps } from './ParticleEmitter.svelte';
 
 export {
+	PreviewCanvas,
 	App,
 	Text,
 	Container,

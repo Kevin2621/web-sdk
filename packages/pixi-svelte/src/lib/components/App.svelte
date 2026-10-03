@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy, type Snippet } from 'svelte';
+	import { onDestroy, type Snippet } from 'svelte';
 
 	import { getContextApp } from '../context.svelte';
 
@@ -7,16 +7,17 @@
 	import InitialiseParent from './InitialiseParent.svelte';
 	import AssetsLoader from './AssetsLoader.svelte';
 
-	type Props = { children: Snippet };
+	type Props = { children: Snippet; preloadTemplateFont?: boolean };
 
 	const props: Props = $props();
 	const context = getContextApp();
 
-	onMount(() => context.stateApp.reset());
+	// Reset before children mount; their async renderer startup must not be cleared.
+	context.stateApp.reset();
 	onDestroy(() => context.stateApp.reset());
 </script>
 
-<InitialiseApplication>
+<InitialiseApplication preloadTemplateFont={props.preloadTemplateFont}>
 	<InitialiseParent>
 		<AssetsLoader>
 			{@render props.children()}

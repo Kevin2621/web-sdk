@@ -1,0 +1,551 @@
+<script lang="ts">
+	import { base } from '$app/paths';
+	import { PreviewCanvas } from 'pixi-svelte';
+	import ScatterBag from './ScatterBag.svelte';
+	import SeedCurtain from './SeedCurtain.svelte';
+	import {
+		burstPose,
+		curtainReveal,
+		seedWaveReveal,
+		growingVolleyPose,
+		makeBagVolley,
+		ENTRY_CURTAIN_START,
+		ENTRY_CURTAIN_END,
+	} from '../game/seedCurtain.mjs';
+	import { Sprite } from 'pixi-svelte';
+	import { onDestroy } from 'svelte';
+	import { getContext } from '../game/context';
+	import { playerLanguage } from '../game/playerLanguage.svelte';
+	import { playerLabel } from '../game/playerLabels';
+	import {
+		seedCelebration,
+		cancelSeedCelebration,
+		continueSeedCelebration,
+		completeSeedContinue,
+		seedBagBurst,
+	} from '../game/seedCelebration.svelte';
+	import { SCATTER_BAG_REEL_SCALE, SYMBOL_SIZE } from '../game/constants';
+	import { getSymbolX } from '../game/utils';
+	const context = getContext();
+	const layout = $derived(context.stateLayoutDerived.mainLayout());
+	const board = $derived(context.stateGameDerived.boardLayout());
+	const bags = $derived(
+		context.stateGame.board.flatMap((reel, x) =>
+			reel.reelState.symbols
+				.slice(1, 4)
+				.flatMap((s, y) => (s.rawSymbol.name === 'S' ? [{ x, y, rawSymbol: s.rawSymbol }] : [])),
+		),
+	);
+
+	const seedArt = `${base}/assets/art-v1/celebration-seedart.png`;
+	const size = $derived(SYMBOL_SIZE * layout.scale);
+	const centerX = $derived(layout.x + (board.x - layout.width / 2) * layout.scale);
+	const boardTop = $derived(
+		layout.y + (board.y - layout.height / 2 - board.height / 2) * layout.scale,
+	);
+	const bagX = (reel: number) => centerX + (getSymbolX(reel) - board.width / 2) * layout.scale;
+	const centerY = $derived(boardTop + board.height * layout.scale * 0.45);
+	const signWidth = $derived(board.width * 0.4 * layout.scale);
+	const signHeight = $derived(signWidth * 0.26);
+	const targetY = $derived(boardTop + 4 * layout.scale - signHeight / 2);
+	const progress = $derived(seedCelebration.progress);
+	const clamp = (v: number) => Math.max(0, Math.min(1, v));
+	const flight = $derived(clamp((progress - 0.84) / 0.13));
+	const ease = $derived(flight * flight * (3 - 2 * flight));
+	const reveal = $derived(clamp((progress - 0.63) / 0.16));
+	let volleys = $state<Record<string, { at: number; seeds: ReturnType<typeof makeBagVolley> }>>({});
+	let volleySalt = 0;
+	$effect(() => {
+		if (!seedCelebration.active) {
+			volleys = {};
+			volleySalt = Math.floor(Math.random() * 1000000);
+		}
+	});
+	function burst(id: string) {
+		if (!volleys[id]) {
+			const [x, y] = id.split(':').map(Number);
+			volleys[id] = {
+				at: progress * 8,
+				seeds: makeBagVolley(
+					Math.min(18, Math.floor(60 / Math.max(1, bags.length))),
+					volleySalt + x * 131 + y * 37,
+				),
+			};
+		}
+		seedBagBurst(id);
+	}
+	const canvas = $derived(context.stateLayoutDerived.canvasSizes());
+	const entranceSeeds = $derived(
+		bags.flatMap((bag) => {
+			const id = `${bag.x}:${bag.y}`,
+				volley = volleys[id];
+			return volley
+				? volley.seeds.map((seed) => ({
+						id: `${id}:${seed.id}`,
+						at: volley.at,
+						seed,
+						x: bagX(bag.x),
+						y: boardTop + (bag.y + 0.12) * size,
+						size,
+					}))
+				: [];
+		}),
+	);
+	const entryCurtain = $derived(
+		clamp((progress - ENTRY_CURTAIN_START) / (ENTRY_CURTAIN_END - ENTRY_CURTAIN_START)),
+	);
+	const entryReveal = $derived(
+		progress < ENTRY_CURTAIN_START
+			? 0
+			: seedWaveReveal(
+					entranceSeeds.map((v, index) =>
+						growingVolleyPose(
+							v.seed,
+							progress * 8 - v.at,
+							v.x,
+							v.y,
+							v.size,
+							canvas.width,
+							canvas.height,
+							entryCurtain,
+							index,
+							entranceSeeds.length,
+						),
+					),
+					canvas.height,
+				),
+	);
+	const exitReveal = $derived(
+		curtainReveal(seedCelebration.exitProgress, canvas.width, canvas.height),
+	);
+	const showReward = $derived(
+		seedCelebration.active && progress >= ENTRY_CURTAIN_START && seedCelebration.exitProgress < 1,
+	);
+	const spray = $derived(seedCelebration.sprayProgress);
+	let rewardDialog: HTMLDialogElement;
+	$effect(() => {
+		if (seedCelebration.active) rewardDialog?.showModal();
+		else rewardDialog?.close();
+	});
+	function confirm(event: Event) {
+		event.stopPropagation();
+		if (seedCelebration.waiting) {
+			seedCelebration.openTriggerBags = bags.map((bag) => bag.rawSymbol);
+			continueSeedCelebration();
+		}
+	}
+	function keyConfirm(event: KeyboardEvent) {
+		event.stopPropagation();
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			if (!event.repeat) confirm(event);
+		}
+	}
+	const packetReveal = $derived(clamp((progress - 0.57) / 0.12));
+	onDestroy(cancelSeedCelebration);
+</script>
+
+<img src={seedArt} alt="" hidden />
+{#if seedCelebration.active}
+	<div class="celebration" aria-hidden="true">
+		<div class="shade" style:opacity={0.55 * clamp(progress / 0.15) * (1 - exitReveal)}></div>
+	</div>
+	{#if progress > 0.81}
+		<div
+			class="award"
+			style:left={`${centerX}px`}
+			style:top={`${centerY + (targetY - centerY) * ease}px`}
+			style:width={`${signWidth}px`}
+			style:font-size={`${signWidth * 0.06}px`}
+			style:clip-path={`inset(0 ${(1 - reveal) * 100}% 0 0)`}
+			style:transform={`translate(-50%,-50%) scale(${2.5 - 1.5 * ease + 0.05 * Math.sin(clamp((progress - 0.97) / 0.03) * Math.PI)})`}
+		>
+			<div class="heading">{playerLabel(playerLanguage(), 'FREE SPINS')}</div>
+			<div class="counter" style:font-size={`${signWidth * 0.09}px`}>{seedCelebration.award}</div>
+		</div>
+	{/if}
+{/if}
+<dialog
+	class="reward-dialog"
+	bind:this={rewardDialog}
+	oncancel={(event) => event.preventDefault()}
+	onkeydown={keyConfirm}
+	onclick={confirm}
+	aria-label="Free spins awarded"
+>
+	{#if seedCelebration.active && context.stateApp.loaded && progress < 0.425}
+		<div class="spine-overlay" aria-hidden="true">
+			<PreviewCanvas width={canvas.width} height={canvas.height} label="Scatter bags">
+				{#if progress < 0.425}
+					{#each bags as bag (`${bag.x}:${bag.y}`)}
+						<ScatterBag
+							x={bagX(bag.x)}
+							y={boardTop + (bag.y + 0.5) * size}
+							size={size * SCATTER_BAG_REEL_SCALE}
+							animation="shake_open"
+							onburst={() => burst(`${bag.x}:${bag.y}`)}
+						/>
+					{/each}
+				{/if}
+			</PreviewCanvas>
+		</div>
+	{/if}
+	{#if showReward}
+		<div
+			class="reward-scene"
+			style:clip-path={`inset(${exitReveal * 100}% 0 ${(1 - entryReveal) * 100}% 0)`}
+		>
+			<div class="reward-background">
+				<div class="reward-rays"></div>
+				<div class="reward-halo"></div>
+			</div>
+			{#if context.stateApp.loaded}
+				<div class="spine-overlay" aria-hidden="true">
+					<PreviewCanvas width={canvas.width} height={canvas.height} label="Reward bag">
+						<ScatterBag
+							x={canvas.width * 0.5}
+							y={canvas.height * 0.48}
+							size={Math.min(420, canvas.width * 0.64, canvas.height * 0.65)}
+							animation={seedCelebration.continuing ? 'bag_pop' : 'idle'}
+							onburst={() => seedBagBurst('reward')}
+							oncomplete={completeSeedContinue}
+						/>
+						{#if spray >= 0 && spray < 1}
+							{#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as i}
+								{@const pose = burstPose(i, spray, canvas.width, canvas.height)}
+								<Sprite key={`wpCurtainSeed${(i % 3) + 1}`} anchor={0.5} {...pose} />
+							{/each}
+						{/if}
+					</PreviewCanvas>
+				</div>
+			{/if}
+			<div
+				class="packet"
+				style:opacity={clamp((progress - 0.38) / 0.12)}
+				style:transform={`translate(-50%,-50%) scale(${0.3 + 0.7 * clamp((progress - 0.38) / 0.18)}) rotate(${(1 - clamp((progress - 0.38) / 0.18)) * -18}deg)`}
+			>
+				<div class="reward-words" style:opacity={clamp((progress - 0.6) / 0.08)}>YOU WON</div>
+				<svg
+					class="seed-number"
+					viewBox="0 0 400 150"
+					role="img"
+					aria-label={`${seedCelebration.award} wild free spins`}
+					style:opacity={packetReveal}
+				>
+					<defs>
+						<pattern id="reward-seed-fill" width="22" height="26" patternUnits="userSpaceOnUse">
+							<rect width="22" height="26" fill="#855019" />
+							<image href={seedArt} width="22" height="26" />
+						</pattern>
+					</defs>
+					<text
+						x="200"
+						y="123"
+						text-anchor="middle"
+						font-family="Georgia, serif"
+						font-weight="bold"
+						font-size={seedCelebration.award >= 100 ? 112 : 138}
+						fill="url(#reward-seed-fill)"
+						stroke="#fff0a0"
+						stroke-width="5"
+						paint-order="stroke fill">{seedCelebration.displayAward}</text
+					>
+				</svg>
+				<div class="reward-subtitle" style:opacity={clamp((progress - 0.65) / 0.08)}>
+					WILD FREE SPINS
+				</div>
+			</div>
+			{#if seedCelebration.waiting}
+				<button class="continue" onclick={confirm}>
+					<span class="continue-body">
+						<svg
+							class="continue-shine"
+							viewBox="0 0 320 58"
+							preserveAspectRatio="none"
+							aria-hidden="true"
+						>
+							<rect x="1.5" y="1.5" width="317" height="55" rx="11" pathLength="100" />
+						</svg>
+						<span class="continue-label">Click or tap anywhere to continue</span>
+					</span>
+				</button>
+			{/if}
+		</div>
+	{/if}
+	{#if seedCelebration.active && context.stateApp.loaded}
+		{#if progress < ENTRY_CURTAIN_END}
+			<SeedCurtain
+				progress={entryCurtain}
+				width={canvas.width}
+				height={canvas.height}
+				volleys={entranceSeeds}
+				clock={progress * 8}
+			/>
+		{:else if seedCelebration.exitProgress >= 0 && seedCelebration.exitProgress < 1}
+			<SeedCurtain
+				progress={seedCelebration.exitProgress}
+				width={canvas.width}
+				height={canvas.height}
+			/>
+		{/if}
+	{/if}
+</dialog>
+
+<style>
+	.reward-scene {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+	}
+	.reward-background {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		background: radial-gradient(ellipse at 50% 44%, #855323 0%, #3e301b 42%, #141f18 85%);
+	}
+	.reward-rays {
+		position: absolute;
+		inset: 0;
+		background: repeating-conic-gradient(
+			from 0deg at 50% 45%,
+			transparent 0deg 14deg,
+			#ffd78010 14deg 22deg,
+			transparent 22deg 36deg
+		);
+	}
+	.reward-halo {
+		position: absolute;
+		left: 50%;
+		top: 46%;
+		width: min(700px, 95vw);
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: radial-gradient(ellipse, #ffca6530, transparent 65%);
+		animation: reward-breathe 3s ease-in-out infinite;
+	}
+	@keyframes reward-breathe {
+		0%,
+		100% {
+			transform: translate(-50%, -50%) scale(0.95);
+			opacity: 0.6;
+		}
+		50% {
+			transform: translate(-50%, -50%) scale(1.08);
+			opacity: 1;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.reward-rays,
+		.reward-halo {
+			animation: none;
+		}
+		.reward-halo {
+			transform: translate(-50%, -50%);
+		}
+	}
+	.spine-overlay {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+	.reward-dialog {
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		overflow: hidden;
+		color: #fff0c0;
+		outline: none;
+	}
+	.reward-dialog::backdrop {
+		background: transparent;
+	}
+	.packet {
+		position: absolute;
+		left: 50%;
+		top: 48%;
+		width: min(420px, 64vw, 65vh);
+		aspect-ratio: 1199/1312;
+		pointer-events: none;
+	}
+	.reward-words,
+	.reward-subtitle {
+		position: absolute;
+		left: 0;
+		right: 0;
+		text-align: center;
+		font-family: Georgia, serif;
+		font-weight: bold;
+		color: #fff0a0;
+		text-shadow:
+			0 2px 3px #46270b,
+			0 0 8px #46270b;
+	}
+	.reward-words {
+		top: -8%;
+		font-size: clamp(22px, 4vw, 36px);
+		letter-spacing: 0.08em;
+	}
+	.seed-number {
+		position: absolute;
+		left: 12%;
+		top: 5%;
+		width: 76%;
+		height: 25%;
+		overflow: visible;
+		filter: drop-shadow(0 3px 2px #452209);
+	}
+	.reward-subtitle {
+		top: 31%;
+		font-size: clamp(18px, 3vw, 28px);
+	}
+	.continue {
+		position: absolute;
+		bottom: 8%;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: #f2e6cd;
+		font: 600 16px system-ui;
+		cursor: pointer;
+		max-width: 90vw;
+	}
+	.continue-body {
+		position: relative;
+		display: block;
+		padding: 14px 22px;
+		border: 1px solid #a48b5b;
+		border-radius: 12px;
+		background: #302b24;
+		box-shadow: 0 3px 7px #0d120c66;
+		animation: continue-lift 4.4s ease-in-out infinite;
+		will-change: transform;
+	}
+	.continue-label {
+		position: relative;
+		z-index: 1;
+		white-space: normal;
+	}
+	.continue-shine {
+		position: absolute;
+		inset: -2px;
+		width: calc(100% + 4px);
+		height: calc(100% + 4px);
+		overflow: visible;
+		pointer-events: none;
+	}
+	.continue-shine rect {
+		fill: none;
+		stroke: #fff1ac;
+		stroke-width: 3;
+		stroke-linecap: round;
+		stroke-dasharray: 11 89;
+		stroke-dashoffset: 12;
+		filter: drop-shadow(0 0 5px #ffe487);
+		opacity: 0;
+		animation: continue-outline-shine 4.4s ease-in-out infinite;
+	}
+	@keyframes continue-lift {
+		0%,
+		13%,
+		87%,
+		100% {
+			transform: translateY(0) rotate(0);
+		}
+		23% {
+			transform: translateY(-9px) rotate(-1deg);
+		}
+		33% {
+			transform: translateY(-9px) rotate(1deg);
+		}
+		43% {
+			transform: translateY(-9px) rotate(-0.8deg);
+		}
+		53% {
+			transform: translateY(-9px) rotate(0.8deg);
+		}
+		65% {
+			transform: translateY(-9px) rotate(0);
+		}
+		78% {
+			transform: translateY(0) rotate(0);
+		}
+	}
+	@keyframes continue-outline-shine {
+		0%,
+		20% {
+			opacity: 0;
+			stroke-dashoffset: 12;
+		}
+		25% {
+			opacity: 1;
+			stroke-dashoffset: 12;
+		}
+		63% {
+			opacity: 1;
+			stroke-dashoffset: -49;
+		}
+		69%,
+		100% {
+			opacity: 0;
+			stroke-dashoffset: -49;
+		}
+	}
+	.continue:focus-visible {
+		outline: 3px solid #fff0a0;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.continue-body,
+		.continue-shine rect {
+			animation: none;
+		}
+		.continue-body {
+			will-change: auto;
+		}
+	}
+	.celebration {
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 9998;
+	}
+	.shade {
+		position: absolute;
+		inset: 0;
+		background: #131c13;
+	}
+	img {
+		position: absolute;
+		object-fit: contain;
+	}
+	.award {
+		position: fixed;
+		z-index: 10002;
+		pointer-events: none;
+		text-align: center;
+		font-family: Georgia, serif;
+		color: #f2e6cd;
+		text-shadow:
+			0 2px 3px #23160e,
+			0 0 12px #eaaa3877;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		line-height: 1.05;
+	}
+	.heading {
+		font-weight: 800;
+	}
+	.counter {
+		font-weight: bold;
+		font-variant-numeric: tabular-nums;
+	}
+</style>

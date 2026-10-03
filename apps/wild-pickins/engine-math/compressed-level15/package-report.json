@@ -1,0 +1,266 @@
+{
+  "status": "byte-identical recompression and local SDK checks passed; Engine staging acceptance pending",
+  "profile": "candidate-corrected-1m-1",
+  "configSha256": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881",
+  "indexSha256": "051dec33bec3c87575594d06e9f6fcfa5bdee9a4fdb6def61bc2ed568df3ac2e",
+  "modes": [
+    {
+      "mode": "base",
+      "cost": 1,
+      "books": 1024088,
+      "events": 6505863,
+      "positiveWeightBooks": 1024088,
+      "totalWeight": 999999999918653,
+      "exactRtp": "9669999999562829/9999999999186530",
+      "rtp": 0.9670000000349455,
+      "maxWinBookUnits": 500000,
+      "sources": [
+        {
+          "path": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/experiment-config.json",
+          "sha256": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881"
+        },
+        {
+          "path": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/books.sqlite",
+          "sha256": "c95f1688ac245e8d7d1f77bf22740bc1717f9a163aa39b4bd50c8183a8be3814"
+        },
+        {
+          "path": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/manifest.json",
+          "sha256": "80cebf4cdc5b8f76acb9fe0572e9a7d02611fffa752eac40894f057d5ffdbdb8"
+        },
+        {
+          "path": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/candidate-corrected-1m-1.csv",
+          "sha256": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4"
+        }
+      ],
+      "eventsUncompressedSha256": "17735dfaf1c2eb775b936d7a2189928937dff16ee607b65a5fbffcf93956c178",
+      "files": {
+        "books_base.jsonl.zst": {
+          "sha256": "32b395cf8b2d088f2de82efe8966fa305d94972d20ef04f2ee6e8bb134e4ea6b",
+          "bytes": 102080956
+        },
+        "lookUpTable_base_0.csv": {
+          "sha256": "3470f7422aac4b2d2f8b8ddfaa4bba7469a1786fda299a2cf14a588c626dc3e4",
+          "bytes": 20868675
+        }
+      },
+      "compression": {
+        "level": 15,
+        "windowBytes": 2097152,
+        "sourceCompressedSha256": "21c3c66ee6bcb3ce1029e03b27c06d772448f28d111e3e7cba2767577f167087",
+        "sourceBytes": 173468512,
+        "uncompressedBytes": 2583233110,
+        "byteIdenticalDecompression": true
+      }
+    },
+    {
+      "mode": "bonus",
+      "cost": 50,
+      "books": 19521,
+      "events": 937335,
+      "positiveWeightBooks": 19521,
+      "totalWeight": 9435134444509,
+      "exactRtp": "4561887503917571/4717567222254500",
+      "rtp": 0.9669999999994636,
+      "maxWinBookUnits": 292230,
+      "sources": [
+        {
+          "path": "wild-pickins/reports/math/standard-buy-trigger-tail200k-cost50/experiment-config.json",
+          "sha256": "1e2a53758193d3c51804b335a7dca0be7c5eb365280c4c971063ab27fbe4c881"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-trigger-tail200k-cost50/books.sqlite",
+          "sha256": "73fbcbc2ffbc2dbc01ac944e0068603f19bcceea798295b1ffdc5ea05f0e0ba2"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-trigger-tail200k-cost50/manifest.json",
+          "sha256": "529779d5e8a28f0f7dbfa1c937c480e8648056b62ca1d6169c8acff17f123dc2"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-trigger-tail200k-cost50/lookUpTable_bonus.csv",
+          "sha256": "bd7814807841ce6a0d9952502a2c1863df806aab6463500b548645ad553870bf"
+        }
+      ],
+      "eventsUncompressedSha256": "006a27ac378896424505f00ccb698152250f3028224426a2973804ceabc4575e",
+      "files": {
+        "books_bonus.jsonl.zst": {
+          "sha256": "7d5ae62b1ab9fa530bdc32ff5a505ded101f982dc30f6968a0b70d51a0b588d5",
+          "bytes": 19172731
+        },
+        "lookUpTable_bonus_0.csv": {
+          "sha256": "bd7814807841ce6a0d9952502a2c1863df806aab6463500b548645ad553870bf",
+          "bytes": 430551
+        }
+      },
+      "compression": {
+        "level": 15,
+        "windowBytes": 2097152,
+        "sourceCompressedSha256": "f1bd8f07f3aa4624771838a53f287110cecc3c86e6572b0751522377bdaecd85",
+        "sourceBytes": 33655549,
+        "uncompressedBytes": 433857178,
+        "byteIdenticalDecompression": true
+      }
+    },
+    {
+      "mode": "standard_bonus_buy_medium",
+      "cost": 200,
+      "books": 512515,
+      "events": 37332290,
+      "positiveWeightBooks": 512515,
+      "totalWeight": 1125899906587230,
+      "exactRtp": "362915069889946717/375299968862410000",
+      "rtp": 0.96699999999999,
+      "maxWinBookUnits": 500000,
+      "sources": [
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-500k-seed9281/summary.json",
+          "sha256": "e58a3a48c85036f35979e9ad22c5421b123fe85fbfef7316016c8c15c37ce950"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-optimizer-quartiles-500k-trial1-exact-target/refinement.json",
+          "sha256": "8d63e3e42e76c2e5d11ffbd752052f489f1d25e5703348d87b2cda45bb882750"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-optimizer-quartiles-500k-trial1-exact-target/lookUpTable_standard_bonus_buy_medium.csv",
+          "sha256": "26b593df5402d669e489e0d5fe97db8c1ce3fac6a3ab6501d27b900d22570c05"
+        },
+        {
+          "path": "wild-pickins/reports/math/candidate-corrected-1m-1-playtest/books.sqlite",
+          "sha256": "c95f1688ac245e8d7d1f77bf22740bc1717f9a163aa39b4bd50c8183a8be3814"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-100k-seed9281/lane-1/books_base.jsonl.zst",
+          "sha256": "008adf53fa5f6e2eb957f3d892c1107e01b7e2d7731199986116da6c0f5e5f75"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-100k-seed9281/lane-2/books_base.jsonl.zst",
+          "sha256": "8e0dbce1559b98c0cda34b4d4583dac3a23216d6a6ff79c77370032f39c3d8a8"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-100k-seed9281/lane-3/books_base.jsonl.zst",
+          "sha256": "d662f8fd89ccb9cf3e7b7ffec5762ed5172b23b39a3c449a7c3e1ffe0ba071d9"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-100k-seed9281/lane-4/books_base.jsonl.zst",
+          "sha256": "0e7944b52734db2ba96a10d8b17faadb7554d065c50eb9ce4aafed89d14079ce"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-extra400k-seed9281/lane-1/books_base.jsonl.zst",
+          "sha256": "15c9593d5c3ee9b1b9b8c78406b49991209fb06a48f9af414cf2d5747034125a"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-extra400k-seed9281/lane-2/books_base.jsonl.zst",
+          "sha256": "6f9f63d81991c00adec1fbb99a1a9c017789c54cff4fbf826ad8861dcf307347"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-extra400k-seed9281/lane-3/books_base.jsonl.zst",
+          "sha256": "a080b4c334cd7869ac2df55d6ce16ea66e6012e690b8447d6c9bed2699692861"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-medium-entry15-extra400k-seed9281/lane-4/books_base.jsonl.zst",
+          "sha256": "8cec6367b7f7ed0f2b3009492a9d6e2ef398cf4d628a68fc6c3ca651ccc5bf41"
+        }
+      ],
+      "eventsUncompressedSha256": "1e6c919242a32c54eb8bc41a4d03f4daa96793f80190fc1d43845f6f69479910",
+      "files": {
+        "books_standard_bonus_buy_medium.jsonl.zst": {
+          "sha256": "6b32f9e0fdd4019bde1a19bc2a713624b16be3a8b14eaea1d98e77113faae52f",
+          "bytes": 851588445
+        },
+        "lookUpTable_standard_bonus_buy_medium_0.csv": {
+          "sha256": "26b593df5402d669e489e0d5fe97db8c1ce3fac6a3ab6501d27b900d22570c05",
+          "bytes": 13301744
+        }
+      },
+      "compression": {
+        "level": 15,
+        "windowBytes": 2097152,
+        "sourceCompressedSha256": "9eeb74ee80281a4015ca656f8eed016fbe2dc5b3bbf685b1df53bf43bd42bebc",
+        "sourceBytes": 1474706558,
+        "uncompressedBytes": 19725316597,
+        "byteIdenticalDecompression": true
+      }
+    },
+    {
+      "mode": "standard_bonus_buy_high",
+      "cost": 500,
+      "books": 500000,
+      "events": 49859451,
+      "positiveWeightBooks": 500000,
+      "totalWeight": 1125899906592837,
+      "exactRtp": "9072876747293851/9382499221606975",
+      "rtp": 0.96699999999999,
+      "maxWinBookUnits": 500000,
+      "sources": [
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-500k-seed9277/summary.json",
+          "sha256": "6697744496353c19b07ddbb0ee1fd65a71469377ed8ba33f3a73efe2183385d2"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-optimizer-quartiles-500k-trial2-exact-target/refinement.json",
+          "sha256": "c1d46357aef60ca90072ceed760ed260429898de2d74b4608c5e4634e2a065c8"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-optimizer-quartiles-500k-trial2-exact-target/lookUpTable_standard_bonus_buy_high.csv",
+          "sha256": "48091d768a820a3892643ab65e78d05e58d0a3f929c778cdd98535a6b63f95ea"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-100k-seed9277/lane-1/books_base.jsonl.zst",
+          "sha256": "bf8ff21d926ecc496f978d2ac893408fc2fac4800e800db47816bd8a40380df3"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-100k-seed9277/lane-2/books_base.jsonl.zst",
+          "sha256": "a48cf7859c5e2eed36115afe8c5fed1c4c628e7bb9b6de2b9f12ca5b66a184b1"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-100k-seed9277/lane-3/books_base.jsonl.zst",
+          "sha256": "2ee61d28480a6eeed308fff644dbd5c8cd11da7e020a802be76ef71b8349965b"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-100k-seed9277/lane-4/books_base.jsonl.zst",
+          "sha256": "c2b15c50ee6046581b764da58f666ad17c1989bc0698ad56d5ea1edf0e9636cc"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-extra400k-seed9277/lane-1/books_base.jsonl.zst",
+          "sha256": "e8df93791418b409e32344f8be355679e1ab367fad6557d60222bcb5cc949d71"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-extra400k-seed9277/lane-2/books_base.jsonl.zst",
+          "sha256": "e7a91d4dc5394aebe2508aaf15fae602d68f1e2b47180af1c6b7d1f6cd13b7d6"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-extra400k-seed9277/lane-3/books_base.jsonl.zst",
+          "sha256": "cd96d4e6008e27087899ea6be49167091f2ca7fff9855da3e9610715e62f2a9b"
+        },
+        {
+          "path": "wild-pickins/reports/math/standard-buy-high-entry20-extra400k-seed9277/lane-4/books_base.jsonl.zst",
+          "sha256": "80ae2d4a26d137f32416310e324a35aa16900b48b315d70f761c98d23fe39f66"
+        }
+      ],
+      "eventsUncompressedSha256": "330ef6a06af96fb42651d6b7a02d2524a9d8e953ea2911574815573c25355321",
+      "files": {
+        "books_standard_bonus_buy_high.jsonl.zst": {
+          "sha256": "b8227fdecd19f8c2ea454775a78ebd71ce034906cd56f8bcc6f332529ff30aaa",
+          "bytes": 1230136375
+        },
+        "lookUpTable_standard_bonus_buy_high_0.csv": {
+          "sha256": "48091d768a820a3892643ab65e78d05e58d0a3f929c778cdd98535a6b63f95ea",
+          "bytes": 13261331
+        }
+      },
+      "compression": {
+        "level": 15,
+        "windowBytes": 2097152,
+        "sourceCompressedSha256": "6ac1b090e4ea6f30b5091b9cb48d51d548d358be68bb3bc6496f7f5526eb0a6e",
+        "sourceBytes": 2130576262,
+        "uncompressedBytes": 29909117569,
+        "byteIdenticalDecompression": true
+      }
+    }
+  ],
+  "notes": [
+    "Outcomes, original book IDs, event payloads and lookup weights are preserved.",
+    "The 50x source has no 5000x outcome; its available maximum remains 2922.3x.",
+    "No Engine upload or wallet acceptance has been performed."
+  ],
+  "recompressedFrom": "/Users/kevinwhite/Development/web-sdk-wild-pickins/apps/wild-pickins/engine-math"
+}
